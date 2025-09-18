@@ -1,0 +1,103 @@
+﻿@model IList<CmsSite>
+@using LeoChen.Cms.Data
+@using NewLife;
+@using NewLife.Cube;
+@using NewLife.Web;
+@using XCode;
+@using XCode.Configuration;
+@using XCode.Membership;
+@{
+    var fact = ViewBag.Factory as IEntityFactory;
+    var page = ViewBag.Page as Pager;
+    var ukey = fact.Unique;
+    var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+    var provider = ManageProvider.Provider;
+}
+<table class="table table-bordered table-hover table-striped table-condensed table-data-list">
+    <thead>
+        <tr>
+            @if (set.EnableSelect && ukey != null)
+            {
+                <th class="text-center" style="width:10px;"><input type="checkbox" id="chkAll" title="全选" /></th>
+            }
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("ID"))">主键ID</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("AreaID"))">区域代码</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Title"))">标题</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Subtitle"))">副标题</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Domain"))">域名</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Logo"))">logo</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Keywords"))">关键词</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Icp"))">icp</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Theme"))">模板名</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Statistical"))">statistical</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Copyright"))">copyright</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("UpdateUserID"))">更新者</a></th>
+            <th class="text-center" style="min-width:134px;"><a href="@Html.Raw(page.GetSortUrl("UpdateTime"))">更新时间</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("UpdateIP"))">更新地址</a></th>
+            @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+            {
+                <th class="text-center">操作</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var entity in Model)
+        {
+            <tr>
+                @if (set.EnableSelect && ukey != null)
+                {
+                    <td class="text-center"><input type="checkbox" name="keys" value="@entity.ID" /></td>
+                }
+                <td class="text-center">@entity.ID</td>
+                <td><a href="CmsArea?ID=@entity.AreaID">@entity.AreaName</a></td>
+                <td>@entity.Title</td>
+                <td>@entity.Subtitle</td>
+                <td>@entity.Domain</td>
+                <td>@entity.Logo</td>
+                <td>@entity.Keywords</td>
+                <td>@entity.Icp</td>
+                <td>@entity.Theme</td>
+                <td>@entity.Statistical</td>
+                <td>@entity.Copyright</td>
+                <td class="text-center">@provider.FindByID(entity.UpdateUserID)</td>
+                <td class="text-center">@entity.UpdateTime.ToFullString("")</td>
+                <td class="text-center" title="@entity.UpdateIP.IPToAddress()">@entity.UpdateIP</td>
+                @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+                {
+                    <td class="text-center">
+                        @await Html.PartialAsync("_List_Data_Action", (Object)entity)
+                    </td>
+                }
+            </tr>
+        }
+        @if (page.State is CmsSite)
+        {
+            var entity = page.State as CmsSite;
+            <tr>
+                @if (set.EnableSelect)
+                {
+                    <td></td>
+                }
+                <td class="text-center">总计</td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+
+                @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+                {
+                    <td></td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

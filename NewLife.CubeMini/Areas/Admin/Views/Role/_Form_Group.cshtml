@@ -1,0 +1,25 @@
+﻿@model EntityField
+@using NewLife;
+@using XCode;
+@using XCode.Configuration;
+@{
+    var entity = Model.Entity;
+    var item = Model.Field;
+
+    var set = NewLife.Cube.CubeSetting.Current;
+    var cls = set.FormGroupClass;
+    if (cls.IsNullOrEmpty()) { cls = "form-group col-xs-12 col-sm-6 col-lg-4"; }
+}
+@if (item.Name == "Permission")
+{
+    if (!entity.IsNullKey)
+    {
+        @await Html.PartialAsync("SetPermission", new { Role = entity })
+    }
+}
+else
+{
+    <div class="@cls">
+        @await Html.PartialAsync("_Form_Item", new EntityField(entity, item))
+    </div>
+}

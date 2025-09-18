@@ -1,0 +1,380 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityModel xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="https://newlifex.com https://newlifex.com/Model202407.xsd" schemaLocation="https://newlifex.com/Model202407.xsd" Document="https://newlifex.com/xcode/model" xmlns="https://newlifex.com/Model202407.xsd">
+  <Option>
+    <!--类名模板。其中{name}替换为Table.Name，如{name}Model/I{name}Dto等-->
+    <ClassNameTemplate />
+    <!--显示名模板。其中{displayName}替换为Table.DisplayName-->
+    <DisplayNameTemplate />
+    <!--基类。可能包含基类和接口，其中{name}替换为Table.Name-->
+    <BaseClass>Entity</BaseClass>
+    <!--命名空间-->
+    <Namespace>LeoChen.Cms.Data</Namespace>
+    <!--输出目录-->
+    <Output>.\</Output>
+    <!--是否使用中文文件名。默认false-->
+    <ChineseFileName>False</ChineseFileName>
+    <!--用于生成Copy函数的参数类型。例如{name}或I{name}-->
+    <ModelNameForCopy />
+    <!--带有索引器。实现IModel接口-->
+    <HasIModel>False</HasIModel>
+    <!--可为null上下文。生成String?等-->
+    <Nullable>False</Nullable>
+    <!--数据库连接名-->
+    <ConnName>Membership</ConnName>
+    <!--模型类模版。设置后生成模型类，用于接口数据传输，例如{name}Model-->
+    <ModelClass>{name}Model</ModelClass>
+    <!--模型类输出目录。默认当前目录的Models子目录-->
+    <ModelsOutput>.\Models\</ModelsOutput>
+    <!--模型接口模版。设置后生成模型接口，用于约束模型类和实体类，例如I{name}-->
+    <ModelInterface>I{name}</ModelInterface>
+    <!--模型接口输出目录。默认当前目录的Interfaces子目录-->
+    <InterfacesOutput>.\Interfaces\</InterfacesOutput>
+    <!--用户实体转为模型类的模型类。例如{name}或{name}DTO-->
+    <ModelNameForToModel />
+    <!--命名格式。Default/Upper/Lower/Underline-->
+    <NameFormat>Default</NameFormat>
+    <!--魔方区域显示名-->
+    <DisplayName>全局配置</DisplayName>
+    <!--魔方控制器输出目录-->
+    <CubeOutput>../../LeoChen.Cms/Areas/GlobalConfiguration</CubeOutput>
+  </Option>
+  <Tables>
+
+    <Table Name="CmsArea" Description="区域管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="Domain" DataType="String" Length="100" Description="域名" />
+        <Column Name="IsDefault" ColumnName="is_default" DataType="Boolean" DefaultValue="False" Description="是否默认" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsSite" Description="站点管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="Title" DataType="String" Master="True" Length="100" Description="标题" />
+        <Column Name="Subtitle" DataType="String" Length="200" Description="副标题" />
+        <Column Name="Domain" DataType="String" Description="域名" />
+        <Column Name="Logo" DataType="String" Length="100" Description="logo" />
+        <Column Name="Keywords" DataType="String" Length="200" Description="关键词" />
+        <Column Name="Description" DataType="String" Length="500" Description="描述" />
+        <Column Name="Icp" DataType="String" Length="30" Description="icp" />
+        <Column Name="Theme" DataType="String" Length="30" Description="模板名" />
+        <Column Name="Statistical" DataType="String" Length="500" Description="statistical" />
+        <Column Name="Copyright" DataType="String" Length="200" Description="copyright" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsCompany" Description="公司信息表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="站点代码" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
+        <Column Name="Address" DataType="String" Length="200" Description="地址" />
+        <Column Name="Postcode" DataType="String" Length="6" Description="邮编" />
+        <Column Name="Contact" DataType="String" Length="30" Description="联系人" />
+        <Column Name="Mobile" DataType="String" Length="30" Description="手机号" />
+        <Column Name="Phone" DataType="String" Length="30" Description="电话" />
+        <Column Name="Fax" DataType="String" Length="30" Description="传真" />
+        <Column Name="Email" DataType="String" Description="邮箱" />
+        <Column Name="QQ" DataType="String" Length="30" Description="QQ号" />
+        <Column Name="Weixin" DataType="String" Length="30" Description="微信号" />
+        <Column Name="Blicense" DataType="String" Length="20" Description="营业执照" />
+        <Column Name="Other" DataType="String" Length="200" Description="其他" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsUser" Description="系统用户表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="RoleId" DataType="Int32" Map="CmsRole@ID@$" Description="角色ID" />
+        <Column Name="Username" DataType="String" Master="True" Length="30" Description="用户名" />
+        <Column Name="Realname" DataType="String" Length="30" Description="显示名称" />
+        <Column Name="Password" DataType="String" Length="100" Description="密码" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="LoginCount" DataType="Int32" Description="登陆次数" />
+        <Column Name="LastLoginIp" DataType="String" Length="11" Description="最后登陆IP" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Username" Unique="True" />
+        <Index Columns="Status" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsRole" Description="角色表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
+        <Column Name="AreaIDs" DataType="String" Length="30" Description="区域组" />
+        <Column Name="Description" DataType="String" Description="描述" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsRole_level" Description="角色级别表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="RoleID" DataType="Int32" Map="CmsRole@ID@Name" Description="角色ID" />
+        <Column Name="MenuUrl" DataType="Int32" Map="CmsMenu@ID@Url" Description="菜单Url" />
+        <Column Name="LevelA" DataType="String" Length="20" Description="菜单Url动作" />
+      </Columns>
+      <Indexes>
+        <Index Columns="RoleID,MenuUrl" Unique="True" />
+        <Index Columns="RoleID" />
+        <Index Columns="MenuUrl" />
+        <Index Columns="LevelA" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsMenu" Description="菜单管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Pid" DataType="Int32" Description="父级代码" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="Url" DataType="String" Length="100" Description="url" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="Ico" DataType="String" Length="30" Description="图标" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Status" />
+        <Index Columns="Sorting" />
+        <Index Columns="Name" />
+        <Index Columns="Url" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsConfig" Description="系统配置表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
+        <Column Name="Value" DataType="String" Length="200" Description="值" />
+        <Column Name="Type" DataType="Int32" Description="类型" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+        <Index Columns="Type" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsContent" Description="内容管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="ContentSortID" DataType="Int32" Map="CmsContent_Sort@ID@Name" Description="分类代码" />
+        <Column Name="ContentSortSubID" DataType="Int32" Map="CmsContent_Sort@ID@Name" Description="子分类代码" />
+        <Column Name="Title" DataType="String" Master="True" Length="100" Nullable="False" Description="标题" />
+        <Column Name="Titlecolor" DataType="String" Length="7" Description="标题颜色" />
+        <Column Name="Subtitle" DataType="String" Length="100" Description="副标题" />
+        <Column Name="Filename" DataType="String" Description="文件名" />
+        <Column Name="Author" DataType="String" Length="30" Description="作者" />
+        <Column Name="Source" DataType="String" Length="30" Description="来源" />
+        <Column Name="Outlink" DataType="String" Length="100" Description="外部链接" />
+        <Column Name="Date" DataType="DateTime" Description="日期" />
+        <Column Name="Ico" DataType="String" Length="100" Description="图标" />
+        <Column Name="Pics" DataType="String" Length="1000" Description="图片集" />
+        <Column Name="Content" DataType="String" RawType="LONGTEXT" Length="65535" Description="内容" />
+        <Column Name="Tags" DataType="String" Length="500" Description="标签" />
+        <Column Name="Enclosure" DataType="String" Length="100" Description="附件" />
+        <Column Name="Keywords" DataType="String" Length="200" Description="关键词" />
+        <Column Name="Description" DataType="String" Length="500" Description="描述" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="IsTop" DataType="Boolean" Description="是否置顶" />
+        <Column Name="IsRecommend" DataType="Boolean" Description="是否推荐" />
+        <Column Name="IsHeadline" DataType="Boolean" Description="是否头条" />
+        <Column Name="Visits" DataType="Int32" Description="访问数" />
+        <Column Name="Likes" DataType="Int32" Description="点赞数" />
+        <Column Name="Oppose" DataType="Int32" Description="反对数" />
+        <Column Name="CreateUser" DataType="String" Length="30" Description="创建用户" />
+        <Column Name="UpdateUser" DataType="String" Length="20" Description="更新用户" />
+        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" />
+        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" />
+        <Column Name="Picstitle" DataType="String" Length="1000" Description="图片标题" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" />
+        <Index Columns="Date" />
+        <Index Columns="Filename" />
+        <Index Columns="ContentSortID" />
+        <Index Columns="Sorting" />
+        <Index Columns="Status" />
+        <Index Columns="ContentSortSubID" />
+        <Index Columns="Sorting,Istop,IsRecommend,IsHeadline,Date,Id" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsContent_ext" Description="内容扩展字段表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" PrimaryKey="True" Description="扩展ID" />
+        <Column Name="ContentId" DataType="Int32" Description="内容ID" />
+      </Columns>
+      <Indexes>
+        <Index Columns="ContentId" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsContent_Sort" Description="内容分类表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="Pid" DataType="Int32" Description="父级代码" />
+        <Column Name="ModelID" DataType="Int32" Map="CmsModel@ID@Name" Description="模型代码" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
+        <Column Name="Subname" DataType="String" Length="200" Description="副名称" />
+        <Column Name="ListTpl" DataType="String" Description="列表模板" />
+        <Column Name="ContentTpl" DataType="String" Description="内容模板" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="Outlink" DataType="String" Length="100" Description="外部链接" />
+        <Column Name="Ico" DataType="String" Length="100" Description="图标" />
+        <Column Name="Pic" DataType="String" Length="100" Description="图片" />
+        <Column Name="Title" DataType="String" Length="100" Description="标题" />
+        <Column Name="Keywords" DataType="String" Length="200" Description="关键词" />
+        <Column Name="Description" DataType="String" Length="500" Description="描述" />
+        <Column Name="Filename" DataType="String" Length="30" Description="文件名" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+        <Column Name="Def1" DataType="String" Length="1000" Description="预留字段1" />
+        <Column Name="Def2" DataType="String" Length="1000" Description="预留字段2" />
+        <Column Name="Def3" DataType="String" Length="1000" Description="预留字段3" />
+        <Column Name="Def4" DataType="String" Length="1000" Description="预留字段1" />
+        <Column Name="Def5" DataType="String" Length="1000" Description="预留字段2" />
+        <Column Name="Def6" DataType="String" Length="1000" Description="预留字段3" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" />
+        <Index Columns="PID" />
+        <Index Columns="AreaID,PID" />
+        <Index Columns="ModelID" />
+        <Index Columns="Sorting" />
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsExtfield" Description="扩展字段表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="ContentSortID" DataType="Int32" Map="CmsContent_Sort@ID@Name" Description="模型代码" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
+        <Column Name="Type" DataType="String" Length="2" Description="类型" />
+        <Column Name="Value" DataType="String" Length="500" Description="值" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+      </Columns>
+      <Indexes>
+        <Index Columns="ContentSortID" />
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsForm" Description="自定义表单">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="表单名称" />
+        <Column Name="TableName" DataType="String" Length="30" Description="数据表名称" />
+      </Columns>
+    </Table>
+    <Table Name="CmsForm_Field" Description="自定义表单字段表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="FormID" DataType="Int32" Map="CmsForm@ID@Name" Description="自定义表单ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
+        <Column Name="LabelType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.ItemType" />
+        <Column Name="Value" DataType="String" Length="500" Description="值" />
+        <Column Name="Length" DataType="Int32" Description="length" />
+        <Column Name="Required" DataType="Boolean" Description="必填" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+      </Columns>
+      <Indexes>
+        <Index Columns="sorting" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsLabel" Description="标签管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
+        <Column Name="Value" DataType="String" RawType="LONGTEXT" Length="65535" Description="值" />
+        <Column Name="LabelType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.ItemType" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsLink_Group" Description="友情链接组">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" />
+        <Index Columns="Name" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsLink" Description="友情链接表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="LinkGroupID" DataType="Int32" Map="CmsLink_Group@ID@Name" Description="组ID" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="Link" DataType="String" Length="100" Description="友情链接" />
+        <Column Name="Logo" DataType="String" Length="100" Description="图标" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+      </Columns>
+      <Indexes>
+        <Index Columns="sorting" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsModel" Description="模型管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="ModelType" DataType="Boolean" Description="类型" />
+        <Column Name="Url" DataType="String" Length="100" Description="Url" />
+        <Column Name="ListTpl" DataType="String" Description="列表模板" />
+        <Column Name="ContentTpl" DataType="String" Description="内容模板" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="Issystem" DataType="Boolean" Description="是否系统模型" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+        <Index Columns="ModelType" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsSlide_Group" Description="幻灯片组">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsSlide" Description="幻灯片表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="SlideGroupID" DataType="Int32" Map="CmsSlide_Group@ID@Name" Description="组ID" />
+        <Column Name="Title" DataType="String" Master="True" Description="标题" />
+        <Column Name="Subtitle" DataType="String" Length="100" Description="副标题" />
+        <Column Name="Pic" DataType="String" Length="100" Description="图片" />
+        <Column Name="Link" DataType="String" Length="100" Description="link" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+      </Columns>
+    </Table>
+    <Table Name="CmsTags" Description="标签表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="Link" DataType="String" Length="200" Description="link" />
+      </Columns>
+      <Indexes>
+        <Index Columns="AreaID" />
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+  </Tables>
+</EntityModel>

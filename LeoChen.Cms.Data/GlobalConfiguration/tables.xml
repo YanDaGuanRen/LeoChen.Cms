@@ -1,0 +1,121 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<EntityModel xmlns:xs="http://www.w3.org/2001/XMLSchema-instance" xs:schemaLocation="https://newlifex.com https://newlifex.com/Model202509.xsd" schemaLocation="https://newlifex.com/Model202407.xsd" Document="https://newlifex.com/xcode/model" xmlns="https://newlifex.com/Model202509.xsd">
+  <Option>
+    <!--类名模板。其中{name}替换为Table.Name，如{name}Model/I{name}Dto等-->
+    <ClassNameTemplate />
+    <!--显示名模板。其中{displayName}替换为Table.DisplayName-->
+    <DisplayNameTemplate />
+    <!--基类。可能包含基类和接口，其中{name}替换为Table.Name-->
+    <BaseClass>Entity</BaseClass>
+    <!--命名空间-->
+    <Namespace>LeoChen.Cms.Data</Namespace>
+    <!--输出目录-->
+    <Output>.\</Output>
+    <!--是否使用中文文件名。默认false-->
+    <ChineseFileName>False</ChineseFileName>
+    <!--用于生成Copy函数的参数类型。例如{name}或I{name}-->
+    <ModelNameForCopy />
+    <!--带有索引器。实现IModel接口-->
+    <HasIModel>False</HasIModel>
+    <!--可为null上下文。生成String?等-->
+    <Nullable>False</Nullable>
+    <!--数据库连接名-->
+    <ConnName>Membership</ConnName>
+    <!--模型类模版。设置后生成模型类，用于接口数据传输，例如{name}Model-->
+    <ModelClass>{name}Model</ModelClass>
+    <!--模型类输出目录。默认当前目录的Models子目录-->
+    <ModelsOutput>.\Models\</ModelsOutput>
+    <!--模型接口模版。设置后生成模型接口，用于约束模型类和实体类，例如I{name}-->
+    <ModelInterface>I{name}</ModelInterface>
+    <!--模型接口输出目录。默认当前目录的Interfaces子目录-->
+    <InterfacesOutput>.\Interfaces\</InterfacesOutput>
+    <!--用户实体转为模型类的模型类。例如{name}或{name}DTO-->
+    <ModelNameForToModel />
+    <!--命名格式。Default/Upper/Lower/Underline-->
+    <NameFormat>Default</NameFormat>
+    <!--魔方区域显示名-->
+    <DisplayName>全局配置</DisplayName>
+    <!--魔方控制器输出目录-->
+    <CubeOutput>../../LeoChen.Cms/Areas/GlobalConfiguration</CubeOutput>
+  </Option>
+  <Tables>
+    <Table Name="CmsArea" Description="区域管理">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="Domain" DataType="String" Length="100" Description="域名" />
+        <Column Name="IsSystem" DataType="Boolean" DefaultValue="False" Description="是否默认" />
+        <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+        <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+        <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+        <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsLabel" Description="定制标签">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
+        <Column Name="Value" DataType="String" RawType="LONGTEXT" Length="65535" Description="值" />
+        <Column Name="LabelType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.CmsItemType" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+        <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+        <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+        <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+        <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsModel" Description="模型管理表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="Name" DataType="String" Master="True" Description="名称" />
+        <Column Name="ModelType" DataType="Boolean" Description="类型" />
+        <Column Name="Url" DataType="String" Length="100" Description="Url" />
+        <Column Name="ListTpl" DataType="String" Description="列表模板" />
+        <Column Name="ContentTpl" DataType="String" Description="内容模板" />
+        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="IsSystem" DataType="Boolean" Description="是否系统模型" />
+        <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+        <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+        <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+        <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+        <Index Columns="ModelType" />
+      </Indexes>
+    </Table>
+    <Table Name="CmsExtfield" Description="扩展字段表">
+      <Columns>
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="ContentSortID" DataType="Int32" Map="CmsContent_Sort@ID@Name" Description="模型代码" />
+        <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
+        <Column Name="Type" DataType="String" Length="2" Description="类型" />
+        <Column Name="Value" DataType="String" Length="500" Description="值" />
+        <Column Name="Description" DataType="String" Length="30" Description="描述" />
+        <Column Name="Sorting" DataType="Int32" Description="排序" />
+        <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+        <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+        <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+        <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+      </Columns>
+      <Indexes>
+        <Index Columns="Name" Unique="True" />
+        <Index Columns="ContentSortID" />
+      </Indexes>
+    </Table>
+  </Tables>
+</EntityModel>

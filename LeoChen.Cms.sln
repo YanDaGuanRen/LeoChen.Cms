@@ -1,0 +1,59 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31717.71
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.CmsPlus", "LeoChen.CmsPlus\LeoChen.CmsPlus.csproj", "{19B49000-6788-06BB-9076-385C020447CE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.Cms.DataPlus", "LeoChen.Cms.DataPlus\LeoChen.Cms.DataPlus.csproj", "{E34C2132-C479-B423-F35E-8AAE466C90B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NewLife.CubeMini", "NewLife.CubeMini\NewLife.CubeMini.csproj", "{E229E74C-D287-CF58-13DE-A8F023548B0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "多租户", "多租户", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "急速版", "急速版", "{676E5F81-61AB-428A-8395-6B0C6453ED95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.Cms", "LeoChen.Cms\LeoChen.Cms.csproj", "{EF05D094-17BD-44B7-5ABB-2750DE6DBB95}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.Cms.Data", "LeoChen.Cms.Data\LeoChen.Cms.Data.csproj", "{2FE82FDE-A956-8655-28B2-199D5969ACEB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{19B49000-6788-06BB-9076-385C020447CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19B49000-6788-06BB-9076-385C020447CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19B49000-6788-06BB-9076-385C020447CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19B49000-6788-06BB-9076-385C020447CE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E34C2132-C479-B423-F35E-8AAE466C90B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E34C2132-C479-B423-F35E-8AAE466C90B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E34C2132-C479-B423-F35E-8AAE466C90B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E34C2132-C479-B423-F35E-8AAE466C90B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E229E74C-D287-CF58-13DE-A8F023548B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E229E74C-D287-CF58-13DE-A8F023548B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E229E74C-D287-CF58-13DE-A8F023548B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E229E74C-D287-CF58-13DE-A8F023548B0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF05D094-17BD-44B7-5ABB-2750DE6DBB95}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF05D094-17BD-44B7-5ABB-2750DE6DBB95}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF05D094-17BD-44B7-5ABB-2750DE6DBB95}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF05D094-17BD-44B7-5ABB-2750DE6DBB95}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2FE82FDE-A956-8655-28B2-199D5969ACEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2FE82FDE-A956-8655-28B2-199D5969ACEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2FE82FDE-A956-8655-28B2-199D5969ACEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2FE82FDE-A956-8655-28B2-199D5969ACEB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{19B49000-6788-06BB-9076-385C020447CE} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{E34C2132-C479-B423-F35E-8AAE466C90B1} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{EF05D094-17BD-44B7-5ABB-2750DE6DBB95} = {676E5F81-61AB-428A-8395-6B0C6453ED95}
+		{2FE82FDE-A956-8655-28B2-199D5969ACEB} = {676E5F81-61AB-428A-8395-6B0C6453ED95}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {BE924F3A-C35B-41BB-9987-B45CA13A8723}
+	EndGlobalSection
+EndGlobal
