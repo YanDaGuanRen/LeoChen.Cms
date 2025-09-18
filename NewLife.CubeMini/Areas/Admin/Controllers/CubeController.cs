@@ -14,11 +14,6 @@ namespace NewLife.Cube.Areas.Admin.Controllers;
 public class CubeController : ConfigController<CubeSetting>
 {
     private Boolean _has;
-    private readonly UIService _uIService;
-
-    /// <summary>实例化</summary>
-    /// <param name="uIService"></param>
-    public CubeController(UIService uIService) => _uIService = uIService;
 
     /// <summary>执行前</summary>
     /// <param name="filterContext"></param>
@@ -26,27 +21,28 @@ public class CubeController : ConfigController<CubeSetting>
     {
         if (!_has)
         {
+            var acelist = new List<string>() { "Ace" };
             var list = GetMembers(typeof(CubeSetting));
             var df = list.FirstOrDefault(e => e.Name == "Theme");
             if (df != null)
             {
-                df.Description = $"可选主题 {_uIService.Themes.Join("/")}";
-                df.DataSource = e => _uIService.Themes.ToDictionary(e => e, e => e);
+                df.Description = $"可选主题 {acelist.Join("/")}";
+                df.DataSource = e => acelist.ToDictionary(e => e, e => e);
             }
 
             df = list.FirstOrDefault(e => e.Name == "Skin");
             if (df != null)
             {
-                df.Description = $"可选皮肤 {_uIService.Skins.Join("/")}";
-                df.DataSource = e => _uIService.Skins.ToDictionary(e => e, e => e);
+                df.Description = $"可选皮肤 {acelist.Join("/")}";
+                df.DataSource = e => acelist.ToDictionary(e => e, e => e);
             }
 
             df = list.FirstOrDefault(e => e.Name == "EChartsTheme");
             if (df != null)
             {
-                var themes = _uIService.GetEChartsThemes();
-                df.Description = $"可选主题 {themes.Join("/")}";
+                var themes = new List<String>() ;
                 themes.Insert(0, "default");
+                df.Description = $"可选主题 {themes.Join("/")}";
                 df.DataSource = e => themes.ToDictionary(e => e, e => e);
             }
 

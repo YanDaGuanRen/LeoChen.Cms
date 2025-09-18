@@ -171,7 +171,6 @@ public static class CubeService
         services.TryAddSingleton<ICacheProvider, CacheProvider>();
 
         // 服务
-        services.AddSingleton<UIService>();
         services.AddSingleton<PasswordService>();
         services.AddSingleton<UserService>();
         services.AddSingleton<AccessService>();
@@ -396,6 +395,7 @@ public static class CubeService
         app.UseMiddleware<RunTimeMiddleware>();
         app.UseMiddleware<TenantMiddleware>();
 
+        //静态文件
         if (env != null) app.UseCubeDefaultUI(env);
 
         // 设置默认路由。如果外部已经执行 UseRouting，则直接注册
