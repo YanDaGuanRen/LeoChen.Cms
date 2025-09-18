@@ -17,6 +17,17 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.Cms", "LeoChen.Cms\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LeoChen.Cms.Data", "LeoChen.Cms.Data\LeoChen.Cms.Data.csproj", "{2FE82FDE-A956-8655-28B2-199D5969ACEB}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{B52A81F6-B1BE-43E3-97DB-C06D4ADF5268}"
+	ProjectSection(SolutionItems) = preProject
+		.gitattributes = .gitattributes
+		.gitignore = .gitignore
+		LICENSE.txt = LICENSE.txt
+		.github\workflows\publish-beta.yml = .github\workflows\publish-beta.yml
+		.github\workflows\publish.yml = .github\workflows\publish.yml
+		ReadMe.MD = ReadMe.MD
+		.github\workflows\test.yml = .github\workflows\test.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
