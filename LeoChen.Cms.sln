@@ -22,8 +22,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other", "Other", "{B52A81F6
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
 		LICENSE.txt = LICENSE.txt
-		.github\workflows\publish-beta.yml = .github\workflows\publish-beta.yml
-		.github\workflows\publish.yml = .github\workflows\publish.yml
 		ReadMe.MD = ReadMe.MD
 		.github\workflows\test.yml = .github\workflows\test.yml
 	EndProjectSection
