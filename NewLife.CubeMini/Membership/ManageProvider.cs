@@ -98,7 +98,6 @@ public class ManageProvider2 : ManageProvider
         else
             user = base.Login(name, password, remember);
 
-        user = CheckAgent(user) as User;
         Current = user;
 
         // 过期时间
@@ -173,55 +172,7 @@ public class ManageProvider2 : ManageProvider
 
         return user;
     }
-
-    /// <summary>检查委托代理</summary>
-    /// <param name="user"></param>
-    /// <returns></returns>
-    public IManageUser CheckAgent(IManageUser user)
-    {
-        if (user == null) return user;
-
-        // 查找该用户是否有可用待立项，按照创建代理的先后顺序
-        var list = PrincipalAgent.GetAllValidByAgentId(user.ID);
-        if (list.Count == 0) return user;
-
-        // 脏数据检查
-        foreach (var item in list)
-        {
-            // 没有次数或者已过期，则禁用
-            if (item.Enable && (item.Times == 0 || item.Expire.Year > 2000 && item.Expire < DateTime.Now))
-            {
-                item.Enable = false;
-                item.Update();
-            }
-        }
-
-        // 查找一个可用项
-        var pa = list.FirstOrDefault(e => e.Enable);
-        if (pa == null || pa.Principal == null) return user;
-
-        var roles = pa.Principal?.Roles;
-        if (roles != null && roles.Any(e => e.IsSystem))
-        {
-            pa.Enable = false;
-            pa.Remark = "安全起见，不得代理系统管理员";
-            pa.Update();
-
-            LogProvider.Provider.WriteLog("用户", "代理", false, $"安全起见，[{pa.AgentName}]不得代理系统管理员[{pa.PrincipalName}]的身份权限", pa.AgentId, pa.AgentName);
-
-            return user;
-        }
-
-        pa.Times--;
-        if (pa.Times == 0) pa.Enable = false;
-        pa.Update();
-
-        LogProvider.Provider.WriteLog("用户", "委托", true, $"委托[{pa.AgentName}]使用[{pa.PrincipalName}]的身份权限", pa.PrincipalId, pa.PrincipalName);
-        LogProvider.Provider.WriteLog("用户", "代理", true, $"[{pa.AgentName}]代理使用[{pa.PrincipalName}]的身份权限", pa.AgentId, pa.AgentName);
-
-        return pa.Principal as IManageUser;
-    }
-
+    
     /// <summary>注销</summary>
     public override void Logout()
     {

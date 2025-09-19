@@ -37,53 +37,5 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
   </ItemGroup>
-
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\layui.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\layui_cube.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\layui_main_cube.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\code.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\laydate\default\laydate.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\icon-ext.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\icon.png" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\layer.css" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\loading-0.gif" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\loading-1.gif" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\css\modules\layer\default\loading-2.gif" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\font\iconfont.eot" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\font\iconfont.svg" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\font\iconfont.ttf" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\font\iconfont.woff" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\font\iconfont.woff2" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\layui.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\layui_cube.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\layui_main_cube.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\all.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\carousel.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\code.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\colorpicker.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\demo.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\dropdown.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\element.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\element_cube.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\flow.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\form.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\jquery.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\lay.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\laydate.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\layedit.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\layer.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\laypage.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\laytpl.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\layui.all.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\mobile.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\rate.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\slider.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\table.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\transfer.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\tree.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\upload.js" />
-    <_ContentIncludedByDefault Remove="wwwroot\CubeContent\layui\modules\util.js" />
-  </ItemGroup>
-  
+      
 </Project>

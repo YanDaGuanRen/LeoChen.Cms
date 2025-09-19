@@ -195,9 +195,7 @@ public class SsoProvider
         log?.WriteLog(typeof(User), "SSO登录", true, $"[{user}]从[{client.Name}]的[{client.UserName ?? client.NickName}]登录", user.ID, user + "");
 
         if (!user.Enable) throw new InvalidOperationException($"用户[{user}]已禁用！");
-
-        // 登录成功，保存当前用户
-        if (prv is ManageProvider2 prv2) user = prv2.CheckAgent(user);
+        
         prv.Current = user;
 
         // 单点登录不要保存Cookie，让它在Session过期时请求认证中心
