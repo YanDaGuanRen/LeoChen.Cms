@@ -5,6 +5,27 @@
     var fs = Model as List<FileItem>;
     var r = ViewBag.Current as String;
     var clips = ViewBag.Clip as ICollection<FileItem>;
+    var message = ViewBag.Message as String;
+}
+@if (!message.IsNullOrEmpty())
+{
+    <div class="alert alert-info alert-dismissible fade in" role="alert" id="messageAlert">
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+        @message
+    </div>
+    <script>  
+        setTimeout(function() {
+            var alert = document.getElementById('messageAlert');
+            if (alert) {
+                alert.classList.remove('in');
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 200);
+            }
+        }, 2000);
+    </script>
 }
 <div class="form-inline">
     <form action="~/Admin/File" id="tool" method="post">
@@ -19,16 +40,17 @@
                     打开
                 </button>
             </span>
-        </div>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="glyphicon glyphicon-file"></i>
-            </span>
-            <input name="file" type="file" id="file" placeholder="上传文件" data-action="upload" data-url="/Admin/File/Upload" data-fields="r" />
-        </div>
+
+                <span class="input-group-btn" style="left: 10px;">
+                    <span class="btn btn-primary btn-sm btn-file">
+                        <span class="glyphicon glyphicon-upload"></span>
+                        选择文件 <input name="file" type="file" id="file" data-action="upload" data-url="/Admin/File/Upload" data-fields="r" />
+                    </span>
+                </span>
+            </div>
         @if (clips.Count > 0)
         {
-            <div class="input-group">
+            <div class="input-group " style="left: 20px;">
                 <span class="input-group-addon">
                     <i class="glyphicon glyphicon-floppy-disk" title="剪切板共有 @clips.Count 项">@clips.Count</i>
                 </span>
@@ -56,68 +78,96 @@
 </div>
 <table class="table table-bordered table-hover table-striped table-condensed">
     <thead>
-        <tr>
-            <th class="text-center"><a href="~/Admin/File?r=@r&sort=name">名称</a></th>
-            <th class="text-center"><a href="~/Admin/File?r=@r&sort=size">大小</a></th>
-            <th class="text-center"><a href="~/Admin/File?r=@r&sort=lastwrite">修改时间</a></th>
-            <th class="text-center">复制</th>
-            <th class="text-center">压缩</th>
-            <th class="text-center">删除</th>
-        </tr>
+    <tr>
+        <th class="text-center"><a href="~/Admin/File?r=@r&sort=name">名称</a></th>
+        <th class="text-center"><a href="~/Admin/File?r=@r&sort=size">大小</a></th>
+        <th class="text-center"><a href="~/Admin/File?r=@r&sort=lastwrite">修改时间</a></th>
+        <th class="text-center">复制</th>
+        <th class="text-center">压缩</th>
+        <th class="text-center">删除</th>
+    </tr>
     </thead>
     <tbody>
-        @foreach (var item in fs)
-        {
-            <tr>
-                @if (item.LastWrite.Year > 2000)
+    @foreach (var item in fs)
+    {
+        <tr>
+            @if (item.LastWrite.Year > 2000)
+            {
+                if (item.Directory)
                 {
-                    if (item.Directory)
-                    {
-                        <td>&nbsp;&nbsp;<a href="~/Admin/File?r=@item.FullName" title="进入目录">@item.Name</a></td>
-                    }
-                    else
-                    {
-                        <td>&nbsp;&nbsp;<a href="~/Admin/File/Download?r=@item.FullName" title="下载文件">@item.Name</a></td>
-                    }
-                    <td class="text-right">@item.Size</td>
-                    <td class="text-center">@item.LastWrite.ToFullString("")</td>
-                    <td class="text-center">
-                        @if (!clips.Any(e => e.FullName == item.FullName))
-                        {
-                            <a href="~/Admin/File/Copy?r=@r&f=@item.FullName" title="复制到剪切板，然后去目标目录粘贴">复制</a>
-                        }
-                        else
-                        {
-                            <a href="~/Admin/File/CancelCopy?r=@r&f=@item.FullName" title="从剪切板移除">取消复制</a>
-                        }
-                    </td>
-                    @if (item.Name.EndsWithIgnoreCase(".zip"))
-                    {
-                        <td class="text-center"><a href="~/Admin/File/Decompress?r=@item.FullName" title="解压缩到当前目录">解压缩</a></td>
-                    }
-                    else
-                    {
-                        <td class="text-center"><a href="~/Admin/File/Compress?r=@item.FullName" title="压缩到当前目录，加上时间后缀">压缩</a></td>
-                    }
-                    <td class="text-center"><a href="~/Admin/File/Delete?r=@item.FullName" onclick="return confirm('确认删除？');">删除</a></td>
+                    <td>&nbsp;&nbsp;<a href="~/Admin/File?r=@item.FullName" title="进入目录">@item.Name</a></td>
                 }
                 else
                 {
-                    if (item.Directory)
+                    <td>&nbsp;&nbsp;<a href="~/Admin/File/Download?r=@item.FullName" title="下载文件">@item.Name</a></td>
+                }
+                <td class="text-right">@item.Size</td>
+                <td class="text-center">@item.LastWrite.ToFullString("")</td>
+                <td class="text-center">
+                    @if (!clips.Any(e => e.FullName == item.FullName))
                     {
-                        <td>&nbsp;&nbsp;<a href="~/Admin/File?r=@item.FullName" title="进入目录">@item.Name</a></td>
+                        <a href="~/Admin/File/Copy?r=@r&f=@item.FullName" title="复制到剪切板，然后去目标目录粘贴">复制</a>
                     }
                     else
                     {
-                        <td>&nbsp;&nbsp;@item.Name</td>
+                        <a href="~/Admin/File/CancelCopy?r=@r&f=@item.FullName" title="从剪切板移除">取消复制</a>
                     }
-                    <td class="text-right">@item.Size</td>
-                    <td class="text-center">@item.LastWrite.ToFullString("")</td>
-                    <td></td>
-                    <td></td>
-                    <td></td>
+                </td>
+                @if (item.Name.EndsWithIgnoreCase(".zip"))
+                {
+                    <td class="text-center"><a href="~/Admin/File/Decompress?r=@item.FullName" title="解压缩到当前目录">解压缩</a></td>
                 }
-            </tr>
-        }
+                else
+                {
+                    <td class="text-center"><a href="~/Admin/File/Compress?r=@item.FullName" title="压缩到当前目录，加上时间后缀">压缩</a></td>
+                }
+                <td class="text-center"><a href="~/Admin/File/Delete?r=@item.FullName" onclick="return confirm('确认删除？');">删除</a></td>
+            }
+            else
+            {
+                if (item.Directory)
+                {
+                    <td>&nbsp;&nbsp;<a href="~/Admin/File?r=@item.FullName" title="进入目录">@item.Name</a></td>
+                }
+                else
+                {
+                    <td>&nbsp;&nbsp;@item.Name</td>
+                }
+                <td class="text-right">@item.Size</td>
+                <td class="text-center">@item.LastWrite.ToFullString("")</td>
+                <td></td>
+                <td></td>
+                <td></td>
+            }
+        </tr>
+    }
     </tbody>
 </table>
+<style>   
+    .btn-file {
+        position: relative;
+        margin-left: 10px;
+        overflow: hidden;
+        padding: 6px 12px;
+        font-size: 14px;
+        line-height: 1.42857143;
+        border-radius: 4px;
+        height: 34.94px;
+    }
+
+        .btn-file input[type=file] {
+            position: absolute;
+            top: 0;
+            right: 0;
+            min-width: 100%;
+            min-height: 100%;
+            font-size: 100px;
+            text-align: right;
+            filter: alpha(opacity=0);
+            opacity: 0;
+            outline: none;
+            background: #428bca;
+            cursor: inherit;
+            display: block;
+        }
+</style>

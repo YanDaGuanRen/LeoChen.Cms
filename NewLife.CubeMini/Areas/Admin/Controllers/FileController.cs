@@ -15,12 +15,22 @@ public class FileController : ControllerBaseX
 {
     #region 基础
 
-    private String Root { get; set; }
+    private static String Root { get; set; }
+
+    static FileController()
+    {
+        var set = CubeSetting.Current;
+        var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
+        Root = $"{CubeSetting.Current.WebRootPath}{tpath}/{set.UploadPath}".GetFullPath();
+        Root = Root.Replace("\\", Path.DirectorySeparatorChar + "").Replace("/", Path.DirectorySeparatorChar + "");
+    }
+
 
     private FileInfo GetFile(String r)
     {
         if (r.IsNullOrEmpty()) return null;
-
+        r = r.Replace("\\", Path.DirectorySeparatorChar + "").Replace("/", Path.DirectorySeparatorChar + "");
+        r = r.TrimStart(Path.DirectorySeparatorChar + "").TrimEnd(Path.DirectorySeparatorChar + "");
         // 默认根目录
         var fi = Root.CombinePath(r).AsFile();
 
@@ -40,6 +50,8 @@ public class FileController : ControllerBaseX
     private DirectoryInfo GetDirectory(String r)
     {
         if (r.IsNullOrEmpty()) return null;
+        r = r.Replace("\\", Path.DirectorySeparatorChar + "").Replace("/", Path.DirectorySeparatorChar + "");
+        r = r.TrimStart(Path.DirectorySeparatorChar + "").TrimEnd(Path.DirectorySeparatorChar + "");
 
         // 默认根目录
         var di = Root.CombinePath(r).AsDirectory();
@@ -48,7 +60,6 @@ public class FileController : ControllerBaseX
         if (!di.FullName.StartsWithIgnoreCase(root))
         {
             WriteLog("Valid", false, $"目录[{di.FullName}]非法越界！");
-
             return null;
         }
 
@@ -119,18 +130,9 @@ public class FileController : ControllerBaseX
     /// <summary>文件管理主视图</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    public ActionResult Index(String r, String sort, String message = "", int dir = 0)
+    public ActionResult Index(String r, String sort, String message = "")
     {
-        var set = CubeSetting.Current;
-        var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
-        Root = dir switch
-        {
-            1 => $"{set.WebRootPath}{tpath}/Avatar".GetFullPath(),
-            _ => $"{set.WebRootPath}{tpath}/{set.UploadPath}".GetFullPath()
-        };
-
         var di = GetDirectory(r) ?? Root.AsDirectory();
-
         // 计算当前路径
         var fd = di.FullName;
         if (fd.StartsWith(Root)) fd = fd[Root.Length..];
@@ -196,8 +198,8 @@ public class FileController : ControllerBaseX
         }
         else
         {
-            var di = GetDirectory(r) ?? throw new Exception("找不到文件或目录！");
-
+            var di = GetDirectory(r);
+            if (di == null ) return Index(r, null,"找不到文件或目录！");
             p = GetFullName(di.Parent.FullName);
             WriteLog("删除", true, di.FullName);
             di.Delete(true);
@@ -230,7 +232,7 @@ public class FileController : ControllerBaseX
         else
         {
             var di = GetDirectory(r);
-            if (di == null) throw new Exception("找不到文件或目录！");
+            if (di == null) return Index(r, null,"找不到文件或目录！"); 
 
             p = GetFullName(di.Parent.FullName);
             var dst = $"{di.Name}_{DateTime.Now:yyyyMMddHHmmss}.zip";
@@ -249,7 +251,7 @@ public class FileController : ControllerBaseX
     public ActionResult Decompress(String r)
     {
         var fi = GetFile(r);
-        if (fi == null) throw new Exception("找不到文件！");
+        if (fi == null) return Index(r, null,"找不到文件！");
 
         var p = GetFullName(fi.Directory.FullName);
         WriteLog("解压缩", true, fi.FullName);
@@ -272,14 +274,14 @@ public class FileController : ControllerBaseX
     {
         try
         {
-            if (file == null) throw new Exception("未选择文件！");
+            if (file == null) JsonRefresh("未选择文件", 2);
 
             var di = GetDirectory(r) ?? Root.AsDirectory();
-            if (di == null) throw new Exception("找不到目录！");
+            if (di == null) return Index(r, null, "找不到目录！");  
 
             var dest = di.FullName.CombinePath(file.FileName);
             WriteLog("上传", true, dest);
-
+            
             dest.EnsureDirectory(true);
             //System.IO.File.WriteAllBytes(dest, file.OpenReadStream().ReadBytes(-1));
             using var fs = new FileStream(dest, FileMode.OpenOrCreate, FileAccess.ReadWrite);
@@ -300,38 +302,7 @@ public class FileController : ControllerBaseX
         }
     }
 
-    /// <summary>上传文件</summary>
-    /// <param name="r"></param>
-    /// <param name="file"></param>
-    /// <returns></returns>
-    [HttpPost]
-    [EntityAuthorize(PermissionFlags.Insert)]
-    public async Task<ActionResult> UploadLayui(String r, IFormFile file)
-    {
-        try
-        {
-            if (file != null)
-            {
-                var di = GetDirectory(r) ?? Root.AsDirectory();
-                if (di == null) throw new Exception("找不到目录！");
 
-                var dest = di.FullName.CombinePath(file.FileName);
-                WriteLog("上传", true, dest);
-
-                dest.EnsureDirectory(true);
-                //System.IO.File.WriteAllBytes(dest, file.OpenReadStream().ReadBytes(-1));
-                using var fs = new FileStream(dest, FileMode.OpenOrCreate, FileAccess.ReadWrite);
-                await file.CopyToAsync(fs);
-            }
-
-            return Json(new { code = 0, message = "上传成功" });
-        }
-        catch (Exception ex)
-        {
-            WriteLog("上传失败", false, ex + "");
-            return Json(new { code = 500, message = "上传失败" });
-        }
-    }
 
     /// <summary>下载文件</summary>
     /// <param name="r"></param>
@@ -340,7 +311,7 @@ public class FileController : ControllerBaseX
     public ActionResult Download(String r)
     {
         var fi = GetFile(r);
-        if (fi == null) throw new Exception("找不到文件！");
+        if (fi == null) return Index(r, null, "文件路径错误,不能下载！");
 
         WriteLog("下载", true, fi.FullName);
 
@@ -369,12 +340,11 @@ public class FileController : ControllerBaseX
     public ActionResult Copy(String r, String f)
     {
         var fi = GetItem(f);
-        if (fi == null) throw new Exception("找不到文件或目录！");
+        if (fi == null) return Index(r, null,"找不到文件或目录！");
 
         var list = GetClip();
         if (!list.Any(e => e.Raw == fi.Raw)) list.Add(fi);
 
-        //return RedirectToAction("Index", new { r });
         return Index(r, null);
     }
 
@@ -386,7 +356,7 @@ public class FileController : ControllerBaseX
     public ActionResult CancelCopy(String r, String f)
     {
         var fi = GetItem(f);
-        if (fi == null) throw new Exception("找不到文件或目录！");
+        if (fi == null) return Index(r, null,"找不到文件或目录！");
 
         var list = GetClip();
         list.RemoveAll(e => e.Raw == fi.Raw);
@@ -402,21 +372,27 @@ public class FileController : ControllerBaseX
     public ActionResult Paste(String r)
     {
         var di = GetDirectory(r) ?? Root.AsDirectory();
-        if (di == null) throw new Exception("找不到目录！");
+        if (di == null) return Index("", null, "找不到目录");
 
         var list = GetClip();
+        if (list.Count > 0 && (list[0].Raw == di.FullName.CombinePath(list[0].Name))) return Index(r, null, "目录相同,不能复制！");
+        if (list.Count > 0 && (Path.GetFileName(di.FullName)== list[0].Name)) return Index(r, null, "不能复制目录到子目录！");
         foreach (var item in list)
         {
             var dst = di.FullName.CombinePath(item.Name);
-            WriteLog("复制", true, $"{item.Raw} => {dst}");
+            if (item.Raw == dst) return Index(r, null, "目录相同,不能复制！");
             if (item.Directory)
+            {
+                if (Path.GetFileName(di.FullName)== item.Name) return Index(r, null, "不能复制目录到子目录！");
                 item.Raw.AsDirectory().CopyTo(dst);
+            }
             else
+            {
                 System.IO.File.Copy(item.Raw, dst, true);
+            }
+            WriteLog("复制", true, $"{item.Raw} => {dst}");
         }
-
         list.Clear();
-
         return Index(r, null);
     }
 
@@ -427,9 +403,10 @@ public class FileController : ControllerBaseX
     public ActionResult Move(String r)
     {
         var di = GetDirectory(r) ?? Root.AsDirectory();
-        if (di == null) throw new Exception("找不到目录！");
+        if (di == null) return Index(r, null,"找不到目录！");
 
         var list = GetClip();
+        if (list.Count > 0 && (list[0].Raw == di.FullName.CombinePath(list[0].Name))) return Index(r, null, "目录相同,不能移动！");
         foreach (var item in list)
         {
             var dst = di.FullName.CombinePath(item.Name);
