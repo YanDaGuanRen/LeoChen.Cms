@@ -888,16 +888,17 @@ public class SsoController : ControllerBaseX
 
         var set = CubeSetting.Current;
         var av = "";
+            var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
         if (!user.Avatar.IsNullOrEmpty() && !user.Avatar.StartsWith("/"))
         {
-            av = set.AvatarPath.CombinePath(user.Avatar).GetBasePath();
+            av =  $"{set.WebRootPath}{tpath}/{user.Avatar}".GetFullPath();
             if (!System.IO.File.Exists(av)) av = null;
         }
 
         // 用于兼容旧代码
-        if (av.IsNullOrEmpty() && !set.AvatarPath.IsNullOrEmpty())
+        if (av.IsNullOrEmpty())
         {
-            av = set.AvatarPath.CombinePath(user.ID + ".png").GetBasePath();
+            av =  $"{set.WebRootPath}{tpath}/{set.UploadPath}/Avatar/{user.ID}.png".GetFullPath();
             if (!System.IO.File.Exists(av)) av = null;
 
             // 使用最后一个第三方头像

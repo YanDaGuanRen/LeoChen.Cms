@@ -79,7 +79,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
     /// <param name="entity">实体对象</param>
     /// <param name="uploadPath">上传目录。为空时默认UploadPath配置</param>
     /// <returns></returns>
-    protected virtual async Task<IList<String>> SaveFiles(TEntity entity, String uploadPath = null)
+    protected virtual async Task<IList<String>> SaveFiles(TEntity entity, bool dateSplit = true)
     {
         var rs = new List<String>();
         var list = new List<String>();
@@ -98,10 +98,9 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
                 {
                     if (file.Name.EqualIgnoreCase(fi.Name, fi.Name + "_attachment"))
                     {
-                        var att = await SaveFile(entity, file, uploadPath, null);
-                        if (att != null)
+                        var url = await SaveFile(entity, file, dateSplit);
+                        if (url != null)
                         {
-                            var url = ViewHelper.GetAttachmentUrl(att);
                             list.Add(url);
                             rs.Add(url);
                         }
@@ -122,60 +121,49 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
     /// <summary>保存单个文件。新建附件</summary>
     /// <param name="entity">实体对象。读取主键与标题，不修改实体对象</param>
     /// <param name="file">文件</param>
-    /// <param name="uploadPath">上传目录，默认使用UploadPath配置</param>
-    /// <param name="fileName">文件名，如若指定则忽略前面的目录</param>
+    /// <param name="isDateSplit">是否按日期分目录</param>
+    /// <param name="savefileName">保存的文件名</param>
     /// <returns></returns>
-    protected virtual async Task<Attachment> SaveFile(TEntity entity, IFormFile file, String uploadPath, String fileName)
+    protected virtual async Task<String> SaveFile(TEntity entity, IFormFile file, bool isDateSplit = true,string savefileName="")
     {
-        if (file == null) throw new ArgumentNullException(nameof(file));
-        if (fileName.IsNullOrEmpty()) fileName = file.FileName;
-
-        using var span = DefaultTracer.Instance?.NewSpan(nameof(SaveFile), new { name = file.Name, fileName, uploadPath });
-
-        var id = Factory.Unique != null ? entity[Factory.Unique] : null;
-        var att = new Attachment
+        var category = typeof(TEntity).Name;
+        if (entity is User userinfo)
         {
-            Category = typeof(TEntity).Name,
-            Key = id + "",
-            Title = entity + "",
-            //FileName = fileName ?? file.FileName,
-            ContentType = file.ContentType,
-            Size = file.Length,
-            Enable = true,
-            UploadTime = DateTime.Now,
-        };
-
-        if (id != null)
-        {
-            var ss = GetControllerAction();
-            att.Url = $"/{ss[0]}/{ss[1]}?id={id}";
+            category = "Avatar";
+            if (savefileName.IsNullOrEmpty()) savefileName = userinfo.ID + Path.GetExtension(file.FileName);
+            isDateSplit = false;
         }
 
-        var rs = false;
+        if (file == null) throw new ArgumentNullException(nameof(file));
+
+        using var span = DefaultTracer.Instance?.NewSpan(nameof(SaveFile), new { name = file.Name, dateSplit = isDateSplit, deffileName = savefileName });
+
+
+        var rs = "";
         var msg = "";
         try
         {
-            rs = await att.SaveFile(file.OpenReadStream(), uploadPath, fileName);
+            rs = await FileUploadHelper.SaveFile(file, category, isDateSplit,savefileName);
         }
         catch (Exception ex)
         {
-            rs = false;
+            rs = "";
             msg = ex.Message;
-            span?.SetError(ex, att);
-
+            span?.SetError(ex, file.Name);
             throw;
         }
         finally
         {
             // 写日志
             var type = entity.GetType();
-            var log = LogProvider.Provider.CreateLog(type, "上传", rs, $"上传 {file.FileName} ，目录 {uploadPath} ，保存为 {att.FilePath} " + msg, 0, null, UserHost);
-            log.LinkID = id.ToLong();
+            var log = LogProvider.Provider.CreateLog(type, "上传", !rs.IsNullOrEmpty(), $"上传 {file.FileName}  ，保存为 {rs} " + msg, 0, null, UserHost);
             log.SaveAsync();
         }
 
-        return att;
+        return rs;
     }
+
+
 
     /// <summary>
     /// 批量启用或禁用

@@ -49,7 +49,7 @@ public class UserController : EntityController<User, UserModel>
 
         {
             var df = ListFields.AddListField("AvatarImage", "Name");
-            df.Header = "";
+            df.Header = "头像";
             //df.Text = "<img src=\"{Avatar}\" style=\"width:64px;height:64px;\" />";
             //df.Url = "/Admin/User/Edit?id={ID}";
             df.DataVisible = entity => !(entity as User).Avatar.IsNullOrEmpty();
@@ -60,12 +60,12 @@ public class UserController : EntityController<User, UserModel>
         {
             var df = ListFields.GetField("Name") as ListField;
             df.Url = "/Admin/User/Edit?id={ID}";
-            df.Target = "_blank";
+            // df.Target = "_blank";
         }
         {
             var df = ListFields.GetField("DisplayName") as ListField;
             df.Url = "/Admin/User/Edit?id={ID}";
-            df.Target = "_blank";
+            // df.Target = "_blank";
             df.Title = "{Remark}";
         }
 
@@ -111,7 +111,7 @@ public class UserController : EntityController<User, UserModel>
         public String Resolve(DataField field, IModel data)
         {
             var user = data as User;
-            return $"<a href=\"/Admin/User/Edit?id={user.ID}\" target=\"_blank\"><img src=\"{user.GetAvatarUrl()}\" style=\"width:64px;height:64px;\" /></a>";
+            return $"<a href=\"/Admin/User/Edit?id={user.ID}\" target=\"_blank\"><img src=\"{user.GetAvatarUrl()}\" style=\"width:32px;height:32px;\" /></a>";
         }
     }
 
@@ -655,9 +655,9 @@ public class UserController : EntityController<User, UserModel>
                 throw new Exception("仅支持上传图片文件！");
 
             //var set = CubeSetting.Current;
-            //var fileName = user.ID + Path.GetExtension(file.FileName);
-            var att = await SaveFile(user, file, null, null);
-            if (att != null) user.Avatar = ViewHelper.GetAttachmentUrl(att);
+            var fileName = user.ID + ext;
+            var url = await SaveFile(user, file,false ,fileName);
+            if (url != null) user.Avatar =url;
         }
 
         user.Update();

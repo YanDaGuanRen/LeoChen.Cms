@@ -89,77 +89,77 @@ public static class ViewHelper
     internal static Boolean MakeListView(Type entityType, String vpath, List<DataField> fields)
     {
         var tmp = """
-            @model IList<{EntityType}>
-            @using {Namespace}
-            @using NewLife;
-            @using NewLife.Cube;
-            @using NewLife.Web;
-            @using XCode;
-            @using XCode.Configuration;
-            @using XCode.Membership;
-            @{
-                var fact = ViewBag.Factory as IEntityFactory;
-                var page = ViewBag.Page as Pager;
-                var ukey = fact.Unique;
-                var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
-                //var provider = ManageProvider.Provider;
-            }
-            <table class="table table-bordered table-hover table-striped table-condensed table-data-list">
-                <thead>
-                    <tr>
-                        @if (set.EnableSelect && ukey != null)
-                        {
-                            <th class="text-center" style="width:10px;"><input type="checkbox" id="chkAll" title="全选" /></th>
-                        }
-                        @foreach(var item in fields)
-                        {
-                            var sortUrl = item.OriField != null ? page.GetSortUrl(item.OriField.Name) : page.GetSortUrl(item.Name);
-                            <th class="text-center"><a href="@Html.Raw(sortUrl)">@item.DisplayName</a></th>
-                        }
-                        @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
-                        {
-                            <th class="text-center">操作</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var entity in Model)
-                    {
-                        <tr>
-                            @if (set.EnableSelect && ukey != null)
-                            {
-                                <td class="text-center"><input type="checkbox" name="keys" value="@entity.ID" /></td>
-                            }
-                            @foreach (var item in fields)
-                            {
-                                @await Html.PartialAsync("_List_Data_Item", new EntityField(entity, item))
-                            }
-                            @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
-                            {
-                                <td class="text-center">
-                                    @await Html.PartialAsync("_List_Data_Action", (Object)entity)
-                                </td>
-                            }
-                        </tr>
-                    }
-                    @if (page.State is {EntityType})
-                    {
-                        var entity = page.State as {EntityType};
-                        <tr>
-                            @if (set.EnableSelect)
-                            {
-                                <td></td>
-                            }
-                            @await Html.PartialAsync("_List_Data_Stat", entity)
-                            @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
-                            {
-                                <td></td>
-                            }
-                        </tr>
-                    }
-                </tbody>
-            </table>
-            """;
+                  @model IList<{EntityType}>
+                  @using {Namespace}
+                  @using NewLife;
+                  @using NewLife.Cube;
+                  @using NewLife.Web;
+                  @using XCode;
+                  @using XCode.Configuration;
+                  @using XCode.Membership;
+                  @{
+                      var fact = ViewBag.Factory as IEntityFactory;
+                      var page = ViewBag.Page as Pager;
+                      var ukey = fact.Unique;
+                      var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+                      //var provider = ManageProvider.Provider;
+                  }
+                  <table class="table table-bordered table-hover table-striped table-condensed table-data-list">
+                      <thead>
+                          <tr>
+                              @if (set.EnableSelect && ukey != null)
+                              {
+                                  <th class="text-center" style="width:10px;"><input type="checkbox" id="chkAll" title="全选" /></th>
+                              }
+                              @foreach(var item in fields)
+                              {
+                                  var sortUrl = item.OriField != null ? page.GetSortUrl(item.OriField.Name) : page.GetSortUrl(item.Name);
+                                  <th class="text-center"><a href="@Html.Raw(sortUrl)">@item.DisplayName</a></th>
+                              }
+                              @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+                              {
+                                  <th class="text-center">操作</th>
+                              }
+                          </tr>
+                      </thead>
+                      <tbody>
+                          @foreach (var entity in Model)
+                          {
+                              <tr>
+                                  @if (set.EnableSelect && ukey != null)
+                                  {
+                                      <td class="text-center"><input type="checkbox" name="keys" value="@entity.ID" /></td>
+                                  }
+                                  @foreach (var item in fields)
+                                  {
+                                      @await Html.PartialAsync("_List_Data_Item", new EntityField(entity, item))
+                                  }
+                                  @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+                                  {
+                                      <td class="text-center">
+                                          @await Html.PartialAsync("_List_Data_Action", (Object)entity)
+                                      </td>
+                                  }
+                              </tr>
+                          }
+                          @if (page.State is {EntityType})
+                          {
+                              var entity = page.State as {EntityType};
+                              <tr>
+                                  @if (set.EnableSelect)
+                                  {
+                                      <td></td>
+                                  }
+                                  @await Html.PartialAsync("_List_Data_Stat", entity)
+                                  @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+                                  {
+                                      <td></td>
+                                  }
+                              </tr>
+                          }
+                      </tbody>
+                  </table>
+                  """;
         var sb = new StringBuilder();
         var fact = EntityFactory.CreateFactory(entityType);
 
@@ -193,7 +193,8 @@ public static class ViewHelper
             }
 
             // 备注
-            if (!item.Description.IsNullOrEmpty() && item.Description != des) sb.AppendFormat(@" title=""{0}""", item.Description);
+            if (!item.Description.IsNullOrEmpty() && item.Description != des)
+                sb.AppendFormat(@" title=""{0}""", item.Description);
 
             // 内容
             sb.AppendFormat(@"><a href=""@Html.Raw(page.GetSortUrl(""{1}""))"">{0}</a></th>", des, name);
@@ -230,16 +231,20 @@ public static class ViewHelper
                     case TypeCode.Boolean:
                         sb.AppendLine(@"<td class=""text-center"">");
                         sb.Append(ident);
-                        sb.AppendFormat(@"    <i class=""glyphicon glyphicon-@(entity.{0} ? ""ok"" : ""remove"")"" style=""color: @(entity.{0} ? ""green"" : ""red"");""></i>", item.Name);
+                        sb.AppendFormat(
+                            @"    <i class=""glyphicon glyphicon-@(entity.{0} ? ""ok"" : ""remove"")"" style=""color: @(entity.{0} ? ""green"" : ""red"");""></i>",
+                            item.Name);
                         sb.AppendLine();
                         sb.Append(ident);
                         sb.Append(@"</td>");
                         break;
                     case TypeCode.DateTime:
                         if (name2.EndsWith("Date"))
-                            sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""yyyy-MM-dd"")</td>", item.Name);
+                            sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""yyyy-MM-dd"")</td>",
+                                item.Name);
                         else
-                            sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToFullString("""")</td>", item.Name);
+                            sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToFullString("""")</td>",
+                                item.Name);
                         break;
                     case TypeCode.Decimal:
                         sb.AppendFormat(@"<td class=""text-right"">@entity.{0}.ToString(""n2"")</td>", item.Name);
@@ -250,20 +255,29 @@ public static class ViewHelper
                         {
                             var des = item.Description + "";
                             if (des.Contains("十分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("百分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 100).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 100).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("千分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 1000).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 1000).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("万分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10000).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10000).ToString(""p2""))</td>",
+                                    item.Name);
                             else
-                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>",
+                                    item.Name);
                         }
                         else
                         {
                             sb.AppendFormat(@"<td class=""text-right"">@entity.{0}.ToString(""n2"")</td>", item.Name);
                         }
+
                         break;
                     case TypeCode.Byte:
                     case TypeCode.Int16:
@@ -281,18 +295,28 @@ public static class ViewHelper
                         {
                             var des = item.Description + "";
                             if (des.Contains("十分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("百分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 100d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 100d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("千分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 1000d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 1000d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("万分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10000d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10000d).ToString(""p2""))</td>",
+                                    item.Name);
                             else
-                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>",
+                                    item.Name);
                         }
                         else
                             sb.AppendFormat(@"<td class=""text-right"">@entity.{0}.ToString(""n0"")</td>", item.Name);
+
                         break;
                     case TypeCode.String:
                         if (!item.MapField.IsNullOrEmpty())
@@ -300,7 +324,8 @@ public static class ViewHelper
                             if (item.MapProvider != null)
                             {
                                 var prv = item.MapProvider;
-                                sb.AppendFormat(@"<td><a href=""{1}?{2}=@entity.{3}"">@entity.{0}</a></td>", item.Name, prv.EntityType.Name, prv.Key, item.MapField);
+                                sb.AppendFormat(@"<td><a href=""{1}?{2}=@entity.{3}"">@entity.{0}</a></td>", item.Name,
+                                    prv.EntityType.Name, prv.Key, item.MapField);
                             }
                             else
                             {
@@ -311,12 +336,14 @@ public static class ViewHelper
                             BuildIP(item, sb);
                         else
                             sb.AppendFormat(@"<td>@entity.{0}</td>", item.Name);
+
                         break;
                     default:
                         sb.AppendFormat(@"<td>@entity.{0}</td>", item.Name);
                         break;
                 }
             }
+
             sb.AppendLine();
         }
 
@@ -333,9 +360,11 @@ public static class ViewHelper
         return true;
     }
 
-    private static void BuildUser(DataField item, StringBuilder sb) => sb.AppendFormat(@"<td class=""text-center"">@provider.FindByID(entity.{0})</td>", item.Name);
+    private static void BuildUser(DataField item, StringBuilder sb) =>
+        sb.AppendFormat(@"<td class=""text-center"">@provider.FindByID(entity.{0})</td>", item.Name);
 
-    private static void BuildIP(DataField item, StringBuilder sb) => sb.AppendFormat(@"<td class=""text-center"" title=""@entity.{0}.IPToAddress()"">@entity.{0}</td>", item.Name);
+    private static void BuildIP(DataField item, StringBuilder sb) =>
+        sb.AppendFormat(@"<td class=""text-center"" title=""@entity.{0}.IPToAddress()"">@entity.{0}</td>", item.Name);
 
     private static String BuildStat(IList<DataField> fields)
     {
@@ -368,20 +397,29 @@ public static class ViewHelper
                         {
                             var des = item.Description + "";
                             if (des.Contains("十分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("百分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 100).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 100).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("千分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 1000).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 1000).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("万分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10000).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10000).ToString(""p2""))</td>",
+                                    item.Name);
                             else
-                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>",
+                                    item.Name);
                         }
                         else
                         {
                             sb.AppendFormat(@"<td class=""text-right"">@entity.{0}.ToString(""n2"")</td>", item.Name);
                         }
+
                         //sb.AppendFormat(@"<td class=""text-right"">@entity.{0:n2}</td>", item.Name);
                         break;
                     case TypeCode.Byte:
@@ -400,18 +438,28 @@ public static class ViewHelper
                         {
                             var des = item.Description + "";
                             if (des.Contains("十分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("百分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 100d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 100d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("千分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 1000d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 1000d).ToString(""p2""))</td>",
+                                    item.Name);
                             else if (des.Contains("万分之一"))
-                                sb.AppendFormat(@"<td class=""text-center"">@((entity.{0} / 10000d).ToString(""p2""))</td>", item.Name);
+                                sb.AppendFormat(
+                                    @"<td class=""text-center"">@((entity.{0} / 10000d).ToString(""p2""))</td>",
+                                    item.Name);
                             else
-                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>", item.Name);
+                                sb.AppendFormat(@"<td class=""text-center"">@entity.{0}.ToString(""p2"")</td>",
+                                    item.Name);
                         }
                         else
                             sb.AppendFormat(@"<td class=""text-right"">@entity.{0}.ToString(""n0"")</td>", item.Name);
+
                         break;
                     case TypeCode.String:
                     default:
@@ -419,6 +467,7 @@ public static class ViewHelper
                         break;
                 }
             }
+
             sb.AppendLine();
         }
 
@@ -429,66 +478,66 @@ public static class ViewHelper
     internal static Boolean MakeFormView(Type entityType, String vpath, List<DataField> fields)
     {
         var tmp = """
-            @model {EntityType}
-            @using {Namespace}
-            @using NewLife;
-            @using NewLife.Cube;
-            @using NewLife.Web;
-            @using XCode;
-            @using XCode.Configuration;
-            @using XCode.Membership;
-            @{
-                var entity = Model;
-                var fields = ViewBag.Fields as FieldCollection;
-            }
+                  @model {EntityType}
+                  @using {Namespace}
+                  @using NewLife;
+                  @using NewLife.Cube;
+                  @using NewLife.Web;
+                  @using XCode;
+                  @using XCode.Configuration;
+                  @using XCode.Membership;
+                  @{
+                      var entity = Model;
+                      var fields = ViewBag.Fields as FieldCollection;
+                  }
 
-            @if (groupFields.Count > 1)
-            {
-                var i = 0;
-                var j = 0;
-                <ul class="nav nav-tabs" role="tablist">
-                    @foreach (var item in groupFields)
-                    {
-                        <li class="@(i==0?"active":"")"><a href="@("#item"+i)" data-toggle="tab">@item.Key</a></li>
-                        i++;
-                    }
-                </ul>
-                <div class="tab-content">
-                    @foreach (var group in groupFields)
-                    {
-                        <div class="tab-pane fade in @(j==0?"active":"")" id="@("item"+j)">
-                            <div class="row">
-                                @foreach (var item in group.Value)
-                                {
-                                    if ((!item.PrimaryKey || item.Field != null && !item.Field.IsIdentity) && (item.DataVisible == null || item.DataVisible(entity, item)))
-                                    {
-                                        if (item is FormField formField && !formField.GroupView.IsNullOrEmpty())
-                                            @await Html.PartialAsync(formField.GroupView, new EntityField(entity, item))
-                                        else
-                                            @await Html.PartialAsync("_Form_Group", new EntityField(entity, item))
-                                    }
-                                }
-                            </div>
-                        </div>
-                        j++;
-                    }
-                </div>
-            }
-            else
-            {
-                foreach (var item in fields)
-                {
-                    // 表单页显示非主键或非自增字段
-                    if ((!item.PrimaryKey || item.Field != null && !item.Field.IsIdentity) && (item.DataVisible == null || item.DataVisible(entity, item)))
-                    {
-                        if (item is FormField formField && !formField.GroupView.IsNullOrEmpty())
-                            @await Html.PartialAsync(formField.GroupView, new EntityField(entity, item))
-                        else
-                            @await Html.PartialAsync("_Form_Group", new EntityField(entity, item))
-                    }
-                }
-            }
-            """;
+                  @if (groupFields.Count > 1)
+                  {
+                      var i = 0;
+                      var j = 0;
+                      <ul class="nav nav-tabs" role="tablist">
+                          @foreach (var item in groupFields)
+                          {
+                              <li class="@(i==0?"active":"")"><a href="@("#item"+i)" data-toggle="tab">@item.Key</a></li>
+                              i++;
+                          }
+                      </ul>
+                      <div class="tab-content">
+                          @foreach (var group in groupFields)
+                          {
+                              <div class="tab-pane fade in @(j==0?"active":"")" id="@("item"+j)">
+                                  <div class="row">
+                                      @foreach (var item in group.Value)
+                                      {
+                                          if ((!item.PrimaryKey || item.Field != null && !item.Field.IsIdentity) && (item.DataVisible == null || item.DataVisible(entity, item)))
+                                          {
+                                              if (item is FormField formField && !formField.GroupView.IsNullOrEmpty())
+                                                  @await Html.PartialAsync(formField.GroupView, new EntityField(entity, item))
+                                              else
+                                                  @await Html.PartialAsync("_Form_Group", new EntityField(entity, item))
+                                          }
+                                      }
+                                  </div>
+                              </div>
+                              j++;
+                          }
+                      </div>
+                  }
+                  else
+                  {
+                      foreach (var item in fields)
+                      {
+                          // 表单页显示非主键或非自增字段
+                          if ((!item.PrimaryKey || item.Field != null && !item.Field.IsIdentity) && (item.DataVisible == null || item.DataVisible(entity, item)))
+                          {
+                              if (item is FormField formField && !formField.GroupView.IsNullOrEmpty())
+                                  @await Html.PartialAsync(formField.GroupView, new EntityField(entity, item))
+                              else
+                                  @await Html.PartialAsync("_Form_Group", new EntityField(entity, item))
+                          }
+                      }
+                  }
+                  """;
         var sb = new StringBuilder();
 
         var fact = EntityFactory.CreateFactory(entityType);
@@ -511,20 +560,25 @@ public static class ViewHelper
             {
                 if (i == 0)
                 {
-                    sb.AppendLine(@"            <li class=""active""><a href=""#item" + i + @""" data-toggle=""tab"">" + (item.Key.IsNullOrEmpty() ? "默认" : item.Key) + @"</a></li>");
+                    sb.AppendLine(@"            <li class=""active""><a href=""#item" + i + @""" data-toggle=""tab"">" +
+                                  (item.Key.IsNullOrEmpty() ? "默认" : item.Key) + @"</a></li>");
                 }
                 else
                 {
-                    sb.AppendLine(@"            <li class=""""><a href=""#item" + i + @""" data-toggle=""tab"">" + (item.Key.IsNullOrEmpty() ? "默认" : item.Key) + @"</a></li>");
+                    sb.AppendLine(@"            <li class=""""><a href=""#item" + i + @""" data-toggle=""tab"">" +
+                                  (item.Key.IsNullOrEmpty() ? "默认" : item.Key) + @"</a></li>");
                 }
+
                 i++;
             }
+
             sb.AppendLine(@"    </ul>");
             sb.AppendLine(@"    <div class=""tab-content"">");
             i = 0;
             foreach (var group in groupList)
             {
-                sb.AppendLine(@"            <div class=""tab-pane fade in " + (i == 0 ? "active" : "") + @""" id=""" + ("item" + i) + @""">");
+                sb.AppendLine(@"            <div class=""tab-pane fade in " + (i == 0 ? "active" : "") + @""" id=""" +
+                              ("item" + i) + @""">");
                 sb.AppendLine(@"                <div class=""row"">");
                 foreach (var item in group)
                 {
@@ -538,10 +592,12 @@ public static class ViewHelper
                     BuildFormItem(item, sb, fact);
                     sb.AppendLine("</div>");
                 }
+
                 sb.AppendLine(@"                </div>");
                 sb.AppendLine(@"    </div>");
                 i++;
             }
+
             sb.AppendLine(@"    </div>");
         }
         else
@@ -581,6 +637,7 @@ public static class ViewHelper
         {
             span += 1;
         }
+
         var input = total - label - span;
         var ident = new String(' ', 4 * 1);
 
@@ -590,35 +647,41 @@ public static class ViewHelper
         // 优先处理映射。因为映射可能是字符串
         if (!field.MapField.IsNullOrEmpty() && field.MapProvider != null)
         {
-            sb.AppendLine($"        @Html.ForDropDownList(\"{field.MapField}\", {fact.EntityType.Name}.Meta.AllFields.First(e=>e.Name==\"{field.Name}\").Map.Provider.GetDataSource(), @entity.{field.Name})");
+            sb.AppendLine(
+                $"        @Html.ForDropDownList(\"{field.MapField}\", {fact.EntityType.Name}.Meta.AllFields.First(e=>e.Name==\"{field.Name}\").Map.Provider.GetDataSource(), @entity.{field.Name})");
         }
         else if (field.ReadOnly)
             sb.AppendLine($"        <label class=\"form-control\">@entity.{field.Name}</label>");
         else if (field.Type == typeof(String))
             BuildStringItem(field, sb);
-        else if (fact.EntityType.As<IEntityTree>() && fact.EntityType.GetValue("Setting") is IEntityTreeSetting set && set?.Parent == field.Name)
+        else if (fact.EntityType.As<IEntityTree>() && fact.EntityType.GetValue("Setting") is IEntityTreeSetting set &&
+                 set?.Parent == field.Name)
             sb.AppendLine($"        @Html.ForEditor({fact.EntityType.Name}._.{field.Name}, entity)");
         else
         {
             switch (field.Type.GetTypeCode())
             {
                 case TypeCode.Boolean:
-                    sb.AppendLine($"        @Html.CheckBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"chkSwitch\" }})");
+                    sb.AppendLine(
+                        $"        @Html.CheckBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"chkSwitch\" }})");
                     break;
                 case TypeCode.DateTime:
                     //sb.AppendLine($"        @Html.ForDateTime(\"{field.Name}\", @entity.{field.Name})");
                     sb.AppendLine($"        <span class=\"input-group-addon\"><i class=\"fa fa-calendar\"></i></span>");
-                    sb.AppendLine($"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}.ToFullString(\"\"), new {{ @class = \"form-control date form_datetime\" }})");
+                    sb.AppendLine(
+                        $"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}.ToFullString(\"\"), new {{ @class = \"form-control date form_datetime\" }})");
                     break;
                 case TypeCode.Decimal:
                     //sb.AppendLine($"        @Html.ForDecimal(\"{field.Name}\", @entity.{field.Name})");
                     sb.AppendLine($"        <span class=\"input-group-addon\"><i class=\"fa fa-yen\"></i></span>");
-                    sb.AppendLine($"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\" }})");
+                    sb.AppendLine(
+                        $"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\" }})");
                     break;
                 case TypeCode.Single:
                 case TypeCode.Double:
                     //sb.AppendLine($"        @Html.ForDouble(\"{field.Name}\", @entity.{field.Name})");
-                    sb.AppendLine($"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\" }})");
+                    sb.AppendLine(
+                        $"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\" }})");
                     break;
                 case TypeCode.Byte:
                 case TypeCode.SByte:
@@ -631,7 +694,8 @@ public static class ViewHelper
                     if (field.Type.IsEnum)
                         sb.AppendLine($"        @Html.ForEnum(\"{field.Name}\", @entity.{field.Name})");
                     else
-                        sb.AppendLine($"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\", role=\"number\" }})");
+                        sb.AppendLine(
+                            $"        @Html.TextBox(\"{field.Name}\", @entity.{field.Name}, new {{ @class = \"form-control\", role=\"number\" }})");
                     break;
                 case TypeCode.String:
                     BuildStringItem(field, sb);
@@ -644,7 +708,8 @@ public static class ViewHelper
 
         sb.AppendLine(@"    </div>");
 
-        if (!des.IsNullOrEmpty()) sb.AppendLine($"    <span class=\"hidden-xs col-sm-{span}\"><span class=\"middle\">{des}</span></span>");
+        if (!des.IsNullOrEmpty())
+            sb.AppendLine($"    <span class=\"hidden-xs col-sm-{span}\"><span class=\"middle\">{des}</span></span>");
     }
 
     private static void BuildStringItem(DataField field, StringBuilder sb)
@@ -679,14 +744,17 @@ public static class ViewHelper
         }
         else if (field.IsBigText())
         {
-            txt = $"<textarea class=\"{cls}\" cols=\"20\" id=\"{name}\" name=\"{name}\" rows=\"3\">@entity.{name}</textarea>";
+            txt =
+                $"<textarea class=\"{cls}\" cols=\"20\" id=\"{name}\" name=\"{name}\" rows=\"3\">@entity.{name}</textarea>";
         }
 
-        if (txt.IsNullOrEmpty()) txt = $"<input class=\"{cls}\" id=\"{name}\" name=\"{name}\" type=\"{type}\" value=\"@entity.{name}\" />";
+        if (txt.IsNullOrEmpty())
+            txt = $"<input class=\"{cls}\" id=\"{name}\" name=\"{name}\" type=\"{type}\" value=\"@entity.{name}\" />";
 
         if (!ico.IsNullOrEmpty())
         {
-            txt = $"<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-{ico}\"></i></span>{txt}</div>";
+            txt =
+                $"<div class=\"input-group\"><span class=\"input-group-addon\"><i class=\"glyphicon glyphicon-{ico}\"></i></span>{txt}</div>";
         }
 
         sb.AppendLine($"        {txt}");
@@ -695,28 +763,28 @@ public static class ViewHelper
     internal static Boolean MakeSearchView(Type entityType, String vpath, List<DataField> fields)
     {
         var tmp = """
-            @using {Namespace}
-            @using NewLife;
-            @using NewLife.Cube;
-            @using NewLife.Web;
-            @using XCode;
-            @using XCode.Configuration;
-            @using XCode.Membership;
-            @{
-                var fact = ViewBag.Factory as IEntityFactory;
-                var page = ViewBag.Page as Pager;
-            }
-            @*<div class="form-group">
-                @Html.ActionLink("用户链接", "Index", "UserConnect", null, new { @class = "btn btn-success btn-sm" })
-                @Html.ActionLink("用户在线", "Index", "UserOnline", null, new { @class = "btn btn-success btn-sm" })
-                <label for="RoleID" class="control-label">角色：</label>
-                @Html.ForDropDownList("RoleID", Role.FindAllWithCache().Cast<IEntity>().ToList(), page["roldId"], "全部", true)
-                @Html.ForDropDownList("p", VisitStat.FindAllPageName(), page["p"], "全部页面", true)
-                @Html.ForListBox("roleIds", Role.FindAllWithCache(), page["roleIds"])
-            </div>*@
-            @*@await Html.PartialAsync("_SelectDepartment", "departmentId")*@
-            @*@await Html.PartialAsync("_DateRange")*@
-            """;
+                  @using {Namespace}
+                  @using NewLife;
+                  @using NewLife.Cube;
+                  @using NewLife.Web;
+                  @using XCode;
+                  @using XCode.Configuration;
+                  @using XCode.Membership;
+                  @{
+                      var fact = ViewBag.Factory as IEntityFactory;
+                      var page = ViewBag.Page as Pager;
+                  }
+                  @*<div class="form-group">
+                      @Html.ActionLink("用户链接", "Index", "UserConnect", null, new { @class = "btn btn-success btn-sm" })
+                      @Html.ActionLink("用户在线", "Index", "UserOnline", null, new { @class = "btn btn-success btn-sm" })
+                      <label for="RoleID" class="control-label">角色：</label>
+                      @Html.ForDropDownList("RoleID", Role.FindAllWithCache().Cast<IEntity>().ToList(), page["roldId"], "全部", true)
+                      @Html.ForDropDownList("p", VisitStat.FindAllPageName(), page["p"], "全部页面", true)
+                      @Html.ForListBox("roleIds", Role.FindAllWithCache(), page["roleIds"])
+                  </div>*@
+                  @*@await Html.PartialAsync("_SelectDepartment", "departmentId")*@
+                  @*@await Html.PartialAsync("_DateRange")*@
+                  """;
 
         tmp = tmp.Replace("{EntityType}", entityType.Name);
         tmp = tmp.Replace("{Namespace}", entityType.Namespace);
@@ -729,22 +797,22 @@ public static class ViewHelper
     internal static Boolean MakeBatchView(Type entityType, String vpath, List<DataField> fields)
     {
         var tmp = """
-            @using NewLife.Common;
-            @using NewLife.Cube
-            @using XCode
-            @{
-                var user = ViewBag.User as IUser ?? User.Identity as IUser;
-                var fact = ViewBag.Factory as IEntityFactory;
-                var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
-            }
-            @if (set.EnableSelect)
-            {
-                @*<button type="button" class="btn btn-purple btn-sm" data-action="action" data-url="@Url.Action("DeleteSelect")" data-method="post" data-fields="keys,keys2" data-confirm="该操作将删除选中数据并不可恢复！确认删除？" disabled>
-                    <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
-                    批量删除
-                </button>*@
-            }
-            """;
+                  @using NewLife.Common;
+                  @using NewLife.Cube
+                  @using XCode
+                  @{
+                      var user = ViewBag.User as IUser ?? User.Identity as IUser;
+                      var fact = ViewBag.Factory as IEntityFactory;
+                      var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+                  }
+                  @if (set.EnableSelect)
+                  {
+                      @*<button type="button" class="btn btn-purple btn-sm" data-action="action" data-url="@Url.Action("DeleteSelect")" data-method="post" data-fields="keys,keys2" data-confirm="该操作将删除选中数据并不可恢复！确认删除？" disabled>
+                          <span class="ace-icon fa fa-search icon-on-right bigger-110"></span>
+                          批量删除
+                      </button>*@
+                  }
+                  """;
 
         tmp = tmp.Replace("{EntityType}", entityType.Name);
         tmp = tmp.Replace("{Namespace}", entityType.Namespace);
@@ -772,47 +840,28 @@ public static class ViewHelper
         if (user == null || user.Avatar.IsNullOrEmpty()) return null;
 
         // 绝对路径
-        if (user.Avatar.StartsWithIgnoreCase("http://", "https://", "/")) return user.Avatar;
-
+        if (user.Avatar.StartsWithIgnoreCase("http://", "https://")) return user.Avatar;
         var set = CubeSetting.Current;
-
-        if (!user.Avatar.StartsWithIgnoreCase("/Sso/"))
+        var av = "";
+        if (user.Avatar.StartsWithIgnoreCase("/Sso/"))
         {
-            var av = set.AvatarPath.CombinePath(user.Avatar).GetBasePath();
-            if (File.Exists(av)) return "/Cube/Avatar?id=" + user.ID;
+            av = $"/{set.UploadPath}/Avatar/{user.ID}.png";
+        }
+        else
+        {
+            av = user.Avatar;
         }
 
-        // 兼容旧版头像
-        if (!set.AvatarPath.IsNullOrEmpty())
-        {
-            var av = set.AvatarPath.CombinePath(user.ID + ".png").GetBasePath();
-            if (File.Exists(av)) return "/Sso/Avatar?id=" + user.ID;
-        }
+        var avfile = $"{set.WebRootPath}{av}".GetFullPath();
 
-        return null;
+
+        return File.Exists(avfile) ? av : null;
     }
 
-    /// <summary>
-    /// 根据文件名称获取文件地址
-    /// </summary>
-    /// <param name="filename"></param>
-    /// <returns></returns>
-    public static String GetFileUrl(this String filename)
-    {
-        if (filename.IsNullOrEmpty()) return null;
 
-        var set = CubeSetting.Current;
-        if (!filename.IsNullOrEmpty())
-        {
-            // 修正资源访问起始路径
-            var file = set.UploadPath.CombinePath(filename).GetBasePath();
-            if (File.Exists(file)) return set.UploadPath.CombinePath(filename);
-        }
-
-        return null;
-    }
 
     private static Boolean? _IsDevelop;
+
     /// <summary>当前是否开发环境。判断csproj文件</summary>
     /// <returns></returns>
     public static Boolean IsDevelop()
@@ -831,7 +880,9 @@ public static class ViewHelper
         return _IsDevelop.Value;
     }
 
-    private static readonly Dictionary<String, String> _logo_cache = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
+    private static readonly Dictionary<String, String> _logo_cache =
+        new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
+
     /// <summary>获取指定名称的Logo图标</summary>
     /// <param name="name"></param>
     /// <returns></returns>
@@ -881,7 +932,10 @@ public static class ViewHelper
         }
 
         // 如果顶级只有一层，并且至少有三级目录，则提升一级
-        if (menus.Count == 1 && menus[0].Childs.All(m => m.Childs.Count > 0)) { menus = menus[0].Childs; }
+        if (menus.Count == 1 && menus[0].Childs.All(m => m.Childs.Count > 0))
+        {
+            menus = menus[0].Childs;
+        }
 
         var menuTree = MenuTree.GetMenuTree(pMenuTree =>
         {
@@ -889,22 +943,21 @@ public static class ViewHelper
             return subMenus;
         }, list =>
         {
-
             var menuList = (from menu in list
-                                // where m.Visible
-                            select new MenuTree
-                            {
-                                ID = menu.ID,
-                                Name = menu.Name,
-                                DisplayName = menu.DisplayName ?? menu.Name,
-                                FullName = menu.FullName,
-                                Url = menu.Url,
-                                Icon = menu.Icon,
-                                Visible = menu.Visible,
-                                NewWindow = menu.NewWindow,
-                                ParentID = menu.ParentID,
-                                Permissions = menu.Permissions
-                            }).ToList();
+                // where m.Visible
+                select new MenuTree
+                {
+                    ID = menu.ID,
+                    Name = menu.Name,
+                    DisplayName = menu.DisplayName ?? menu.Name,
+                    FullName = menu.FullName,
+                    Url = menu.Url,
+                    Icon = menu.Icon,
+                    Visible = menu.Visible,
+                    NewWindow = menu.NewWindow,
+                    ParentID = menu.ParentID,
+                    Permissions = menu.Permissions
+                }).ToList();
             return menuList.Count > 0 ? menuList : null;
         }, menus);
 
@@ -937,22 +990,11 @@ public static class ViewHelper
 
         return ms;
     }
-
-    /// <summary>获取附件Url</summary>
-    /// <param name="attachment"></param>
-    /// <returns></returns>
-    public static String GetAttachmentUrl(Attachment attachment)
-    {
-        if (!attachment.ContentType.IsNullOrEmpty() && attachment.ContentType.StartsWithIgnoreCase("image/"))
-            return $"/cube/image?id={attachment.Id}{attachment.Extension}";
-
-        return $"/cube/file?id={attachment.Id}{attachment.Extension}";
-    }
-
     /// <summary>是否附件列</summary>
     /// <param name="dc"></param>
     /// <returns></returns>
     public static Boolean IsAttachment(this IDataColumn dc) => dc.ItemType.EqualIgnoreCase("file", "image") || dc.ItemType.StartsWithIgnoreCase("file-", "image-");
+
 
     /// <summary>格式化数据用于显示</summary>
     /// <param name="itemType"></param>
@@ -1025,14 +1067,17 @@ public static class ViewHelper
 public class Bootstrap
 {
     #region 属性
+
     /// <summary>最大列数</summary>
     public Int32 MaxColumn { get; set; } //= 2;
 
     /// <summary>默认标签宽度</summary>
-    public Int32 LabelWidth { get; set; }// = 4;
+    public Int32 LabelWidth { get; set; } // = 4;
+
     #endregion
 
     #region 当前项
+
     ///// <summary>当前项</summary>
     //public FieldItem Item { get; set; }
 
@@ -1052,18 +1097,22 @@ public class Bootstrap
         Type = item.Type;
         Length = item.Length;
     }
+
     #endregion
 
     #region 构造
+
     /// <summary>实例化一个页面助手</summary>
     public Bootstrap()
     {
         MaxColumn = 2;
         LabelWidth = 4;
     }
+
     #endregion
 
     #region 方法
+
     /// <summary>获取分组宽度</summary>
     /// <returns></returns>
     public virtual Int32 GetGroupWidth()
@@ -1075,5 +1124,6 @@ public class Bootstrap
 
         return 12;
     }
+
     #endregion
 }

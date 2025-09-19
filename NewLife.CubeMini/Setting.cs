@@ -33,10 +33,10 @@ public class CubeSetting : Config<CubeSetting>
     [Category("通用")]
     public Boolean ShowRunTime { get; set; } = true;
 
-    /// <summary>头像目录。设定后下载远程头像到本地，默认Avatars子目录，web上一级Avatars。清空表示不抓取</summary>
-    [Description("头像目录。设定后下载远程头像到本地，默认Avatars子目录，web上一级Avatars。清空表示不抓取")]
+    /// <summary>上传目录日期分割格式。默认是按天yyyyMMdd</summary>
+    [Description("上传目录日期分割格式。默认是按天yyyyMMdd 或 按月yyyyMM 或 按年yyyy")]
     [Category("通用")]
-    public String AvatarPath { get; set; } = "Avatars";
+    public String DateSplitFormat { get; set; } = "yyyyMMdd";
 
     /// <summary>上传目录。默认Uploads</summary>
     [Description("上传目录。默认Uploads")]
@@ -338,6 +338,11 @@ public class CubeSetting : Config<CubeSetting>
     protected override void OnLoaded()
     {
         if (StartPage.IsNullOrEmpty()) StartPage = "/Admin/User/Info";
+
+        if (!UploadPath.IsNullOrEmpty()) UploadPath=UploadPath.TrimStart("\\").TrimEnd("\\").TrimStart("/").TrimEnd("/").Replace("\\","/");
+        if (UploadPath.IsNullOrEmpty()) UploadPath = "Uploads";
+        if (!WebRootPath.IsNullOrEmpty()) WebRootPath = WebRootPath.TrimStart("\\").TrimEnd("\\").TrimStart("/").TrimEnd("/").Replace("\\","/");
+        if (WebRootPath.IsNullOrEmpty()) WebRootPath = "wwwroot";
 
         var web = Runtime.IsWeb;
 

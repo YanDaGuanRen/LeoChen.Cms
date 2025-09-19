@@ -352,7 +352,7 @@ public class SsoProvider
             {
                 // 在分布式系统中，可能存在多个节点，需要判断头像在当前节点是否存在
                 // 使用OSS存储头像成本比较高，还不如在各个节点都存一份
-                var av2 = CubeSetting.Current.AvatarPath.CombinePath(user2.ID + ".png").GetBasePath();
+                var av2 = CubeSetting.Current.WebRootPath.CombinePath(set.UploadPath,"Avatar",user.ID + ".png").GetFullPath();
                 if (!File.Exists(av2))
                 {
                     LogProvider.Provider?.WriteLog(user.GetType(), "更新头像", true, $"{user2.Avatar} => {av}", user.ID, user + "");
@@ -364,7 +364,7 @@ public class SsoProvider
             if (client.Config != null && client.Config.FetchAvatar)
             {
                 // 如果Avatar还是保存远程头像地址，下载远程头像到本地
-                if (user2.Avatar.StartsWithIgnoreCase("http://", "https://") && !set.AvatarPath.IsNullOrEmpty())
+                if (user2.Avatar.StartsWithIgnoreCase("http://", "https://"))
                     Task.Run(() => FetchAvatar(user, av));
             }
         }
@@ -889,7 +889,8 @@ public class SsoProvider
 
         // 不要扩展名
         var set = CubeSetting.Current;
-        var dest = set.AvatarPath.CombinePath(user.ID + ".png").GetBasePath();
+        var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
+        var dest = $"{set.WebRootPath}{tpath}/{set.UploadPath}/Avatar/{user.ID}.png".GetFullPath();
 
         //// 头像是否已存在
         //if (File.Exists(dest)) return false;

@@ -10,11 +10,12 @@ namespace NewLife.Cube.Areas.Admin.Controllers;
 [DisplayName("文件")]
 [EntityAuthorize(PermissionFlags.Detail)]
 [AdminArea]
-[Menu(28, false, Icon = "fa-file")]
+[Menu(28, true, Icon = "fa-file")]
 public class FileController : ControllerBaseX
 {
     #region 基础
-    private String Root => "../".GetCurrentPath();
+
+    private String Root { get; set; }
 
     private FileInfo GetFile(String r)
     {
@@ -110,14 +111,24 @@ public class FileController : ControllerBaseX
     }
 
     private String GetFullName(String r) => r.TrimStart(Root).TrimStart(Root.TrimEnd(Path.DirectorySeparatorChar + ""));
+
     #endregion
 
     #region 列表&删除
+
     /// <summary>文件管理主视图</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    public ActionResult Index(String r, String sort, String message = "")
+    public ActionResult Index(String r, String sort, String message = "", int dir = 0)
     {
+        var set = CubeSetting.Current;
+        var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
+        Root = dir switch
+        {
+            1 => $"{set.WebRootPath}{tpath}/Avatar".GetFullPath(),
+            _ => $"{set.WebRootPath}{tpath}/{set.UploadPath}".GetFullPath()
+        };
+
         var di = GetDirectory(r) ?? Root.AsDirectory();
 
         // 计算当前路径
@@ -194,9 +205,11 @@ public class FileController : ControllerBaseX
 
         return RedirectToAction("Index", new { r = p });
     }
+
     #endregion
 
     #region 压缩与解压缩
+
     /// <summary>压缩文件</summary>
     /// <param name="r"></param>
     /// <returns></returns>
@@ -244,9 +257,11 @@ public class FileController : ControllerBaseX
 
         return RedirectToAction("Index", new { r = p });
     }
+
     #endregion
 
     #region 上传下载
+
     /// <summary>上传文件</summary>
     /// <param name="r"></param>
     /// <param name="file"></param>
@@ -308,6 +323,7 @@ public class FileController : ControllerBaseX
                 using var fs = new FileStream(dest, FileMode.OpenOrCreate, FileAccess.ReadWrite);
                 await file.CopyToAsync(fs);
             }
+
             return Json(new { code = 0, message = "上传成功" });
         }
         catch (Exception ex)
@@ -330,10 +346,13 @@ public class FileController : ControllerBaseX
 
         return PhysicalFile(fi.FullName, "application/octet-stream", fi.Name, true);
     }
+
     #endregion
 
     #region 复制粘贴
+
     private const String CLIPKEY = "File_Clipboard";
+
     private List<FileItem> GetClip()
     {
         var list = Session[CLIPKEY] as List<FileItem>;
@@ -395,6 +414,7 @@ public class FileController : ControllerBaseX
             else
                 System.IO.File.Copy(item.Raw, dst, true);
         }
+
         list.Clear();
 
         return Index(r, null);
@@ -419,6 +439,7 @@ public class FileController : ControllerBaseX
             else
                 System.IO.File.Move(item.Raw, dst);
         }
+
         list.Clear();
 
         return Index(r, null);
@@ -434,5 +455,6 @@ public class FileController : ControllerBaseX
 
         return Index(r, null);
     }
+
     #endregion
 }
