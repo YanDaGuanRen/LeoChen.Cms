@@ -1,4 +1,4 @@
-﻿@model CmsSite
+﻿@model CmsLabel
 @using LeoChen.Cms.Data
 @using NewLife;
 @using NewLife.Cube;
@@ -19,69 +19,27 @@
             <div class="tab-pane fade in active" id="item0">
                 <div class="row">
 <div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">区域代码</label>
+    <label class="control-label col-xs-3 col-sm-3">名称</label>
     <div class="input-group col-xs-9 col-sm-9">
-        @Html.ForDropDownList("AreaID", CmsSite.Meta.AllFields.First(e=>e.Name=="AreaName").Map.Provider.GetDataSource(), @entity.AreaName)
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">标题</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Title" name="Title" type="text" value="@entity.Title" />
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">副标题</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Subtitle" name="Subtitle" type="text" value="@entity.Subtitle" />
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">域名</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Domain" name="Domain" type="text" value="@entity.Domain" />
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">logo</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Logo" name="Logo" type="text" value="@entity.Logo" />
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">关键词</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Keywords" name="Keywords" type="text" value="@entity.Keywords" />
+        <input class="form-control" id="Name" name="Name" type="text" value="@entity.Name" />
     </div>
 </div>
 <div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">值</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Value" name="Value" rows="3">@entity.Value</textarea>
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">类型</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.ForEnum("LabelType", @entity.LabelType)
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
     <label class="control-label col-xs-3 col-sm-3">描述</label>
     <div class="input-group col-xs-9 col-sm-9">
-        <textarea class="form-control" cols="20" id="Description" name="Description" rows="3">@entity.Description</textarea>
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">icp</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Icp" name="Icp" type="text" value="@entity.Icp" />
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">模板名</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Theme" name="Theme" type="text" value="@entity.Theme" />
-    </div>
-</div>
-<div class="form-group col-md-12">
-    <label class="control-label col-xs-3 col-sm-3">statistical</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <textarea class="form-control" cols="20" id="Statistical" name="Statistical" rows="3">@entity.Statistical</textarea>
-    </div>
-</div>
-<div class="form-group col-xs-12 col-sm-6">
-    <label class="control-label col-xs-3 col-sm-3">copyright</label>
-    <div class="input-group col-xs-9 col-sm-9">
-        <input class="form-control" id="Copyright" name="Copyright" type="text" value="@entity.Copyright" />
+        <input class="form-control" id="Description" name="Description" type="text" value="@entity.Description" />
     </div>
 </div>
                 </div>

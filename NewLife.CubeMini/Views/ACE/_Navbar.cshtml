@@ -1,4 +1,7 @@
 ﻿@using NewLife.Common;
+@using NewLife.Cube.Common
+@using NewLife.Cube.Entity
+@using NewLife.Cube.Extensions
 @using XCode.Membership;
 @{
     var user = ViewBag.User as IUser ?? User.Identity as IUser;
@@ -17,6 +20,17 @@
     var ms = user.GetModules();
 
     var set = CubeSetting.Current;
+    
+    
+    // 获取所有区域
+    var areas = CmsArea.FindAllWithCache();
+    var currentAreaId = CmsAreaContext.CurrentId;
+    
+    // 如果没有设置区域，使用默认区域
+    if (currentAreaId <= 0 && areas.Count > 0 && currentAreaId != areas[0].ID )
+    {
+        currentAreaId = areas[0].ID;
+    }
 }
 <!-- #section:basics/navbar.layout -->
 <div id="navbar" class="navbar navbar-default">
@@ -58,7 +72,37 @@
                 }
             </ul>
         }
+        <!-- 区域选择 -->
+        @if (areas.Count > 0)
+        {
+            <div class="navbar-buttons navbar-header pull-left" role="navigation">
+                <ul class="nav ace-nav">
+                    <li class="light-blue">
+                        <a data-toggle="dropdown" href="#" class="dropdown-toggle" target="main">
+                            <span class="hidden-xs" style="line-height:45px;top:0px;">
+                                @(areas.FirstOrDefault(a => a.ID == currentAreaId)?.Name ?? "默认区域")
+                            </span>
+                            <i class="ace-icon fa fa-caret-down"></i>
+                        </a>
 
+                        <ul class="dropdown-menu-right dropdown-menu dropdown-caret">
+                            @foreach (var area in areas)
+                            {
+                                <li>
+                                    <form method="post" action="@Url.Action("ChangeArea", "Index")" style="display: inline;">
+                                        <input type="hidden" name="areaId" value="@area.ID" />
+                                        <button type="submit" class="btn btn-link" style="text-align: left; width: 100%;">
+                                            <i class="ace-icon fa fa-map-marker"></i>
+                                            @area.Name
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        }
         <!-- #section:basics/navbar.dropdown -->
         <div class="navbar-buttons navbar-header pull-right" role="navigation">
             <ul class="nav ace-nav">

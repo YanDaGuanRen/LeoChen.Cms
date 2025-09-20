@@ -13,13 +13,14 @@ using XCode.DataAccessLayer;
 
 namespace LeoChen.Cms.Data;
 
-/// <summary>区域管理</summary>
+/// <summary>轮播图片</summary>
 [Serializable]
 [DataObject]
-[Description("区域管理")]
-[BindIndex("IU_CmsArea_Name", true, "Name")]
-[BindTable("CmsArea", Description = "区域管理", ConnName = "Membership", DbType = DatabaseType.None)]
-public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
+[Description("轮播图片")]
+[BindIndex("IX_CmsSlide_Sorting", false, "Sorting")]
+[BindIndex("IX_CmsSlide_SlideGroupID", false, "SlideGroupID")]
+[BindTable("CmsSlide", Description = "轮播图片", ConnName = "Membership", DbType = DatabaseType.None)]
+public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
 {
     #region 属性
     private Int32 _ID;
@@ -30,29 +31,53 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
     [BindColumn("ID", "主键ID", "")]
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
 
-    private String _Name;
-    /// <summary>名称</summary>
-    [DisplayName("名称")]
-    [Description("名称")]
-    [DataObjectField(false, false, true, 50)]
-    [BindColumn("Name", "名称", "", Master = true)]
-    public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
-
-    private String _Domain;
-    /// <summary>域名</summary>
-    [DisplayName("域名")]
-    [Description("域名")]
-    [DataObjectField(false, false, true, 100)]
-    [BindColumn("Domain", "域名", "")]
-    public String Domain { get => _Domain; set { if (OnPropertyChanging("Domain", value)) { _Domain = value; OnPropertyChanged("Domain"); } } }
-
-    private Boolean _IsSystem;
-    /// <summary>是否默认</summary>
-    [DisplayName("是否默认")]
-    [Description("是否默认")]
+    private Int32 _SlideGroupID;
+    /// <summary>组ID</summary>
+    [DisplayName("组ID")]
+    [Description("组ID")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("IsSystem", "是否默认", "", DefaultValue = "False")]
-    public Boolean IsSystem { get => _IsSystem; set { if (OnPropertyChanging("IsSystem", value)) { _IsSystem = value; OnPropertyChanged("IsSystem"); } } }
+    [BindColumn("SlideGroupID", "组ID", "")]
+    public Int32 SlideGroupID { get => _SlideGroupID; set { if (OnPropertyChanging("SlideGroupID", value)) { _SlideGroupID = value; OnPropertyChanged("SlideGroupID"); } } }
+
+    private String _Title;
+    /// <summary>标题</summary>
+    [DisplayName("标题")]
+    [Description("标题")]
+    [DataObjectField(false, false, true, 50)]
+    [BindColumn("Title", "标题", "", Master = true)]
+    public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
+
+    private String _Subtitle;
+    /// <summary>副标题</summary>
+    [DisplayName("副标题")]
+    [Description("副标题")]
+    [DataObjectField(false, false, true, 100)]
+    [BindColumn("Subtitle", "副标题", "")]
+    public String Subtitle { get => _Subtitle; set { if (OnPropertyChanging("Subtitle", value)) { _Subtitle = value; OnPropertyChanged("Subtitle"); } } }
+
+    private String _Pic;
+    /// <summary>图片</summary>
+    [DisplayName("图片")]
+    [Description("图片")]
+    [DataObjectField(false, false, true, 100)]
+    [BindColumn("Pic", "图片", "")]
+    public String Pic { get => _Pic; set { if (OnPropertyChanging("Pic", value)) { _Pic = value; OnPropertyChanged("Pic"); } } }
+
+    private String _Link;
+    /// <summary>link</summary>
+    [DisplayName("link")]
+    [Description("link")]
+    [DataObjectField(false, false, true, 100)]
+    [BindColumn("Link", "link", "")]
+    public String Link { get => _Link; set { if (OnPropertyChanging("Link", value)) { _Link = value; OnPropertyChanged("Link"); } } }
+
+    private Int32 _Sorting;
+    /// <summary>排序</summary>
+    [DisplayName("排序")]
+    [Description("排序")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("Sorting", "排序", "")]
+    public Int32 Sorting { get => _Sorting; set { if (OnPropertyChanging("Sorting", value)) { _Sorting = value; OnPropertyChanged("Sorting"); } } }
 
     private Int32 _CreateUserID;
     /// <summary>创建者</summary>
@@ -112,12 +137,15 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
     #region 拷贝
     /// <summary>拷贝模型对象</summary>
     /// <param name="model">模型</param>
-    public void Copy(ICmsArea model)
+    public void Copy(ICmsSlide model)
     {
         ID = model.ID;
-        Name = model.Name;
-        Domain = model.Domain;
-        IsSystem = model.IsSystem;
+        SlideGroupID = model.SlideGroupID;
+        Title = model.Title;
+        Subtitle = model.Subtitle;
+        Pic = model.Pic;
+        Link = model.Link;
+        Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;
@@ -136,9 +164,12 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
         get => name switch
         {
             "ID" => _ID,
-            "Name" => _Name,
-            "Domain" => _Domain,
-            "IsSystem" => _IsSystem,
+            "SlideGroupID" => _SlideGroupID,
+            "Title" => _Title,
+            "Subtitle" => _Subtitle,
+            "Pic" => _Pic,
+            "Link" => _Link,
+            "Sorting" => _Sorting,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
             "CreateIP" => _CreateIP,
@@ -152,9 +183,12 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
             switch (name)
             {
                 case "ID": _ID = value.ToInt(); break;
-                case "Name": _Name = Convert.ToString(value); break;
-                case "Domain": _Domain = Convert.ToString(value); break;
-                case "IsSystem": _IsSystem = value.ToBoolean(); break;
+                case "SlideGroupID": _SlideGroupID = value.ToInt(); break;
+                case "Title": _Title = Convert.ToString(value); break;
+                case "Subtitle": _Subtitle = Convert.ToString(value); break;
+                case "Pic": _Pic = Convert.ToString(value); break;
+                case "Link": _Link = Convert.ToString(value); break;
+                case "Sorting": _Sorting = value.ToInt(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
                 case "CreateIP": _CreateIP = Convert.ToString(value); break;
@@ -174,7 +208,7 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
     /// <summary>根据主键ID查找</summary>
     /// <param name="id">主键ID</param>
     /// <returns>实体对象</returns>
-    public static CmsArea FindByID(Int32 id)
+    public static CmsSlide FindByID(Int32 id)
     {
         if (id < 0) return null;
 
@@ -187,36 +221,48 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
         //return Find(_.ID == id);
     }
 
-    /// <summary>根据名称查找</summary>
-    /// <param name="name">名称</param>
-    /// <returns>实体对象</returns>
-    public static CmsArea FindByName(String name)
+    /// <summary>根据排序查找</summary>
+    /// <param name="sorting">排序</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsSlide> FindAllBySorting(Int32 sorting)
     {
-        if (name.IsNullOrEmpty()) return null;
+        if (sorting < 0) return [];
 
         // 实体缓存
-        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.Name.EqualIgnoreCase(name));
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.Sorting == sorting);
 
-        // 单对象缓存
-        return Meta.SingleCache.GetItemWithSlaveKey(name) as CmsArea;
+        return FindAll(_.Sorting == sorting);
+    }
 
-        //return Find(_.Name == name);
+    /// <summary>根据组ID查找</summary>
+    /// <param name="slideGroupId">组ID</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsSlide> FindAllBySlideGroupID(Int32 slideGroupId)
+    {
+        if (slideGroupId < 0) return [];
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.SlideGroupID == slideGroupId);
+
+        return FindAll(_.SlideGroupID == slideGroupId);
     }
     #endregion
 
     #region 高级查询
     /// <summary>高级查询</summary>
-    /// <param name="isSystem">是否默认</param>
+    /// <param name="slideGroupId">组ID</param>
+    /// <param name="sorting">排序</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsArea> Search(Boolean? isSystem, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsSlide> Search(Int32 slideGroupId, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
-        if (isSystem != null) exp &= _.IsSystem == isSystem;
+        if (slideGroupId >= 0) exp &= _.SlideGroupID == slideGroupId;
+        if (sorting >= 0) exp &= _.Sorting == sorting;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
 
@@ -225,20 +271,29 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
     #endregion
 
     #region 字段名
-    /// <summary>取得区域管理字段信息的快捷方式</summary>
+    /// <summary>取得轮播图片字段信息的快捷方式</summary>
     public partial class _
     {
         /// <summary>主键ID</summary>
         public static readonly Field ID = FindByName("ID");
 
-        /// <summary>名称</summary>
-        public static readonly Field Name = FindByName("Name");
+        /// <summary>组ID</summary>
+        public static readonly Field SlideGroupID = FindByName("SlideGroupID");
 
-        /// <summary>域名</summary>
-        public static readonly Field Domain = FindByName("Domain");
+        /// <summary>标题</summary>
+        public static readonly Field Title = FindByName("Title");
 
-        /// <summary>是否默认</summary>
-        public static readonly Field IsSystem = FindByName("IsSystem");
+        /// <summary>副标题</summary>
+        public static readonly Field Subtitle = FindByName("Subtitle");
+
+        /// <summary>图片</summary>
+        public static readonly Field Pic = FindByName("Pic");
+
+        /// <summary>link</summary>
+        public static readonly Field Link = FindByName("Link");
+
+        /// <summary>排序</summary>
+        public static readonly Field Sorting = FindByName("Sorting");
 
         /// <summary>创建者</summary>
         public static readonly Field CreateUserID = FindByName("CreateUserID");
@@ -261,20 +316,29 @@ public partial class CmsArea : ICmsArea, IEntity<ICmsArea>
         static Field FindByName(String name) => Meta.Table.FindByName(name);
     }
 
-    /// <summary>取得区域管理字段名称的快捷方式</summary>
+    /// <summary>取得轮播图片字段名称的快捷方式</summary>
     public partial class __
     {
         /// <summary>主键ID</summary>
         public const String ID = "ID";
 
-        /// <summary>名称</summary>
-        public const String Name = "Name";
+        /// <summary>组ID</summary>
+        public const String SlideGroupID = "SlideGroupID";
 
-        /// <summary>域名</summary>
-        public const String Domain = "Domain";
+        /// <summary>标题</summary>
+        public const String Title = "Title";
 
-        /// <summary>是否默认</summary>
-        public const String IsSystem = "IsSystem";
+        /// <summary>副标题</summary>
+        public const String Subtitle = "Subtitle";
+
+        /// <summary>图片</summary>
+        public const String Pic = "Pic";
+
+        /// <summary>link</summary>
+        public const String Link = "Link";
+
+        /// <summary>排序</summary>
+        public const String Sorting = "Sorting";
 
         /// <summary>创建者</summary>
         public const String CreateUserID = "CreateUserID";

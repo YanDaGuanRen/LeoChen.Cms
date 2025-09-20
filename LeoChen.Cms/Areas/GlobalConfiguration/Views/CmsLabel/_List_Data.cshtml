@@ -1,4 +1,4 @@
-﻿@model IList<CmsSite>
+﻿@model IList<CmsLabel>
 @using LeoChen.Cms.Data
 @using NewLife;
 @using NewLife.Cube;
@@ -21,16 +21,8 @@
                 <th class="text-center" style="width:10px;"><input type="checkbox" id="chkAll" title="全选" /></th>
             }
             <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("ID"))">主键ID</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("AreaID"))">区域代码</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Title"))">标题</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Subtitle"))">副标题</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Domain"))">域名</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Logo"))">logo</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Keywords"))">关键词</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Icp"))">icp</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Theme"))">模板名</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Statistical"))">statistical</a></th>
-            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Copyright"))">copyright</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("Name"))">名称</a></th>
+            <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("LabelType"))">类型</a></th>
             <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("UpdateUserID"))">更新者</a></th>
             <th class="text-center" style="min-width:134px;"><a href="@Html.Raw(page.GetSortUrl("UpdateTime"))">更新时间</a></th>
             <th class="text-center"><a href="@Html.Raw(page.GetSortUrl("UpdateIP"))">更新地址</a></th>
@@ -49,16 +41,8 @@
                     <td class="text-center"><input type="checkbox" name="keys" value="@entity.ID" /></td>
                 }
                 <td class="text-center">@entity.ID</td>
-                <td><a href="CmsArea?ID=@entity.AreaID">@entity.AreaName</a></td>
-                <td>@entity.Title</td>
-                <td>@entity.Subtitle</td>
-                <td>@entity.Domain</td>
-                <td>@entity.Logo</td>
-                <td>@entity.Keywords</td>
-                <td>@entity.Icp</td>
-                <td>@entity.Theme</td>
-                <td>@entity.Statistical</td>
-                <td>@entity.Copyright</td>
+                <td>@entity.Name</td>
+                <td class="text-center">@entity.LabelType</td>
                 <td class="text-center">@provider.FindByID(entity.UpdateUserID)</td>
                 <td class="text-center">@entity.UpdateTime.ToFullString("")</td>
                 <td class="text-center" title="@entity.UpdateIP.IPToAddress()">@entity.UpdateIP</td>
@@ -70,23 +54,15 @@
                 }
             </tr>
         }
-        @if (page.State is CmsSite)
+        @if (page.State is CmsLabel)
         {
-            var entity = page.State as CmsSite;
+            var entity = page.State as CmsLabel;
             <tr>
                 @if (set.EnableSelect)
                 {
                     <td></td>
                 }
                 <td class="text-center">总计</td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
                 <td></td>
                 <td></td>
                 <td></td>

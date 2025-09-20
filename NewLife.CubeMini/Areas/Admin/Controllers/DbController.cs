@@ -2,6 +2,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using NewLife.Cube.Areas.Admin.Models;
+using NewLife.Cube.Common;
 using NewLife.Reflection;
 using XCode;
 using XCode.DataAccessLayer;
@@ -23,7 +24,7 @@ public class DbController : ControllerBaseX
     {
         var list = new List<DbItem>();
         var dir = NewLife.Setting.Current.BackupPath.GetBasePath().AsDirectory();
-
+        var aaa = CmsAreaContext.CurrentId;
         // 读取配置文件
         foreach (var item in DAL.ConnStrs.ToArray())
         {

@@ -10,8 +10,7 @@ public class SearchField : DataField
     /// </remarks>
     public Boolean Multiple { get; set; }
 
-#if MVC
     /// <summary>视图。MVC特有，允许针对字段定义视图</summary>
     public String View { get; set; }
-#endif
+
 }

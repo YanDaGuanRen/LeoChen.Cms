@@ -7,16 +7,16 @@ using NewLife.Cube.ViewModels;
 using NewLife.Log;
 using NewLife.Web;
 using XCode.Membership;
-using static LeoChen.Cms.Data.CmsArea;
+using static LeoChen.Cms.Data.CmsExtForm;
 
-namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
+namespace LeoChen.Cms.Areas.ExpandContent.Controllers;
 
-/// <summary>区域管理</summary>
-[Menu(40, true, Icon = "fa-table")]
-[GlobalConfigurationArea]
-public class CmsAreaController : EntityController<CmsArea>
+/// <summary>自定义表单数据</summary>
+[Menu(10, true, Icon = "fa-table")]
+[ExpandContentArea]
+public class CmsExtFormController : EntityController<CmsExtForm>
 {
-    static CmsAreaController()
+    static CmsExtFormController()
     {
         //LogOnChange = true;
 
@@ -32,19 +32,19 @@ public class CmsAreaController : EntityController<CmsArea>
         //    var df = ListFields.AddListField("devices", null, "Onlines");
         //    df.DisplayName = "查看设备";
         //    df.Url = "Device?groupId={Id}";
-        //    df.DataVisible = e => (e as CmsArea).Devices > 0;
+        //    df.DataVisible = e => (e as CmsExtForm).Devices > 0;
         //    df.Target = "_frame";
         //}
         //{
         //    var df = ListFields.GetField("Kind") as ListField;
-        //    df.GetValue = e => ((Int32)(e as CmsArea).Kind).ToString("X4");
+        //    df.GetValue = e => ((Int32)(e as CmsExtForm).Kind).ToString("X4");
         //}
         //ListFields.TraceUrl("TraceId");
     }
 
     //private readonly ITracer _tracer;
 
-    //public CmsAreaController(ITracer tracer)
+    //public CmsExtFormController(ITracer tracer)
     //{
     //    _tracer = tracer;
     //}
@@ -52,13 +52,11 @@ public class CmsAreaController : EntityController<CmsArea>
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>
     /// <param name="p">分页器。包含分页排序参数，以及Http请求参数</param>
     /// <returns></returns>
-    protected override IEnumerable<CmsArea> Search(Pager p)
+    protected override IEnumerable<CmsExtForm> Search(Pager p)
     {
-        var isSystem = p["isSystem"]?.ToBoolean();
+        var formId = p["formId"].ToInt(-1);
+        var formFieldId = p["formFieldId"].ToInt(-1);
 
-        var start = p["dtStart"].ToDateTime();
-        var end = p["dtEnd"].ToDateTime();
-
-        return CmsArea.Search(isSystem, start, end, p["Q"], p);
+        return CmsExtForm.Search(formId, formFieldId, p["Q"], p);
     }
 }

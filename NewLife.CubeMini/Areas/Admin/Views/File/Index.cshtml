@@ -44,7 +44,8 @@
                 <span class="input-group-btn" style="left: 10px;">
                     <span class="btn btn-primary btn-sm btn-file">
                         <span class="glyphicon glyphicon-upload"></span>
-                        选择文件 <input name="file" type="file" id="file" data-action="upload" data-url="/Admin/File/Upload" data-fields="r" />
+                        选择文件 
+                        <input name="file" type="file" id="file" data-action="upload" data-url="/Admin/File/Upload" data-fields="r" />
                     </span>
                 </span>
             </div>
@@ -154,20 +155,19 @@
         border-radius: 4px;
         height: 34.94px;
     }
-
-        .btn-file input[type=file] {
-            position: absolute;
-            top: 0;
-            right: 0;
-            min-width: 100%;
-            min-height: 100%;
-            font-size: 100px;
-            text-align: right;
-            filter: alpha(opacity=0);
-            opacity: 0;
-            outline: none;
-            background: #428bca;
-            cursor: inherit;
-            display: block;
-        }
+    .btn-file input[type=file] {
+        position: absolute;
+        top: 0;
+        right: 0;
+        min-width: 100%;
+        min-height: 100%;
+        font-size: 100px;
+        text-align: right;
+        filter: alpha(opacity=0);
+        opacity: 0;
+        outline: none;
+        background: #428bca;
+        cursor: inherit;
+        display: block;
+    }
 </style>

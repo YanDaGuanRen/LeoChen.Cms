@@ -158,10 +158,8 @@ public static class CubeService
         // 配置Json
         services.Configure<Microsoft.AspNetCore.Mvc.JsonOptions>(options =>
         {
-#if NET7_0_OR_GREATER
             // 支持模型类中的DataMember特性
             options.JsonSerializerOptions.TypeInfoResolver = DataMemberResolver.Default;
-#endif
             options.JsonSerializerOptions.Converters.Add(new TypeConverter());
             options.JsonSerializerOptions.Converters.Add(new LocalTimeConverter());
             // 支持中文编码
@@ -285,28 +283,6 @@ public static class CubeService
         });
         var list = bag.ToList();
 
-#if !NET6_0_OR_GREATER
-        // 反射 *.Views.dll
-        foreach (var item in ".".AsDirectory().GetFiles("*.Views.dll"))
-        {
-            var asm = Assembly.LoadFile(item.FullName);
-            if (!list.Contains(asm) && !list.Any(e => e.FullName == asm.FullName))
-            {
-                list.Add(asm);
-            }
-        }
-
-        // 反射 NewLife.Cube.*.dll
-        foreach (var item in ".".AsDirectory().GetFiles("NewLife.Cube.*.dll"))
-        {
-            var asm = Assembly.LoadFile(item.FullName);
-            if (!list.Contains(asm) && !list.Any(e => e.FullName == asm.FullName))
-            {
-                list.Add(asm);
-            }
-        }
-#endif
-
         // 为了能够实现模板覆盖，程序集相互引用需要排序，父程序集在前
         list.Sort((x, y) =>
         {
@@ -392,7 +368,8 @@ public static class CubeService
 
         app.UseMiddleware<RunTimeMiddleware>();
         app.UseMiddleware<TenantMiddleware>();
-
+        app.UseMiddleware<CmsAreaMiddleware>();
+        
         //静态文件
         if (env != null) app.UseCubeDefaultUI(env);
 

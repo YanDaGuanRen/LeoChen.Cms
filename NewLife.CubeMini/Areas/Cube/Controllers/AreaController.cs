@@ -103,60 +103,9 @@ public class AreaController : EntityController<Area, AreaModel>
             exp &= _.ID <= 999999;
             var list2 = Area.FindAll(exp.GroupBy(_.Kind), null, _.ID.Count() & _.Kind, 0, 0);
             list2 = list2.OrderByDescending(e => e.ID).ToList();
-            if (list2.Count >= 0)
-            {
-                AddChart(list2, _.Kind, "个数", [_.ID], SeriesTypes.Bar);
-
-                //var chart = new ECharts
-                //{
-                //    Height = 400,
-                //};
-                //chart.SetX(list2, _.Kind, e => e.Kind ?? "未知");
-                //chart.SetY("个数", "value");
-                //chart.SetTooltip();
-
-                //var bar = chart.AddBar(list2, _.Kind, e => e.ID);
-
-                //ViewBag.Charts = new[] { chart };
-            }
-            if (list2.Count >= 0)
-            {
-                var chart = AddChart(list2, _.Kind, null, [_.ID], SeriesTypes.Pie, "bottom");
-                chart.XAxis = null;
-                var pie = chart.Series[0];
-
-                //var chart = new ECharts
-                //{
-                //    Height = 400,
-                //};
-                ////chart.SetX(list2, _.Kind);
-                ////chart.SetY(null, "value");
-                //chart.Legend = new { show = "false", top = "5%", left = "center" };
-
-                //var pie = chart.AddPie(list2, _.Kind, e => new NameValue(e.Kind ?? "未知", e.ID));
-                pie["radius"] = new[] { "40%", "70%" };
-                pie["avoidLabelOverlap"] = false;
-                pie["itemStyle"] = new { borderRadius = 10, borderColor = "#fff", borderWidth = 2 };
-                pie["label"] = new { show = false, position = "center" };
-                pie["emphasis"] = new { label = new { show = true, fontSize = 40, fontWeight = "bold" } };
-                pie["labelLine"] = new { show = false };
-
-                //chart.SetTooltip("item", null, null);
-                //ViewBag.Charts2 = new[] { chart };
-            }
         }
 
         return list;
     }
-
-    /// <summary>
-    /// 中国地图
-    /// </summary>
-    /// <returns></returns>
-    public ActionResult Map()
-    {
-        PageSetting.EnableNavbar = false;
-
-        return View("Map");
-    }
+    
 }

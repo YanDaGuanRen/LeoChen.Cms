@@ -26,29 +26,20 @@ using XCode.Shards;
 
 namespace LeoChen.Cms.Data;
 
-public partial class CmsArea : Entity<CmsArea>
+public partial class CmsExtForm : Entity<CmsExtForm>
 {
     #region 对象操作
-    static CmsArea()
+    static CmsExtForm()
     {
         // 累加字段，生成 Update xx Set Count=Count+1234 Where xxx
         //var df = Meta.Factory.AdditionalFields;
-        //df.Add(nameof(CreateUserID));
+        //df.Add(nameof(FormID));
 
         // 过滤器 UserModule、TimeModule、IPModule
-        Meta.Modules.Add(new UserModule { AllowEmpty = false });
-        Meta.Modules.Add<TimeModule>();
-        Meta.Modules.Add(new IPModule { AllowEmpty = false });
 
         // 实体缓存
         // var ec = Meta.Cache;
         // ec.Expire = 60;
-
-        // 单对象缓存
-        var sc = Meta.SingleCache;
-        // sc.Expire = 60;
-        sc.FindSlaveKeyMethod = k => Find(_.Name == k);
-        sc.GetSlaveKeyMethod = e => e.Name;
     }
 
     /// <summary>验证并修补数据，返回验证结果，或者通过抛出异常的方式提示验证失败。</summary>
@@ -64,20 +55,8 @@ public partial class CmsArea : Entity<CmsArea>
 
         // 在新插入数据或者修改了指定字段时进行修正
 
-        // 处理当前已登录用户信息，可以由UserModule过滤器代劳
-        /*var user = ManageProvider.User;
-        if (user != null)
-        {
-            if (method == DataMethod.Insert && !Dirtys[nameof(CreateUserID)]) CreateUserID = user.ID;
-            if (!Dirtys[nameof(UpdateUserID)]) UpdateUserID = user.ID;
-        }*/
-        //if (method == DataMethod.Insert && !Dirtys[nameof(CreateTime)]) CreateTime = DateTime.Now;
-        //if (!Dirtys[nameof(UpdateTime)]) UpdateTime = DateTime.Now;
-        //if (method == DataMethod.Insert && !Dirtys[nameof(CreateIP)]) CreateIP = ManageProvider.UserHost;
-        //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
-
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(Name));
+        // CheckExist(method == DataMethod.Insert, nameof(FormFieldID), nameof(FormID));
 
         return true;
     }
@@ -89,15 +68,15 @@ public partial class CmsArea : Entity<CmsArea>
     //    // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
     //    if (Meta.Session.Count > 0) return;
 
-    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsArea[区域管理]数据……");
+    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsExtForm[自定义表单数据]数据……");
 
-    //    var entity = new CmsArea();
-    //    entity.Name = "abc";
-    //    entity.Domain = "abc";
-    //    entity.IsSystem = true;
+    //    var entity = new CmsExtForm();
+    //    entity.FormID = 0;
+    //    entity.FormFieldID = 0;
+    //    entity.FieldValue = "abc";
     //    entity.Insert();
 
-    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsArea[区域管理]数据！");
+    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsExtForm[自定义表单数据]数据！");
     //}
 
     ///// <summary>已重载。基类先调用Valid(true)验证数据，然后在事务保护内调用OnInsert</summary>
@@ -120,8 +99,8 @@ public partial class CmsArea : Entity<CmsArea>
 
     #region 高级查询
 
-    // Select Count(ID) as ID,Category From CmsArea Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
-    //static readonly FieldCache<CmsArea> _CategoryCache = new(nameof(Category))
+    // Select Count(ID) as ID,Category From CmsExtForm Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
+    //static readonly FieldCache<CmsExtForm> _CategoryCache = new(nameof(Category))
     //{
     //Where = _.CreateTime > DateTime.Today.AddDays(-30) & Expression.Empty
     //};
@@ -132,9 +111,9 @@ public partial class CmsArea : Entity<CmsArea>
     #endregion
 
     #region 业务操作
-    public ICmsArea ToModel()
+    public ICmsExtForm ToModel()
     {
-        var model = new CmsArea();
+        var model = new CmsExtForm();
         model.Copy(this);
 
         return model;

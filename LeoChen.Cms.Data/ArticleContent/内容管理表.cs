@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Entity;
 using NewLife.Data;
 using XCode;
 using XCode.Cache;

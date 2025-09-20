@@ -41,9 +41,7 @@ public partial class ReadOnlyEntityController<TEntity>
         var set = PageSetting;
         set.IsReadOnly = true;
 
-#if MVC
         set.EnableTableDoubleClick = CubeSetting.Current.EnableTableDoubleClick;
-#endif
 
         if (set.OrderByKey)
         {
@@ -51,7 +49,7 @@ public partial class ReadOnlyEntityController<TEntity>
             if (Entity<TEntity>.Meta.ShardPolicy == null && Entity<TEntity>.Meta.Count > 1_000_000)
                 set.OrderByKey = false;
         }
-
+        
         SysConfig = SysConfig.Current;
     }
     #endregion

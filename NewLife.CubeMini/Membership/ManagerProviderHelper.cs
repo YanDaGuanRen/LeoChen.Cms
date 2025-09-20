@@ -62,8 +62,6 @@ public static class ManagerProviderHelper
                 if ((user = u) != null)
                 {
                     provider.SetCurrent(user, serviceProvider);
-
-#if MVC
                     // 保存登录信息。如果是json请求，不用记录自动登录
                     var req = context?.Request;
                     if (user is IAuthUser mu && !req.IsAjaxRequest())
@@ -72,7 +70,6 @@ public static class ManagerProviderHelper
 
                         LogProvider.Provider.WriteLog("用户", "自动登录", true, $"{user} IssuedAt={jwt.IssuedAt.ToFullString()} Expire={jwt.Expire.ToFullString()}", user.ID, user + "", ip: context.GetUserHost());
                     }
-#endif
                 }
             }
 

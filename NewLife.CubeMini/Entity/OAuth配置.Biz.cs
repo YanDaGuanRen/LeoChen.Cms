@@ -99,9 +99,9 @@ public partial class OAuthConfig : Entity<OAuthConfig>
             AppId = "NewLife.Cube",
             Secret = Rand.NextString(16),
 
-            Enable = true,
-            Debug = true,
-            Visible = true,
+            Enable = false,
+            Debug = false,
+            Visible = false,
             AutoRegister = true,
             FetchAvatar = true,
         };
@@ -129,8 +129,8 @@ public partial class OAuthConfig : Entity<OAuthConfig>
         Add("OpenWeixin", "微信开放平台", "/CubeContent/images/logo/Weixin.png", "snsapi_login用于扫码登录");
         Add("Microsoft", "微软", "/CubeContent/images/logo/Microsoft.png");
         //Add("Weibo", "微博", "/CubeContent/images/logo/Weibo.png");
-        //Add("Taobao", "淘宝", "/CubeContent/images/logo/Taobao.png");
-        //Add("Alipay", "支付宝", "/CubeContent/images/logo/Alipay.png");
+        Add("Taobao", "淘宝", "/CubeContent/images/logo/Taobao.png");
+        Add("Alipay", "支付宝", "/CubeContent/images/logo/Alipay.png");
 
         if (XTrace.Debug) XTrace.WriteLine("完成初始化OAuthConfig[OAuth配置]数据！");
     }

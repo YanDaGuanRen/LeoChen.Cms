@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Common;
 using NewLife.Data;
 using NewLife.Log;
 using NewLife.Model;
@@ -49,6 +50,7 @@ public partial class CmsSite : Entity<CmsSite>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        AreaID = CmsAreaContext.CurrentId;
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;

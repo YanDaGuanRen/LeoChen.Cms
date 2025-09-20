@@ -360,9 +360,8 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
-
-**/*.Entity/Config/
 **/.idea
-Core.config
-XCore.config
+**/Config/Core.config
+**/Config/XCore.config
 **/xcodetool.exe
+

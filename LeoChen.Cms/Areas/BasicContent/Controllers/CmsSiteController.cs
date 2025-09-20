@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Log;
@@ -40,6 +42,49 @@ public class CmsSiteController : EntityController<CmsSite>
         //    df.GetValue = e => ((Int32)(e as CmsSite).Kind).ToString("X4");
         //}
         //ListFields.TraceUrl("TraceId");
+    }
+
+    public override ActionResult Index(Pager p = null)
+    {
+        var aeraid = CmsAreaContext.CurrentId;
+
+        var entity = FindByAreaID(aeraid);
+        if (entity == null)
+        {
+             entity = new CmsSite();
+
+            // 验证数据权限
+            Valid(entity, DataObjectMethodType.Insert, false);
+
+            // 记下添加前的来源页，待会添加成功以后跳转
+            // 如果列表页有查询条件，优先使用
+            var key = $"Cube_Add_LeoChen.Cms.Data.CmsSite";
+            Session[key] = Request.Path.ToString();
+            // 用于显示的列
+            ViewBag.Fields = OnGetFields(ViewKinds.AddForm, entity);
+
+            return View("AddForm", entity);
+        }
+        else
+        {
+            // 验证数据权限
+            Valid(entity, DataObjectMethodType.Update, false);
+            // 如果列表页有查询条件，优先使用
+            var key = $"Cube_Edit_LeoChen.Cms.Data.CmsSite-{entity.ID}";
+            Session[key] = Request.Path.ToString();
+            // Json输出
+            if (IsJsonRequest) return Json(0, null, entity);
+            ViewBag.Fields = OnGetFields(ViewKinds.EditForm, entity);
+            return View("EditForm", entity);
+        }
+    }
+
+
+    protected override FieldCollection OnGetFields(ViewKinds kind, Object model)
+    {
+        var rs = base.OnGetFields(kind, model);
+        rs.RemoveField("AreaID","AreaName");
+        return rs;
     }
 
     //private readonly ITracer _tracer;

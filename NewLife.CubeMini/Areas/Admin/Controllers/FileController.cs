@@ -135,6 +135,7 @@ public class FileController : ControllerBaseX
         var di = GetDirectory(r) ?? Root.AsDirectory();
         // 计算当前路径
         var fd = di.FullName;
+        fd.EnsureDirectory(false);
         if (fd.StartsWith(Root)) fd = fd[Root.Length..];
         ViewBag.Current = fd;
 

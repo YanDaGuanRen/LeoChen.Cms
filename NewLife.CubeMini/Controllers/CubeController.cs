@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NewLife.Cube.Areas.Cube.Controllers;
 using NewLife.Cube.Entity;
+using NewLife.Cube.Extensions;
 using NewLife.Cube.Services;
 using NewLife.Data;
 using NewLife.Log;

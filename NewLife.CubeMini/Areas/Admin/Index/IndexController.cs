@@ -292,4 +292,21 @@ public class IndexController : ControllerBaseX
 
         return menuTree;
     }
+    
+    /// <summary>
+    /// 切换区域
+    /// </summary>
+    /// <param name="areaId"></param>
+    /// <returns></returns>
+    [HttpPost]
+    public IActionResult ChangeArea(Int32 areaId)
+    {
+        // 保存区域ID到Cookie
+        HttpContext.SaveArea(areaId);
+        
+        // 返回到前一个页面
+        var referer = Request.Headers["Referer"].ToString();
+        
+        return RedirectToAction("Index", "Index", new { area = "Admin" });
+    }
 }

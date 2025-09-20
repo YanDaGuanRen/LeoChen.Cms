@@ -7,21 +7,21 @@ using System.Xml.Serialization;
 
 namespace LeoChen.Cms.Data;
 
-/// <summary>区域管理</summary>
-public partial class CmsAreaModel
+/// <summary>文章内链</summary>
+public partial class CmsTagsModel
 {
     #region 属性
     /// <summary>主键ID</summary>
     public Int32 ID { get; set; }
 
+    /// <summary>区域代码</summary>
+    public Int32 AreaID { get; set; }
+
     /// <summary>名称</summary>
     public String Name { get; set; }
 
-    /// <summary>域名</summary>
-    public String Domain { get; set; }
-
-    /// <summary>是否默认</summary>
-    public Boolean IsSystem { get; set; }
+    /// <summary>link</summary>
+    public String Link { get; set; }
 
     /// <summary>创建者</summary>
     public Int32 CreateUserID { get; set; }
@@ -45,12 +45,12 @@ public partial class CmsAreaModel
     #region 拷贝
     /// <summary>拷贝模型对象</summary>
     /// <param name="model">模型</param>
-    public void Copy(ICmsArea model)
+    public void Copy(ICmsTags model)
     {
         ID = model.ID;
+        AreaID = model.AreaID;
         Name = model.Name;
-        Domain = model.Domain;
-        IsSystem = model.IsSystem;
+        Link = model.Link;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;
