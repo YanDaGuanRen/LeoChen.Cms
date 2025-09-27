@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Common;
 using NewLife.Data;
 using NewLife.Log;
 using NewLife.Model;
@@ -31,6 +32,10 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     #region 对象操作
     static CmsContent_Sort()
     {
+        // Setting.Key = __.ID;
+        // Setting.Sort = __.Sorting;
+        // Setting.Parent = __.Pid;
+        // Setting.Name = __.Name;
         // 累加字段，生成 Update xx Set Count=Count+1234 Where xxx
         //var df = Meta.Factory.AdditionalFields;
         //df.Add(nameof(AreaID));
@@ -55,6 +60,7 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        AreaID = CmsAreaContext.CurrentId;
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;
@@ -99,7 +105,7 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     //    entity.Subname = "abc";
     //    entity.ListTpl = "abc";
     //    entity.ContentTpl = "abc";
-    //    entity.Status = true;
+    //    entity.Enable = true;
     //    entity.Outlink = "abc";
     //    entity.Ico = "abc";
     //    entity.Pic = "abc";
@@ -132,6 +138,8 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     //{
     //    return base.OnDelete();
     //}
+    
+    
     #endregion
 
     #region 扩展属性

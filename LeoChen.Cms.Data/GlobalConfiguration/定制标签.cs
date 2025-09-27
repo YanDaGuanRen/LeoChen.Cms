@@ -40,6 +40,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
 
     private String _Value;
     /// <summary>值</summary>
+    [Category("值内容")]
     [DisplayName("值")]
     [Description("值")]
     [DataObjectField(false, false, true, 65535)]

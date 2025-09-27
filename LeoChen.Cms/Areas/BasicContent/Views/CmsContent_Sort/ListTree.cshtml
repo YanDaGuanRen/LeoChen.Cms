@@ -1,0 +1,94 @@
+﻿@using NewLife.Web;
+@using XCode;
+@{
+    var theme = NewLife.Cube.CubeSetting.Current.Theme;
+    if (String.IsNullOrEmpty(theme)) theme = "ACE";
+    Layout = "~/Views/" + theme + "/_Layout.cshtml";
+    var fact = ViewBag.Factory as IEntityFactory;
+    var page = ViewBag.Page as Pager;
+    var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+}
+@if (!set.NavView.IsNullOrEmpty())
+{
+    <div class="row">
+        @await Html.PartialAsync(set.NavView)
+    </div>
+}
+@if (set.EnableToolbar)
+{
+    <div class="clearfix">
+        @await Html.PartialAsync("_List_Toolbar")
+    </div>
+}
+
+<div class="table-responsive">
+    @await Html.PartialAsync("_ListTree_Data")
+
+</div>
+<div class="panel-footer">
+    @await Html.PartialAsync("_List_Pager")
+</div>
+<script src="/CubeContent/js/jquery-3.6.0.min.js"></script>
+
+<!-- 2. 强制样式（确保隐藏生效） -->
+<style>
+.ccsrow { display: table-row !important; } /* 行默认显示 */
+.ccsrow.hidden { display: none !important; } /* 隐藏类（优先级最高） */
+
+</style>
+
+<script>
+$(window).on('load', function() {
+    // 初始化：隐藏非根节点（pid≠0）
+    initTree();
+
+    // 点击图标触发折叠（用项目现有jQuery，无需额外引入）
+    $('.toggle-icon').click(function() {
+        var $parentRow = $(this).closest('.ccsrow');
+        var parentId = $parentRow.data('id');
+        var $children = $('.ccsrow[data-pid="' + parentId + '"]');
+
+        if ($children.length === 0) return;
+
+        var isHidden = $children.first().hasClass('hidden');
+
+        if (isHidden) {
+            // 展开：显示子节点 + 图标从“右箭头”变“下箭头”
+            $children.removeClass('hidden');
+            $(this).removeClass('glyphicon-chevron-right').addClass('glyphicon-chevron-down');
+        } else {
+            // 收起：隐藏所有子级 + 图标从“下箭头”变“右箭头”
+            hideAllChildren(parentId);
+            $(this).removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+        }
+    });
+
+    // 初始化树形结构
+    function initTree() {
+        $('.ccsrow').each(function() {
+            var pid = $(this).data('pid');
+            if (pid != 0) $(this).addClass('hidden');
+        });
+    }
+
+    // 递归隐藏所有子级（同步重置子节点图标）
+    function hideAllChildren(parentId) {
+        var $children = $('.ccsrow[data-pid="' + parentId + '"]');
+        $children.each(function() {
+            var childId = $(this).data('id');
+            $(this).addClass('hidden');
+            // 子节点图标重置为“右箭头”（展开状态）
+            $(this).find('.toggle-icon').removeClass('glyphicon-chevron-down').addClass('glyphicon-chevron-right');
+            hideAllChildren(childId); // 递归处理孙子节点
+        });
+    }
+});
+</script>
+
+<!-- 配合图标显隐的样式（用项目现有CSS优先级，避免冲突） -->
+<style>
+.ccsrow { display: table-row !important; }
+.ccsrow.hidden { display: none !important; }
+/* 确保图标垂直居中，与文字对齐 */
+.toggle-icon { line-height: 1; vertical-align: middle; }
+</style>

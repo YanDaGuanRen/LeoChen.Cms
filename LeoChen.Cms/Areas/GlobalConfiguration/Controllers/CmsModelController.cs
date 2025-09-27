@@ -21,7 +21,7 @@ public class CmsModelController : EntityController<CmsModel>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -42,6 +42,12 @@ public class CmsModelController : EntityController<CmsModel>
         //ListFields.TraceUrl("TraceId");
     }
 
+    public override ActionResult Add()
+    {
+        var e = new CmsModel();
+        e.Status = true;
+        return AddEntity(e);
+    }
     //private readonly ITracer _tracer;
 
     //public CmsModelController(ITracer tracer)

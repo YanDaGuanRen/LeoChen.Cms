@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using Microsoft.AspNetCore.Mvc;
 using NewLife.Cube.ViewModels;
 using NewLife.Web;
 using XCode;
@@ -26,6 +27,11 @@ public class MenuController : EntityTreeController<Menu, MenuModel>
             var ff = EditFormFields.GetField("Ex4") as FormField;
             ff.DisplayName = "帮助文档链接";
         }
+    }
+
+    public override ActionResult Index(Pager p = null)
+    {
+        return base.Index(p);
     }
 
     /// <summary>实体树的数据来自缓存</summary>

@@ -8,6 +8,9 @@ using NewLife.Log;
 using NewLife.Web;
 using XCode.Membership;
 using static LeoChen.Cms.Data.CmsContent_Sort;
+using NewLife;
+using NewLife.Cube.Common;
+using XCode.Model;
 
 namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 
@@ -18,51 +21,123 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
 {
     static CmsContent_SortController()
     {
-        //LogOnChange = true;
-
-        //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
-
-        //{
-        //    var df = ListFields.GetField("Code") as ListField;
-        //    df.Url = "?code={Code}";
-        //    df.Target = "_blank";
-        //}
-        //{
-        //    var df = ListFields.AddListField("devices", null, "Onlines");
-        //    df.DisplayName = "查看设备";
-        //    df.Url = "Device?groupId={Id}";
-        //    df.DataVisible = e => (e as CmsContent_Sort).Devices > 0;
-        //    df.Target = "_frame";
-        //}
-        //{
-        //    var df = ListFields.GetField("Kind") as ListField;
-        //    df.GetValue = e => ((Int32)(e as CmsContent_Sort).Kind).ToString("X4");
-        //}
-        //ListFields.TraceUrl("TraceId");
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
     }
 
-    //private readonly ITracer _tracer;
+    public override Task<ActionResult> Edit(CmsContent_Sort model)
+    {
+        return base.Edit(model);
+    }
 
-    //public CmsContent_SortController(ITracer tracer)
-    //{
-    //    _tracer = tracer;
-    //}
+    public override ActionResult Edit(string id)
+    {
+        return base.Edit(id);
+    }
+
+    protected override WhereBuilder CreateWhere()
+    {
+        HttpContext.Items["AreaID"] = CmsAreaContext.CurrentId;
+        return base.CreateWhere();
+    }
+    
+
+    public override ActionResult Index(Pager p = null)
+    {
+        PageSetting.EnableTableDoubleClick = false;
+        PageSetting.EnableKey = false;
+        PageSetting.EnableAdd = true;
+        var areaid = CmsAreaContext.CurrentId;
+
+        var list = FindAllByAreaIDAndPid(areaid, 0);
+        // 用于显示的列
+        ViewBag.Fields = OnGetFields(ViewKinds.List, list);
+        ViewBag.SearchFields = OnGetFields(ViewKinds.Search, list);
+        if (IsJsonRequest) return Json(0, null, list, new { page = p });
+        return View("ListTree", list);
+    }
+
+    /// <summary>
+    /// 批量排序
+    /// </summary>
+    /// <returns></returns>
+    public ActionResult AllSorting()
+    {
+        var idlist = GetRequest("id").SplitAsInt(",");
+        var oldsortlist = GetRequest("oldsorting").SplitAsInt(",");
+        var sortlist = GetRequest("sorting").SplitAsInt(",");
+        if (idlist.Length == oldsortlist.Length && oldsortlist.Length == sortlist.Length)
+        {
+            var count = 0;
+            for (int i = 0; i < idlist.Length; i++)
+            {
+               
+                if (oldsortlist[i] != sortlist[i])
+                {
+                    count++;
+                   var e = FindByID(idlist[i]);
+                   e.Sorting = sortlist[i];
+                   e.Save();
+                }
+            }
+            return JsonRefresh($"成功排序{count}行");
+        }
+        
+        return JsonRefresh($"请求出错！数据未修改");
+    }
+
+
+    public override ActionResult DeleteSelect()
+    {
+        return base.DeleteSelect();
+    }
+
+    protected override FieldCollection OnGetFields(ViewKinds kind, Object model)
+    {
+        var rs = base.OnGetFields(kind, model);
+        if (kind == ViewKinds.List)
+        {
+            var keepFieldNames = new List<string> 
+            {
+                "ID",          // ID
+                "Name",        // 名称
+                "ListTpl",     // 列表模板
+                "ContentTpl",  // 内容模板
+                "Enable",      // 状态
+                "Sorting"      // 排序
+            };
+
+            // 3. 计算需要删除的字段名（所有不在keep列表中的字段）
+            var removeFieldNames = rs.Select(f => f.Name)
+                .Where(name => !keepFieldNames.Contains(name))
+                .ToArray(); // 转换为数组，方便传递给RemoveField
+
+            if (removeFieldNames.Length > 0)
+            {
+                rs.RemoveField(removeFieldNames); 
+            }
+        }
+
+        rs.RemoveField("AreaID","AreaName");
+        return rs;
+
+    }
+
+    
 
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>
     /// <param name="p">分页器。包含分页排序参数，以及Http请求参数</param>
     /// <returns></returns>
     protected override IEnumerable<CmsContent_Sort> Search(Pager p)
     {
-        var areaId = p["areaId"].ToInt(-1);
+        var areaId = CmsAreaContext.CurrentId;
         var pid = p["pid"].ToInt(-1);
         var modelId = p["modelId"].ToInt(-1);
         var sorting = p["sorting"].ToInt(-1);
-        var status = p["status"]?.ToBoolean();
+        var enable = p["enable"]?.ToBoolean();
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsContent_Sort.Search(areaId, pid, modelId, sorting, status, start, end, p["Q"], p);
+        return CmsContent_Sort.Search(areaId, pid, modelId, enable,sorting, start, end, p["Q"], p);
     }
 }

@@ -40,8 +40,4 @@
     <ProjectReference Include="..\NewLife.CubeMini\NewLife.CubeMini.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="BasicContent\" />
-  </ItemGroup>
-
 </Project>

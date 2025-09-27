@@ -1,0 +1,47 @@
+﻿@using LeoChen.Cms.Data
+@using NewLife;
+@using NewLife.Cube
+@using NewLife.Cube.ViewModels
+@using NewLife.Reflection
+@using NewLife.Web;
+@using XCode;
+@using XCode.Configuration;
+@using XCode.Membership
+@{
+    var fact = ViewBag.Factory as IEntityFactory;
+    var fields = ViewBag.Fields as FieldCollection;
+    var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+}
+<table id="sort-tree-table" class="table table-bordered table-hover table-striped table-condensed table-data-list">
+    <thead>
+    <tr>
+        @foreach (var item in fields)
+        {
+            var df = item as ListField;
+            var name = df?.Header ?? item.DisplayName ?? item.Name;
+            var title = df?.HeaderTitle ?? item.Description;
+
+            if (item.Type == typeof(DateTime) && item.Services.Count == 0)
+            {
+                var width = item.ItemType == "Date" ? 80 : 134;
+                <th class="text-center" style="min-width:@(width)px;" title="@title"><a>@name</a></th>
+            }
+            else if (item.Type == null)
+            {
+                <th class="text-center" title="@title">@name</th>
+            }
+            else
+            {
+                <th class="text-center" title="@title"><a>@name</a></th>
+            }
+        }
+        @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
+        {
+            <th class="text-center">操作</th>
+        }
+    </tr>
+    </thead>
+    <tbody>
+    @await Html.PartialAsync("_ListTree_Data2", Model as IList<CmsContent_Sort>)
+    </tbody>
+</table>

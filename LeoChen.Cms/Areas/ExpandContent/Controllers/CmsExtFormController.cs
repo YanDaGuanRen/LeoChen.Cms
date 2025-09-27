@@ -21,7 +21,7 @@ public class CmsExtFormController : EntityController<CmsExtForm>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;

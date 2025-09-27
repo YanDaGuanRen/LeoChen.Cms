@@ -35,16 +35,16 @@ public partial interface ICmsSite
     /// <summary>描述</summary>
     String Description { get; set; }
 
-    /// <summary>icp</summary>
+    /// <summary>备案信息</summary>
     String Icp { get; set; }
 
     /// <summary>模板名</summary>
     String Theme { get; set; }
 
-    /// <summary>statistical</summary>
+    /// <summary>统计代码</summary>
     String Statistical { get; set; }
 
-    /// <summary>copyright</summary>
+    /// <summary>版权</summary>
     String Copyright { get; set; }
 
     /// <summary>创建者</summary>

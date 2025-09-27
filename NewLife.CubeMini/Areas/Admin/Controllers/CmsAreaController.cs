@@ -23,7 +23,7 @@ public class CmsAreaController : EntityController<CmsArea>
         {
             var df = ListFields.AddListField("seleArea", null, "Enable");
             df.DisplayName = "切换区域";
-            df.Url = "Device?groupId={Id}";
+            df.Url = "Device?groupId={ID}";
         }
         //{
         //    var df = ListFields.GetField("Code") as ListField;

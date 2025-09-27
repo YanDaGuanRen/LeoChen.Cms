@@ -1,0 +1,36 @@
+﻿@using NewLife;
+@using NewLife.Web;
+@using XCode;
+@using XCode.Membership
+@{
+    var fact = ViewBag.Factory as IEntityFactory;
+    var page = ViewBag.Page as Pager;
+
+    var act = Context.Request.Path + "";
+    if (act.IsNullOrEmpty()) { act = Url.Action("Index"); }
+
+    var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+}
+<div class="tableTools-container">
+    <div class="form-inline">
+        <form action="@Html.Raw(page.GetFormAction(act))" method="post" role="form">
+            @if (set.EnableAdd && !set.IsReadOnly && this.Has(PermissionFlags.Insert))
+            {
+                var rv = page.GetRouteValue();
+                @Html.ActionLink("添加", "Add", rv, new { @class = "btn btn-success btn-sm" }.ToDictionary())
+            }
+            @if (set.EnableSelect)
+            {
+                <div class="form-group toolbar-batch">
+                    @await Html.PartialAsync("_List_Toolbar_Batch")
+                </div>
+            }
+            @await Html.PartialAsync("_List_Toolbar_Custom")
+            <div class="pull-right form-group">
+                @await Html.PartialAsync("_List_Search")
+                @await Html.PartialAsync("_List_Toolbar_Search")
+                @await Html.PartialAsync("_List_Toolbar_Adv")
+            </div>
+        </form>
+    </div>
+</div>

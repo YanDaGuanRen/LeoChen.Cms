@@ -21,8 +21,13 @@ public class CmsLabelController : EntityController<CmsLabel>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
-
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        {
+            var df = ListFields.AddListField("CmsLabelDisplayName", null, "Name");
+            df.DisplayName = "调用标签名称";
+            df.Text = "ExtLabel_{Name}";
+            df.TextAlign = TextAligns.Center;
+        }
         //{
         //    var df = ListFields.GetField("Code") as ListField;
         //    df.Url = "?code={Code}";
@@ -42,6 +47,11 @@ public class CmsLabelController : EntityController<CmsLabel>
         //ListFields.TraceUrl("TraceId");
     }
 
+    public override ActionResult Add()
+    {
+        var e = new CmsLabel();
+        return AddEntity(e);
+    }
     //private readonly ITracer _tracer;
 
     //public CmsLabelController(ITracer tracer)

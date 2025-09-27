@@ -36,7 +36,7 @@ public partial interface ICmsContent_Sort
     String ContentTpl { get; set; }
 
     /// <summary>状态</summary>
-    Boolean Status { get; set; }
+    Boolean Enable { get; set; }
 
     /// <summary>外部链接</summary>
     String Outlink { get; set; }

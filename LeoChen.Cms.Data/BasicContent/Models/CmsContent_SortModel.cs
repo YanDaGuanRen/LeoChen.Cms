@@ -36,7 +36,7 @@ public partial class CmsContent_SortModel
     public String ContentTpl { get; set; }
 
     /// <summary>状态</summary>
-    public Boolean Status { get; set; }
+    public Boolean Enable { get; set; }
 
     /// <summary>外部链接</summary>
     public String Outlink { get; set; }
@@ -112,7 +112,7 @@ public partial class CmsContent_SortModel
         Subname = model.Subname;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
-        Status = model.Status;
+        Enable = model.Enable;
         Outlink = model.Outlink;
         Ico = model.Ico;
         Pic = model.Pic;

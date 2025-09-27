@@ -35,16 +35,16 @@ public partial class CmsSiteModel
     /// <summary>描述</summary>
     public String Description { get; set; }
 
-    /// <summary>icp</summary>
+    /// <summary>备案信息</summary>
     public String Icp { get; set; }
 
     /// <summary>模板名</summary>
     public String Theme { get; set; }
 
-    /// <summary>statistical</summary>
+    /// <summary>统计代码</summary>
     public String Statistical { get; set; }
 
-    /// <summary>copyright</summary>
+    /// <summary>版权</summary>
     public String Copyright { get; set; }
 
     /// <summary>创建者</summary>

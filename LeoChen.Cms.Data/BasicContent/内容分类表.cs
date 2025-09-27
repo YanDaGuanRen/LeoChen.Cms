@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Common;
 using NewLife.Cube.Entity;
 using NewLife.Data;
 using XCode;
@@ -22,6 +23,7 @@ namespace LeoChen.Cms.Data;
 [BindIndex("IX_CmsContent_Sort_PID", false, "PID")]
 [BindIndex("IX_CmsContent_Sort_AreaID_PID", false, "AreaID,PID")]
 [BindIndex("IX_CmsContent_Sort_ModelID", false, "ModelID")]
+[BindIndex("IX_CmsContent_Sort_Enable", false, "Enable")]
 [BindIndex("IX_CmsContent_Sort_Sorting", false, "Sorting")]
 [BindIndex("IU_CmsContent_Sort_Name", true, "Name")]
 [BindTable("CmsContent_Sort", Description = "内容分类表", ConnName = "Membership", DbType = DatabaseType.None)]
@@ -92,13 +94,13 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     [BindColumn("ContentTpl", "内容模板", "")]
     public String ContentTpl { get => _ContentTpl; set { if (OnPropertyChanging("ContentTpl", value)) { _ContentTpl = value; OnPropertyChanged("ContentTpl"); } } }
 
-    private Boolean _Status;
+    private Boolean _Enable;
     /// <summary>状态</summary>
     [DisplayName("状态")]
     [Description("状态")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Status", "状态", "")]
-    public Boolean Status { get => _Status; set { if (OnPropertyChanging("Status", value)) { _Status = value; OnPropertyChanged("Status"); } } }
+    [BindColumn("Enable", "状态", "")]
+    public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private String _Outlink;
     /// <summary>外部链接</summary>
@@ -286,7 +288,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         Subname = model.Subname;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
-        Status = model.Status;
+        Enable = model.Enable;
         Outlink = model.Outlink;
         Ico = model.Ico;
         Pic = model.Pic;
@@ -326,7 +328,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
             "Subname" => _Subname,
             "ListTpl" => _ListTpl,
             "ContentTpl" => _ContentTpl,
-            "Status" => _Status,
+            "Enable" => _Enable,
             "Outlink" => _Outlink,
             "Ico" => _Ico,
             "Pic" => _Pic,
@@ -361,7 +363,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
                 case "Subname": _Subname = Convert.ToString(value); break;
                 case "ListTpl": _ListTpl = Convert.ToString(value); break;
                 case "ContentTpl": _ContentTpl = Convert.ToString(value); break;
-                case "Status": _Status = value.ToBoolean(); break;
+                case "Enable": _Enable = value.ToBoolean(); break;
                 case "Outlink": _Outlink = Convert.ToString(value); break;
                 case "Ico": _Ico = Convert.ToString(value); break;
                 case "Pic": _Pic = Convert.ToString(value); break;
@@ -415,6 +417,8 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     {
         if (id < 0) return null;
 
+        var areaid = CmsAreaContext.CurrentId;
+
         // 实体缓存
         if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.ID == id);
 
@@ -423,6 +427,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         //return Find(_.ID == id);
     }
+    
 
     /// <summary>根据区域代码查找</summary>
     /// <param name="areaId">区域代码</param>
@@ -449,6 +454,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         return FindAll(_.Pid == pid);
     }
+    
 
     /// <summary>根据区域代码、父级代码查找</summary>
     /// <param name="areaId">区域代码</param>
@@ -513,22 +519,22 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     /// <param name="areaId">区域代码</param>
     /// <param name="pid">父级代码</param>
     /// <param name="modelId">模型代码</param>
+    /// <param name="enable">状态</param>
     /// <param name="sorting">排序</param>
-    /// <param name="status">状态</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsContent_Sort> Search(Int32 areaId, Int32 pid, Int32 modelId, Int32 sorting, Boolean? status, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsContent_Sort> Search(Int32 areaId, Int32 pid, Int32 modelId, Boolean? enable, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (areaId >= 0) exp &= _.AreaID == areaId;
         if (pid >= 0) exp &= _.Pid == pid;
         if (modelId >= 0) exp &= _.ModelID == modelId;
+        if (enable != null) exp &= _.Enable == enable;
         if (sorting >= 0) exp &= _.Sorting == sorting;
-        if (status != null) exp &= _.Status == status;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
 
@@ -565,7 +571,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         public static readonly Field ContentTpl = FindByName("ContentTpl");
 
         /// <summary>状态</summary>
-        public static readonly Field Status = FindByName("Status");
+        public static readonly Field Enable = FindByName("Enable");
 
         /// <summary>外部链接</summary>
         public static readonly Field Outlink = FindByName("Outlink");
@@ -658,7 +664,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         public const String ContentTpl = "ContentTpl";
 
         /// <summary>状态</summary>
-        public const String Status = "Status";
+        public const String Enable = "Enable";
 
         /// <summary>外部链接</summary>
         public const String Outlink = "Outlink";

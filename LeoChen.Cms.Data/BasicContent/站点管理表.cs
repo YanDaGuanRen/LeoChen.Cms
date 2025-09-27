@@ -88,11 +88,11 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
     private String _Icp;
-    /// <summary>icp</summary>
-    [DisplayName("icp")]
-    [Description("icp")]
+    /// <summary>备案信息</summary>
+    [DisplayName("备案信息")]
+    [Description("备案信息")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Icp", "icp", "")]
+    [BindColumn("Icp", "备案信息", "")]
     public String Icp { get => _Icp; set { if (OnPropertyChanging("Icp", value)) { _Icp = value; OnPropertyChanged("Icp"); } } }
 
     private String _Theme;
@@ -104,19 +104,19 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     public String Theme { get => _Theme; set { if (OnPropertyChanging("Theme", value)) { _Theme = value; OnPropertyChanged("Theme"); } } }
 
     private String _Statistical;
-    /// <summary>statistical</summary>
-    [DisplayName("statistical")]
-    [Description("statistical")]
+    /// <summary>统计代码</summary>
+    [DisplayName("统计代码")]
+    [Description("统计代码")]
     [DataObjectField(false, false, true, 500)]
-    [BindColumn("Statistical", "statistical", "")]
+    [BindColumn("Statistical", "统计代码", "")]
     public String Statistical { get => _Statistical; set { if (OnPropertyChanging("Statistical", value)) { _Statistical = value; OnPropertyChanged("Statistical"); } } }
 
     private String _Copyright;
-    /// <summary>copyright</summary>
-    [DisplayName("copyright")]
-    [Description("copyright")]
+    /// <summary>版权</summary>
+    [DisplayName("版权")]
+    [Description("版权")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Copyright", "copyright", "")]
+    [BindColumn("Copyright", "版权", "")]
     public String Copyright { get => _Copyright; set { if (OnPropertyChanging("Copyright", value)) { _Copyright = value; OnPropertyChanged("Copyright"); } } }
 
     private Int32 _CreateUserID;
@@ -346,16 +346,16 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         /// <summary>描述</summary>
         public static readonly Field Description = FindByName("Description");
 
-        /// <summary>icp</summary>
+        /// <summary>备案信息</summary>
         public static readonly Field Icp = FindByName("Icp");
 
         /// <summary>模板名</summary>
         public static readonly Field Theme = FindByName("Theme");
 
-        /// <summary>statistical</summary>
+        /// <summary>统计代码</summary>
         public static readonly Field Statistical = FindByName("Statistical");
 
-        /// <summary>copyright</summary>
+        /// <summary>版权</summary>
         public static readonly Field Copyright = FindByName("Copyright");
 
         /// <summary>创建者</summary>
@@ -406,16 +406,16 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         /// <summary>描述</summary>
         public const String Description = "Description";
 
-        /// <summary>icp</summary>
+        /// <summary>备案信息</summary>
         public const String Icp = "Icp";
 
         /// <summary>模板名</summary>
         public const String Theme = "Theme";
 
-        /// <summary>statistical</summary>
+        /// <summary>统计代码</summary>
         public const String Statistical = "Statistical";
 
-        /// <summary>copyright</summary>
+        /// <summary>版权</summary>
         public const String Copyright = "Copyright";
 
         /// <summary>创建者</summary>

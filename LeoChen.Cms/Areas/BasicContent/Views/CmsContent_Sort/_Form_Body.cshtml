@@ -1,0 +1,197 @@
+﻿@model CmsContent_Sort
+@using LeoChen.Cms.Data
+@using NewLife;
+@using NewLife.Cube;
+@using NewLife.Web;
+@using XCode;
+@using XCode.Configuration;
+@using XCode.Membership;
+@{
+    var entity = Model;
+    var fields = ViewBag.Fields as FieldCollection;
+}
+
+    <ul class="nav nav-tabs" role="tablist">
+            <li class="active"><a href="#item0" data-toggle="tab">默认</a></li>
+            <li class=""><a href="#item1" data-toggle="tab">扩展信息</a></li>
+    </ul>
+    <div class="tab-content">
+            <div class="tab-pane fade in active" id="item0">
+                <div class="row">
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">区域代码</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.ForDropDownList("AreaID", CmsContent_Sort.Meta.AllFields.First(e=>e.Name=="AreaName").Map.Provider.GetDataSource(), @entity.AreaName)
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">父级代码</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.ForEditor(CmsContent_Sort._.Pid, entity)
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">模型代码</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.ForDropDownList("ModelID", CmsContent_Sort.Meta.AllFields.First(e=>e.Name=="ModelName").Map.Provider.GetDataSource(), @entity.ModelName)
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">名称</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Name" name="Name" type="text" value="@entity.Name" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">副名称</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Subname" name="Subname" type="text" value="@entity.Subname" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">列表模板</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="ListTpl" name="ListTpl" type="text" value="@entity.ListTpl" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">内容模板</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="ContentTpl" name="ContentTpl" type="text" value="@entity.ContentTpl" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">状态</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.CheckBox("Enable", @entity.Enable, new { @class = "chkSwitch" })
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">外部链接</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Outlink" name="Outlink" type="text" value="@entity.Outlink" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">图标</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Ico" name="Ico" type="text" value="@entity.Ico" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">图片</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Pic" name="Pic" type="text" value="@entity.Pic" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">标题</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Title" name="Title" type="text" value="@entity.Title" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">关键词</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Keywords" name="Keywords" type="text" value="@entity.Keywords" />
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">描述</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Description" name="Description" rows="3">@entity.Description</textarea>
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">文件名</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="Filename" name="Filename" type="text" value="@entity.Filename" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">排序</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.TextBox("Sorting", @entity.Sorting, new { @class = "form-control", role="number" })
+    </div>
+</div>
+                </div>
+    </div>
+            <div class="tab-pane fade in " id="item1">
+                <div class="row">
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段1</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def1" name="Def1" rows="3">@entity.Def1</textarea>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段2</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def2" name="Def2" rows="3">@entity.Def2</textarea>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段3</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def3" name="Def3" rows="3">@entity.Def3</textarea>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段1</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def4" name="Def4" rows="3">@entity.Def4</textarea>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段2</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def5" name="Def5" rows="3">@entity.Def5</textarea>
+    </div>
+</div>
+<div class="form-group col-md-12">
+    <label class="control-label col-xs-3 col-sm-3">预留字段3</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <textarea class="form-control" cols="20" id="Def6" name="Def6" rows="3">@entity.Def6</textarea>
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">创建者</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.TextBox("CreateUserID", @entity.CreateUserID, new { @class = "form-control", role="number" })
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">创建时间</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        @Html.TextBox("CreateTime", @entity.CreateTime.ToFullString(""), new { @class = "form-control date form_datetime" })
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">创建地址</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="CreateIP" name="CreateIP" type="text" value="@entity.CreateIP" />
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">更新者</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        @Html.TextBox("UpdateUserID", @entity.UpdateUserID, new { @class = "form-control", role="number" })
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">更新时间</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
+        @Html.TextBox("UpdateTime", @entity.UpdateTime.ToFullString(""), new { @class = "form-control date form_datetime" })
+    </div>
+</div>
+<div class="form-group col-xs-12 col-sm-6">
+    <label class="control-label col-xs-3 col-sm-3">更新地址</label>
+    <div class="input-group col-xs-9 col-sm-9">
+        <input class="form-control" id="UpdateIP" name="UpdateIP" type="text" value="@entity.UpdateIP" />
+    </div>
+</div>
+                </div>
+    </div>
+    </div>
