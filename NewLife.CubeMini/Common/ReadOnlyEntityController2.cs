@@ -257,6 +257,27 @@ public partial class ReadOnlyEntityController<TEntity>
     /// <returns></returns>
     protected virtual String[] SelectKeys => GetRequest("Keys")?.Split(",");
 
+    /// <summary>获取缓存的分页对象。内含查询条件和排序条件</summary>
+    /// <returns></returns>
+    protected virtual Pager GetCachePager()
+    {
+        var request = WebHelper.Params;
+        var queryData = request["_query"];
+        if (!queryData.IsNullOrEmpty())
+        {
+            queryData = queryData.ToBase64().ToStr();
+            var p = new Pager();
+            p.Parse(queryData);
+            return p;
+        }
+        else
+        {
+            // 计算目标数据量。不能破坏缓存对象，需要new一个新对象
+            var p = Session[CacheKey] as Pager;
+            return new Pager(p);
+        }
+    }
+
     /// <summary>多次导出数据</summary>
     /// <returns></returns>
     protected virtual IEnumerable<TEntity> ExportData(Int32 max = 0)
@@ -264,14 +285,11 @@ public partial class ReadOnlyEntityController<TEntity>
         var set = CubeSetting.Current;
         if (max <= 0) max = set.MaxExport;
 
-        // 计算目标数据量
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p)
-        {
-            RetrieveTotalCount = true,
-            PageIndex = 1,
-            PageSize = 1,
-        };
+        var p = GetCachePager();
+        p.RetrieveTotalCount = true;
+        p.PageIndex = 1;
+        p.PageSize = 1;
+        
         SearchData(p);
         p.PageSize = 20_000;
 
@@ -308,14 +326,10 @@ public partial class ReadOnlyEntityController<TEntity>
     protected virtual IEnumerable<TEntity> ExportDataByPage(Int32 pageSize, Int32 max)
     {
         // 跳过头部一些页数，导出当前页以及以后的数据
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p)
-        {
-            // 不要查记录数
-            RetrieveTotalCount = false,
-            PageIndex = 1,
-            PageSize = pageSize
-        };
+        var p = GetCachePager();
+        p.RetrieveTotalCount = true;
+        p.PageIndex = 1;
+        p.PageSize = 1;
 
         while (max > 0)
         {
@@ -348,15 +362,10 @@ public partial class ReadOnlyEntityController<TEntity>
     /// <returns></returns>
     protected virtual IEnumerable<TEntity> ExportDataByDatetime(Int32 step, Int32 max)
     {
-        // 跳过头部一些页数，导出当前页以及以后的数据
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p)
-        {
-            // 不要查记录数
-            RetrieveTotalCount = false,
-            PageIndex = 1,
-            PageSize = 0,
-        };
+        var p = GetCachePager();
+        p.RetrieveTotalCount = false;
+        p.PageIndex = 1;
+        p.PageSize = 0;
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();

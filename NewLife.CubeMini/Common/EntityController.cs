@@ -1,19 +1,14 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Text;
 using Microsoft.AspNetCore.Mvc;
-using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Data;
-using NewLife.IO;
 using NewLife.Log;
 using NewLife.Reflection;
 using NewLife.Remoting;
-using NewLife.Serialization;
 using NewLife.Web;
 using XCode;
-using XCode.Configuration;
 using XCode.Membership;
 
 namespace NewLife.Cube;
@@ -22,6 +17,7 @@ namespace NewLife.Cube;
 public partial class EntityController<TEntity, TModel>
 {
     #region 默认Action
+
     /// <summary>删除</summary>
     /// <param name="id"></param>
     /// <returns></returns>
@@ -60,7 +56,7 @@ public partial class EntityController<TEntity, TModel>
     [DisplayName("添加{type}")]
     public virtual ActionResult Add()
     {
-           var entity = Factory.Create(true) as TEntity;
+        var entity = Factory.Create(true) as TEntity;
         // 填充QueryString参数
         var qs = Request.Query;
         foreach (var item in Factory.Fields)
@@ -91,7 +87,7 @@ public partial class EntityController<TEntity, TModel>
 
         return View("AddForm", entity);
     }
-    
+
     /// <summary>保存</summary>
     /// <param name="model"></param>
     /// <returns></returns>
@@ -107,7 +103,7 @@ public partial class EntityController<TEntity, TModel>
             if (entity is IEntity<TModel> entity2)
                 entity2.Copy(model);
             else if (model is IModel src)
-                entity.CopyFrom(src, true);
+                entity.CopyFrom(src, true, true);
             else
                 entity.Copy(model);
         }
@@ -213,7 +209,7 @@ public partial class EntityController<TEntity, TModel>
             if (entity is IEntity<TModel> entity2)
                 entity2.Copy(model);
             else if (model is IModel src)
-                entity.CopyFrom(src, true);
+                entity.CopyFrom(src, true, true);
             else
                 entity.Copy(model, false, uk.Name);
         }
@@ -289,9 +285,11 @@ public partial class EntityController<TEntity, TModel>
         var count = EnableOrDisableSelect(false, reason);
         return JsonRefresh($"共禁用[{count}]个");
     }
+
     #endregion
 
     #region 高级Action
+
     /// <summary>高级开发接口</summary>
     /// <param name="act"></param>
     /// <returns></returns>
@@ -305,185 +303,24 @@ public partial class EntityController<TEntity, TModel>
 
         return act switch
         {
-            "Sync" => await Backup(),
+            "Sync" => Backup(),
             _ => await base.Develop(act),
         };
-    }
-
-    /// <summary>导入Xml</summary>
-    /// <returns></returns>
-    [EntityAuthorize(PermissionFlags.Insert)]
-    [DisplayName("导入")]
-    [HttpPost]
-    public virtual ActionResult ImportXml() => throw new NotImplementedException();
-
-    /// <summary>导入Json</summary>
-    /// <remarks>当前采用前端解析的excel，表头第一行数据无效，从第二行开始处理</remarks>
-    /// <returns></returns>
-    [EntityAuthorize(PermissionFlags.Insert)]
-    [DisplayName("导入")]
-    [HttpPost]
-    public virtual ActionResult ImportJson(String data)
-    {
-        if (String.IsNullOrWhiteSpace(data)) return Json(500, null, $"“{nameof(data)}”不能为 null 或空白。");
-        try
-        {
-            var fact = Factory;
-            var dal = fact.Session.Dal;
-            var type = Activator.CreateInstance(fact.EntityType);
-            var json = new JsonParser(data);
-            var dataList = json.Decode() as IList<Object>;
-
-
-            //解析json
-            //var dataList = JArray.Parse(data);
-            var errorString = String.Empty;
-            Int32 okSum = 0, fiSum = 0;
-
-            //using var tran = Entity<TEntity>.Meta.CreateTrans();
-            foreach (var itemD in dataList)
-            {
-                var item = itemD.ToDictionary();
-                if (item[fact.Fields[1].Name].ToString() == fact.Fields[1].DisplayName) //判断首行是否为标体列
-                {
-                    continue;
-                }
-                else
-                {
-                    //检查主字段是否重复
-                    if (Entity<TEntity>.Find(fact.Master.Name, item[fact.Master.Name].ToString()) == null)
-                    {
-                        //var entity = item.ToJson().ToJsonEntity(fact.EntityType);
-                        var entity = fact.Create();
-
-                        foreach (var fieldsItem in fact.Fields)
-                        {
-                            if (!item.ContainsKey(fieldsItem.Name))
-                            {
-                                if (!fieldsItem.IsNullable)
-                                    fieldsItem.FromExcelToEntity(item, entity);
-
-                                continue;
-                            }
-
-                            fieldsItem.FromExcelToEntity(item, entity);
-                        }
-
-                        if (fact.FieldNames.Contains("CreateTime"))
-                            entity["CreateTime"] = DateTime.Now;
-
-                        if (fact.FieldNames.Contains("CreateIP"))
-                            entity["CreateIP"] = "--";
-
-                        okSum += fact.Session.Insert(entity);
-                    }
-                    else
-                    {
-                        errorString += $"<br>{item[fact.Master.Name]}重复";
-                        fiSum++;
-                    }
-                }
-            }
-
-            //tran.Commit();
-
-            WriteLog("导入Excel", true, $"导入Excel[{data}]（{dataList.Count()}行）成功！");
-
-            return Json(0, $"导入成功:({okSum}行)，失败({fiSum}行)！{errorString}");
-        }
-        catch (Exception ex)
-        {
-            XTrace.WriteException(ex);
-
-            WriteLog("导入Excel", false, ex.GetMessage());
-
-            return Json(500, ex.GetMessage(), ex);
-        }
     }
 
     /// <summary>导入Excel</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Insert)]
     [DisplayName("导入Excel")]
+    [Obsolete("=>ImportFile")]
     public virtual ActionResult ImportExcel(IFormFile file)
     {
         try
         {
             var fact = Factory;
-            using var reader = new ExcelReader(file.OpenReadStream(), Encoding.UTF8);
+            var rs = ImportExcel(file.FileName, file.OpenReadStream(), fact, GetCachePager());
 
-            var headers = new List<String>();
-            var fields = new List<FieldItem>();
-            var list = new List<TEntity>();
-            var total = 0;
-            var blank = 0;
-            var result = 0;
-            var batchSize = 10_000;
-
-            // 流式读取Excel数据，一边解析一边处理，避免一次性加载占用大量内存
-            foreach (var row in reader.ReadRows())
-            {
-                if (fields.Count == 0)
-                {
-                    // 读取标题行，找到对应字段
-                    foreach (var item in row)
-                    {
-                        headers.Add(item + "");
-
-                        // 找到对应字段，可能为空
-                        var field = Factory.Fields.FirstOrDefault(e => (item + "").EqualIgnoreCase(e.Name, e.DisplayName));
-                        fields.Add(field);
-                    }
-
-                    // 如果没有找到任何字段，说明该行不是标题行，需要检查下一行。该行可能是注释说明行
-                    if (!fields.Any(e => e != null))
-                    {
-                        blank++;
-                        headers.Clear();
-                        fields.Clear();
-                    }
-                }
-                else
-                {
-                    total++;
-                    // 如果该行所有列都为空，则直接跳过
-                    if (row.All(e => e == null || e.ToString().Trim().Length == 0))
-                    {
-                        blank++;
-                        continue;
-                    }
-
-                    // 实例化实体对象，读取一行，逐个字段赋值
-                    var entity = fact.Create() as TEntity;
-                    for (var i = 0; i < row.Length && i < fields.Count; i++)
-                    {
-                        var field = fields[i];
-                        if (field != null)
-                            entity.SetItem(field.Name, row[i].ChangeType(field.Type));
-                        else
-                            entity[headers[i]] = row[i];
-                    }
-
-                    if ((entity as IEntity).HasDirty) list.Add(entity);
-
-                    // 如果足够一批，先保存一批
-                    if (list.Count >= batchSize)
-                    {
-                        result += OnImport(list, headers, fields);
-                        list.Clear();
-                    }
-                }
-            }
-
-            // 保存数据
-            if (list.Count > 0)
-            {
-                result += OnImport(list, headers, fields);
-            }
-
-            var msg = $"导入[{file.FileName}]，共[{total}]行，成功[{result}]行，{blank}行无效！";
-            base.WriteLog("导入Excel", true, msg);
-
+            var msg = $"导入[{file.FileName}]，成功[{rs}]行！";
             return JsonRefresh(msg, 2);
         }
         catch (Exception ex)
@@ -494,66 +331,6 @@ public partial class EntityController<TEntity, TModel>
 
             return Json(500, ex.GetMessage(), ex);
         }
-    }
-
-    /// <summary>导入数据，保存落库</summary>
-    /// <remarks>
-    /// 此时得到的实体列表，都是全新创建，用于接收上传数据。
-    /// 业务上，还需要考虑跟旧数据进行合并，已存在更新，不存在则新增。
-    /// </remarks>
-    /// <param name="list">导入实体列表</param>
-    /// <param name="headers">表头</param>
-    /// <param name="fields">导入字段</param>
-    /// <returns></returns>
-    protected virtual Int32 OnImport(IList<TEntity> list, IList<String> headers, IList<FieldItem> fields)
-    {
-        // 如果存在主键或者唯一索引，先查找是否存在，如果存在则更新，否则新增
-        fields = fields.Where(e => e != null).ToList();
-        var names = fields.Select(e => e.Name).ToList();
-        var uk = Factory.Unique;
-        if (uk != null && fields.Any(e => e.Name == uk.Name))
-        {
-            for (var i = 0; i < list.Count; i++)
-            {
-                var entity = list[i];
-                var old = Factory.FindByKey(entity[uk.Name]) as TEntity;
-                if (old != null) list[i] = CopyFrom(old, entity, fields);
-            }
-        }
-        else
-        {
-            // 唯一索引
-            var di = Factory.Table.DataTable.Indexes.FirstOrDefault(e => e.Unique && !e.Columns.Except(names).Any());
-            if (di != null)
-            {
-                var fs = fields.Where(e => di.Columns.Contains(e.Name)).ToList();
-                for (var i = 0; i < list.Count; i++)
-                {
-                    var entity = list[i];
-                    var exp = new WhereExpression();
-                    foreach (var fi in fs)
-                    {
-                        exp &= fi.Equal(entity[fi.Name]);
-                    }
-                    var old = Factory.Find(exp) as TEntity;
-                    if (old != null) list[i] = CopyFrom(old, entity, fields);
-                }
-            }
-        }
-
-        return list.Save();
-    }
-
-    TEntity CopyFrom(TEntity entity, IModel source, IList<FieldItem> fields)
-    {
-        if (fields == null || fields.Count == 0) return entity;
-
-        foreach (var fi in fields)
-        {
-            if (fi != null) entity.SetItem(fi.Name, source[fi.Name]);
-        }
-
-        return entity;
     }
 
     /// <summary>修改bool值</summary>
@@ -594,6 +371,7 @@ public partial class EntityController<TEntity, TModel>
                 }
             }
         }
+
         return JsonRefresh($"操作成功！共更新[{rs}]行！");
     }
 
@@ -632,9 +410,11 @@ public partial class EntityController<TEntity, TModel>
 
         return JsonRefresh($"操作成功！共更新[{rs}]行！");
     }
+
     #endregion
 
     #region 批量删除
+
     /// <summary>删除选中</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Delete)]
@@ -693,8 +473,7 @@ public partial class EntityController<TEntity, TModel>
 
         var total = 0;
         var success = 0;
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p);
+        var p = GetCachePager();
         if (p != null)
         {
             // 循环多次删除
@@ -740,9 +519,43 @@ public partial class EntityController<TEntity, TModel>
         else
             return RedirectToAction("Index");
     }
+
+    #endregion
+
+    #region 导入Excel/Csv/Json/Zip
+    /// <summary>导入文件（Excel/Csv/Json/Zip），然后批量写入数据库</summary>
+    /// <param name="file">上传的zip文件</param>
+    /// <returns></returns>
+    [HttpPost]
+    [EntityAuthorize(PermissionFlags.Insert)]
+    [DisplayName("导入Excel/Csv/Json/Zip")]
+    public virtual IActionResult ImportFile(IFormFile file)
+    {
+        if (file == null || file.Length <= 0) return RedirectToAction("Index");
+
+        var factory = Factory;
+        var page = GetCachePager();
+        var stream = file.OpenReadStream();
+        var name = file.FileName;
+        var ext = Path.GetExtension(file.FileName).ToLower();
+        var rs = ext switch
+        {
+            ".xls" or ".xlsx" => ImportExcel(name, stream, factory, page),
+            ".csv" => ImportCsv(name, stream, factory, page),
+            ".json" => ImportJson(name, stream, factory, page),
+            ".zip" => ImportZip(name, stream, factory, page),
+            _ => throw new NotSupportedException($"不支持的导入文件类型[{ext}]"),
+        };
+        var msg = $"导入[{name}] 共{rs}行";
+        // WriteLog("导入" + ext.TrimStart('.'), true, msg);
+
+        return JsonRefresh(msg, 3);
+    }
+    
     #endregion
 
     #region 同步/还原
+
     /// <summary>同步数据</summary>
     /// <returns></returns>
     [NonAction]
@@ -788,7 +601,8 @@ public partial class EntityController<TEntity, TModel>
         sw.Stop();
 
         var fact = Factory;
-        XTrace.WriteLine("[{0}]共同步数据[{1:n0}]行，耗时{2:n0}ms，数据源：{3}", fact.EntityType.FullName, list.Length, sw.ElapsedMilliseconds, url);
+        XTrace.WriteLine("[{0}]共同步数据[{1:n0}]行，耗时{2:n0}ms，数据源：{3}", fact.EntityType.FullName, list.Length,
+            sw.ElapsedMilliseconds, url);
 
         var arrType = fact.EntityType.MakeArrayType();
         if (list.Length > 0)
@@ -801,7 +615,10 @@ public partial class EntityController<TEntity, TModel>
             {
                 fact.Session.Truncate();
             }
-            catch (Exception ex) { XTrace.WriteException(ex); }
+            catch (Exception ex)
+            {
+                XTrace.WriteException(ex);
+            }
 
             // 插入
             //ms.All(e => { e.AllChilds = new List<Menu>(); return true; });
@@ -814,6 +631,7 @@ public partial class EntityController<TEntity, TModel>
 
                 entity.Insert();
             }
+
             fact.AllowInsertIdentity = false;
 
             tran.Commit();
@@ -821,5 +639,6 @@ public partial class EntityController<TEntity, TModel>
 
         return Index();
     }
+
     #endregion
 }

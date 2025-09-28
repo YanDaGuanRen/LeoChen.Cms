@@ -1,62 +1,63 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
-	  <RootNamespace>LeoChen.Cms</RootNamespace>
-	  <AssemblyName>LeoChen.Cms</AssemblyName>
-    <AssemblyTitle>Web管理平台</AssemblyTitle>
-    <Description>零代数据管理平台，基于魔方，快速开发各种管理后台</Description>
-    <Company>新生命开发团队</Company>
-    <Copyright>©2002-2025 NewLife</Copyright>
-    <VersionPrefix>1.0</VersionPrefix>
-    <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
-    <Version>$(VersionPrefix).$(VersionSuffix)</Version>
-    <FileVersion>$(Version)</FileVersion>
-    <AssemblyVersion>$(VersionPrefix).*</AssemblyVersion>
-    <Deterministic>false</Deterministic>
-    <OutputPath>..\Bin\Web</OutputPath>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <LangVersion>latest</LangVersion>
-  </PropertyGroup>
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <RootNamespace>LeoChen.Cms</RootNamespace>
+        <AssemblyName>LeoChen.Cms</AssemblyName>
+        <AssemblyTitle>Web管理平台</AssemblyTitle>
+        <Description>零代数据管理平台，基于魔方，快速开发各种管理后台</Description>
+        <Company>新生命开发团队</Company>
+        <Copyright>©2002-2025 NewLife</Copyright>
+        <VersionPrefix>1.0</VersionPrefix>
+        <VersionSuffix>$([System.DateTime]::Now.ToString(`yyyy.MMdd`))</VersionSuffix>
+        <Version>$(VersionPrefix).$(VersionSuffix)</Version>
+        <FileVersion>$(Version)</FileVersion>
+        <AssemblyVersion>$(VersionPrefix).*</AssemblyVersion>
+        <Deterministic>false</Deterministic>
+        <OutputPath>..\Bin\Web</OutputPath>
+        <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NewLife.Core" Version="11.6.2025.901" />
-    <PackageReference Include="NewLife.Redis" Version="6.3.2025.801" />
-    <PackageReference Include="NewLife.Redis.Extensions" Version="6.3.2025.801" />
-    <PackageReference Include="NewLife.Remoting.Extensions" Version="3.5.2025.901" />
-    <PackageReference Include="NewLife.Stardust.Extensions" Version="3.4.2025.901" />
-    <PackageReference Include="NewLife.XCode" Version="11.20.2025.901" />
-  </ItemGroup>
-
-
-  <ItemGroup>
-    <ProjectReference Include="..\LeoChen.Cms.Data\LeoChen.Cms.Data.csproj" />
-    <ProjectReference Include="..\NewLife.CubeMini\NewLife.CubeMini.csproj" />
-  </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="NewLife.Core" Version="11.6.2025.921-beta1554" />
+        <PackageReference Include="NewLife.XCode" Version="11.20.2025.921-beta1555" />
+        <PackageReference Include="NewLife.Redis" Version="6.3.2025.801"/>
+        <PackageReference Include="NewLife.Redis.Extensions" Version="6.3.2025.801"/>
+        <PackageReference Include="NewLife.Remoting.Extensions" Version="3.5.2025.901"/>
+        <PackageReference Include="NewLife.Stardust.Extensions" Version="3.4.2025.901"/>
+        <PackageReference Include="Microsoft.AspNetCore.SpaServices.Extensions" Version="9.0.9"/>
+    </ItemGroup>
 
 
-  <ItemGroup>
-    <Folder Include="Areas\" />
-    <Folder Include="Areas\GlobalConfiguration\Views\CmsLabel\" />
-  </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\LeoChen.Cms.Data\LeoChen.Cms.Data.csproj"/>
+        <ProjectReference Include="..\NewLife.CubeMini\NewLife.CubeMini.csproj"/>
+    </ItemGroup>
 
 
-  <ItemGroup>
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_Form_Body.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Data.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Search.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Toolbar_Batch.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsCompany\_Form_Action.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\ListTree.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_Form_Body.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data2.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Search.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Batch.cshtml" />
-    <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Search.cshtml" />
-  </ItemGroup>
+    <ItemGroup>
+        <Folder Include="Areas\"/>
+        <Folder Include="Areas\GlobalConfiguration\Views\CmsLabel\"/>
+    </ItemGroup>
+
+
+    <ItemGroup>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_Form_Body.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Data.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Search.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Toolbar_Batch.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsCompany\_Form_Action.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\ListTree.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_Form_Body.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data2.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Search.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Batch.cshtml"/>
+        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Search.cshtml"/>
+    </ItemGroup>
 
 
 </Project>

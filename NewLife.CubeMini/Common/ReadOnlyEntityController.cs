@@ -16,6 +16,7 @@ using NewLife.Cube.Results;
 using NewLife.Cube.ViewModels;
 using NewLife.Data;
 using NewLife.Log;
+using NewLife.Reflection;
 using NewLife.Security;
 using NewLife.Serialization;
 using NewLife.Web;
@@ -156,8 +157,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     {
         var url = Request.GetReferer();
 
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p);
+        var p = GetCachePager();
         if (p != null && p.Params.Count > 0) return Json(500, "当前带有查询参数，为免误解，禁止全表清空！");
 
         try
@@ -341,7 +341,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <param name="p">分页</param>
     /// <returns></returns>
     [AllowAnonymous]
-    [DisplayName("Excel接口")]
+    [DisplayName("Csv接口")]
     public virtual IActionResult Csv(String token, Pager p)
     {
         try
@@ -414,7 +414,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <summary>导出Xml</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    [DisplayName("导出")]
+    [DisplayName("导出Xml")]
     public virtual ActionResult ExportXml()
     {
         var obj = OnExportXml();
@@ -469,7 +469,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <summary>导出Json</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    [DisplayName("导出")]
+    [DisplayName("导出Json")]
     public virtual ActionResult ExportJson()
     {
         var json = OnExportJson().ToJson(true);
@@ -486,7 +486,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <summary>导出Excel</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    [DisplayName("导出")]
+    [DisplayName("导出Excel")]
     public virtual IActionResult ExportExcel()
     {
         // 准备需要输出的列
@@ -577,7 +577,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <summary>导出Csv</summary>
     /// <returns></returns>
     [EntityAuthorize(PermissionFlags.Detail)]
-    [DisplayName("导出")]
+    [DisplayName("导出Csv")]
     public virtual IActionResult ExportCsv()
     {
         var name = GetType().Name.TrimEnd("Controller");
@@ -608,7 +608,37 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
 
         return fields;
     }
+
+    /// <summary>导出当前查询为Zip文件，支持异地恢复数据</summary>
+    /// <returns></returns>
+    [EntityAuthorize(PermissionFlags.Detail)]
+    [DisplayName("导出Zip")]
+    public virtual IActionResult ExportZip()
+    {
+        var name = GetType().Name.TrimEnd("Controller");
+        var fileName = GetAttachment(name, ".zip", true);
+
+        var list = ExportData();
+
+        var dic = new Dictionary<Type, IEnumerable<IEntity>>
+        {
+            { Factory.EntityType, list }
+        };
+
+        var p = GetCachePager();
+        OnExportZip(dic, p);
+
+        WriteLog("导出Zip", true, $"开始导出[{dic.Keys.Join()}]");
+
+        return new ZipResult { Data = dic, AttachmentName = fileName, HttpContext = HttpContext };
+    }
+
+    /// <summary>导出Zip时，可以添加其它数据集</summary>
+    /// <param name="data">将要导出的数据集</param>
+    /// <param name="page">分页参数，含请求参数</param>
+    protected virtual void OnExportZip(IDictionary<Type, IEnumerable<IEntity>> data, Pager page) { }
     #endregion
+
 
     #region 高级Action
     /// <summary>高级开发接口</summary>
@@ -626,7 +656,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
 
         return act switch
         {
-            "Backup" => await Backup(),
+            "Backup" => Backup(),
             "BackupAndExport" => await BackupAndExport(),
             "Restore" => Restore(),
             "Share" => Share(),
@@ -644,7 +674,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
     /// <summary>备份到服务器本地目录</summary>
     /// <returns></returns>
     [NonAction]
-    public virtual async Task<ActionResult> Backup()
+    public virtual ActionResult Backup()
     {
         try
         {
@@ -661,17 +691,35 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
             var bak = NewLife.Setting.Current.BackupPath.CombinePath(fileName).GetBasePath();
             bak.EnsureDirectory(true);
 
-            WriteLog("备份", true, $"开始备份[{name}]到[{fileName}]");
+            // 异步执行备份，阻塞等待一点时间，避免前端超时。
+            var task = Task.Run(() =>
+            {
+                WriteLog("备份", true, $"开始备份[{name}]到[{fileName}]");
+                try
+                {
+                    var rs = 0;
+                    var sw = Stopwatch.StartNew();
+                    {
+                        using var fs = new FileStream(bak, FileMode.OpenOrCreate);
+                        using var gs = new GZipStream(fs, CompressionLevel.SmallestSize, true);
+                        rs = dal.Backup(fact.Table.DataTable, gs, default);
+                        sw.Stop();
+                    }
 
-            var sw = Stopwatch.StartNew();
-            await using var fs = new FileStream(bak, FileMode.OpenOrCreate);
-            await using var gs = new GZipStream(fs, CompressionLevel.Optimal, true);
-            var rs = dal.Backup(fact.Table.DataTable, gs, HttpContext.RequestAborted);
-            sw.Stop();
-
-            WriteLog("备份", true, $"备份[{name}]到[{fileName}]（{rs:n0}行）成功！耗时：{sw.Elapsed}");
-
-            return Json(0, $"备份[{fileName}]（{rs:n0}行）成功！");
+                    var fi = bak.AsFile();
+                    WriteLog("备份", true, $"备份[{name}]到[{fileName}]（{rs:n0}行）（{fi.Length.ToGMK()}字节）成功！耗时：{sw.Elapsed}");
+                    return rs;
+                }
+                catch (Exception ex)
+                {
+                    WriteLog("备份", false, $"备份[{fileName}]失败！{ex.GetMessage()}");
+                    return -1;
+                }
+            });
+            if (task.Wait(5_000))
+                return Json(0, $"备份[{fileName}]（{task.Result:n0}行）成功！");
+            else
+                return Json(0, $"备份[{fileName}]后台执行中……");
         }
         catch (Exception ex)
         {
@@ -707,10 +755,12 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
         var ms = Response.Body;
         try
         {
+            WriteLog("备份导出", true, $"开始备份导出[{name}]");
+            var sw = Stopwatch.StartNew();
             await using var gs = new GZipStream(ms, CompressionLevel.Optimal, true);
             var count = dal.Backup(fact.Table.DataTable, gs, HttpContext.RequestAborted);
-
-            WriteLog("备份导出", true, $"备份[{name}]（{count:n0}行）成功！");
+            sw.Stop();
+            WriteLog("备份导出", true, $"备份[{name}]（{count:n0}行）成功！耗时：{sw.Elapsed}");
 
             return new EmptyResult();
         }
@@ -742,12 +792,31 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
             var fi = di?.GetFiles(fileName)?.OrderByDescending(e => e.Name).FirstOrDefault();
             if (fi == null || !fi.Exists) throw new XException($"找不到[{fileName}]的备份文件");
 
-            using var fs = fi.OpenRead();
-            var rs = dal.Restore(fs, fact.Table.DataTable, HttpContext.RequestAborted);
+            // 异步执行恢复，阻塞等待一点时间，避免前端超时。
+            var task = Task.Run(() =>
+            {
+                WriteLog("恢复", true, $"开始恢复[{fileName}]到[{name}]（{fi.Length.ToGMK()}字节）");
+                try
+                {
+                    var sw = Stopwatch.StartNew();
+                    using var fs = fi.OpenRead();
+                    var rs = dal.Restore(fs, fact.Table.DataTable, default);
+                    sw.Stop();
 
-            WriteLog("恢复", true, $"恢复[{fileName}]（{rs:n0}行）成功！");
+                    WriteLog("恢复", true, $"恢复[{fileName}]（{rs:n0}行）成功！");
+                    return rs;
+                }
+                catch (Exception ex)
+                {
+                    WriteLog("恢复", false, $"恢复[{fileName}]失败！{ex.GetMessage()}");
+                    return -1;
+                }
+            });
 
-            return JsonRefresh($"恢复[{fileName}]（{rs:n0}行）成功！", 2);
+            if (task.Wait(5_000))
+                return JsonRefresh($"恢复[{fileName}]（{task.Result:n0}行）成功！", 2);
+            else
+                return Json(0, $"恢复[{fileName}]后台执行中……", 2);
         }
         catch (Exception ex)
         {
@@ -771,11 +840,8 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
         var userId = ManageProvider.User.ID;
         var list = UserToken.Search(null, userId, true, DateTime.Now, DateTime.MinValue, null);
 
-        var p = Session[CacheKey] as Pager;
-        p = new Pager(p)
-        {
-            RetrieveTotalCount = false,
-        };
+        var p = GetCachePager();
+        p.RetrieveTotalCount = false;
 
         // 构造url
         var cs = GetControllerAction();

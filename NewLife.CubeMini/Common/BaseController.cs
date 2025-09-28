@@ -23,7 +23,7 @@ public abstract class BaseController : ControllerBase, IActionFilter
     public String Token { get; private set; }
 
     /// <summary>用户主机</summary>
-    public String UserHost => HttpContext.GetUserHost();
+    public String UserHost { get; set; }
 
     private IDictionary<String, Object> _args;
     #endregion
@@ -31,6 +31,7 @@ public abstract class BaseController : ControllerBase, IActionFilter
     #region 令牌验证
     void IActionFilter.OnActionExecuting(ActionExecutingContext context)
     {
+        UserHost = HttpContext.GetUserHost();
         _args = context.ActionArguments;
 
         var token = Token = context.HttpContext.LoadToken();
