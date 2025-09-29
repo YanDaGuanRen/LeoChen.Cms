@@ -38,7 +38,7 @@ public class CubeSetting : Config<CubeSetting>
     [Category("通用")]
     public String DateSplitFormat { get; set; } = "yyyyMMdd";
 
-    /// <summary>上传目录。默认Uploads</summary>
+    /// <summary>上传目录。默认Uploads 它只能在wwwroot目录下面,因为租户问题所以不需要添加wwwroot系统会自动添加,</summary>
     [Description("上传目录。默认Uploads")]
     [Category("通用")]
     public String UploadPath { get; set; } = "Uploads";
@@ -414,5 +414,7 @@ public class CubeSetting : Config<CubeSetting>
         else
             return cr[..p1] + now.ToString(format) + cr[(p2 + 1)..];
     }
+
+    
     #endregion
 }

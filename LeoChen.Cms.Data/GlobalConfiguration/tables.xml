@@ -39,30 +39,14 @@
     <CubeOutput>../../LeoChen.Cms/Areas/GlobalConfiguration</CubeOutput>
   </Option>
   <Tables>
-    <Table Name="CmsArea" Description="区域管理">
-      <Columns>
-        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
-        <Column Name="Name" DataType="String" Master="True" Description="名称" />
-        <Column Name="Domain" DataType="String" Length="100" Description="域名" />
-        <Column Name="IsSystem" DataType="Boolean" DefaultValue="False" Description="是否默认" />
-        <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
-        <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
-        <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
-        <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
-        <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
-        <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
-      </Columns>
-      <Indexes>
-        <Index Columns="Name" Unique="True" />
-      </Indexes>
-    </Table>
     <Table Name="CmsLabel" Description="定制标签">
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
-        <Column Name="Value" DataType="String" RawType="LONGTEXT" Length="65535" Description="值" />
-        <Column Name="LabelType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.CmsItemType" />
+        <Column Name="Enable" DataType="Boolean" Description="状态" />
+        <Column Name="LabelType" DataType="Int32" Description="标签类型,修改后先保存再编辑" Type="LeoChen.Cms.Data.CmsItemType" />
         <Column Name="Description" DataType="String" Length="30" Description="描述" />
+        <Column Name="Value" DataType="String" Description="值" Category="值内容" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
         <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
@@ -72,17 +56,18 @@
       </Columns>
       <Indexes>
         <Index Columns="Name" Unique="True" />
+        <Index Columns="Enable" Unique="True" />
       </Indexes>
     </Table>
-    <Table Name="CmsModel" Description="模型管理表">
+    <Table Name="CmsModel" Description="模型管理">
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="Name" DataType="String" Master="True" Description="名称" />
-        <Column Name="ModelType" DataType="Boolean" Description="类型" />
+        <Column Name="ModelType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.CmsModelType" />
         <Column Name="Url" DataType="String" Length="100" Description="Url" />
         <Column Name="ListTpl" DataType="String" Description="列表模板" />
         <Column Name="ContentTpl" DataType="String" Description="内容模板" />
-        <Column Name="Status" DataType="Boolean" Description="状态" />
+        <Column Name="Enable" DataType="Boolean" Description="状态" />
         <Column Name="IsSystem" DataType="Boolean" Description="是否系统模型" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
@@ -94,15 +79,16 @@
       <Indexes>
         <Index Columns="Name" Unique="True" />
         <Index Columns="ModelType" />
+        <Index Columns="Enable" />
       </Indexes>
     </Table>
-    <Table Name="CmsExtfield" Description="扩展字段表">
+    <Table Name="CmsModelExtfield" Description="模型扩展">
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
-        <Column Name="ContentSortID" DataType="Int32" Map="CmsContent_Sort@ID@Name" Description="模型代码" />
+        <Column Name="ModelID" DataType="Int32" Map="CmsModel@ID@Name" Description="模型代码" />
         <Column Name="Name" DataType="String" Master="True" Length="30" Description="名称" />
-        <Column Name="Type" DataType="String" Length="2" Description="类型" />
-        <Column Name="Value" DataType="String" Length="500" Description="值" />
+        <Column Name="FieldType" DataType="Int32" Description="类型" Type="LeoChen.Cms.Data.CmsItemType" />
+        <Column Name="Value" DataType="String" Length="2000" Description="值" />
         <Column Name="Description" DataType="String" Length="30" Description="描述" />
         <Column Name="Sorting" DataType="Int32" Description="排序" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
@@ -114,7 +100,7 @@
       </Columns>
       <Indexes>
         <Index Columns="Name" Unique="True" />
-        <Index Columns="ContentSortID" />
+        <Index Columns="ModelID" />
       </Indexes>
     </Table>
   </Tables>

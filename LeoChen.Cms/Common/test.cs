@@ -1,4 +1,4 @@
-﻿namespace LenChen.Cms.Common;
+﻿namespace LeoChen.Cms.Common;
 
 public class test
 {

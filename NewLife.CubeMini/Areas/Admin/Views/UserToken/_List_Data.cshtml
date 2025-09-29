@@ -1,11 +1,11 @@
 ﻿@model IList<UserToken>
-@using NewLife.Cube.Entity
-@using NewLife;
+@using NewLife
+@using NewLife.Cube;
+@using NewLife.Cube.Entity;
 @using NewLife.Web;
 @using XCode;
 @using XCode.Configuration;
 @using XCode.Membership;
-@using NewLife.Cube;
 @{
     var fact = ViewBag.Factory as IEntityFactory;
     var page = ViewBag.Page as Pager;

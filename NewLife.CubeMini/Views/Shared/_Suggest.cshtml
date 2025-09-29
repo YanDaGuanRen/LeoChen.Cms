@@ -1,10 +1,10 @@
 ﻿@model SuggestModel
+@using System.Linq;
 @using NewLife;
+@using NewLife.Cube.ViewModels;
 @using NewLife.Serialization;
 @using NewLife.Web;
 @using XCode;
-@using System.Linq;
-@using NewLife.Cube.ViewModels;
 @{
     var id = Model.Id;
     var page = ViewBag.Page as Pager;

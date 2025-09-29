@@ -46,7 +46,7 @@
         <Column Name="Title" DataType="String" Master="True" Description="标题" />
         <Column Name="Subtitle" DataType="String" Length="100" Description="副标题" />
         <Column Name="Pic" DataType="String" Length="100" Description="图片" />
-        <Column Name="Link" DataType="String" Length="100" Description="link" />
+        <Column Name="Link" DataType="String" Length="100" Description="链接" />
         <Column Name="Sorting" DataType="Int32" Description="排序" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
@@ -85,7 +85,7 @@
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
         <Column Name="Name" DataType="String" Master="True" Description="名称" />
-        <Column Name="Link" DataType="String" Length="200" Description="link" />
+        <Column Name="Link" DataType="String" Length="200" Description="链接" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
         <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />

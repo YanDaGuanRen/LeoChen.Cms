@@ -78,6 +78,7 @@ public partial class CmsLabel : Entity<CmsLabel>
 
         // 检查唯一索引
         // CheckExist(method == DataMethod.Insert, nameof(Name));
+        // CheckExist(method == DataMethod.Insert, nameof(Enable));
 
         return true;
     }
@@ -93,9 +94,10 @@ public partial class CmsLabel : Entity<CmsLabel>
 
     //    var entity = new CmsLabel();
     //    entity.Name = "abc";
-    //    entity.Value = "abc";
+    //    entity.Enable = true;
     //    entity.LabelType = 0;
     //    entity.Description = "abc";
+    //    entity.Value = "abc";
     //    entity.Insert();
 
     //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsLabel[定制标签]数据！");

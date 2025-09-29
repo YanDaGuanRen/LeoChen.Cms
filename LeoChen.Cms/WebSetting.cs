@@ -35,10 +35,7 @@ public class WebSetting : Config<WebSetting>, ITokenSetting
     [Description("自动注册。允许客户端自动注册，默认true")]
     [Category("设备管理")]
     public Boolean AutoRegister { get; set; } = true;
-
-    /// <summary>服务集合</summary>
-    [Description("服务集合")]
-    public ServiceItem[] Services { get; set; }
+    
     #endregion
 
     #region 方法
@@ -48,24 +45,7 @@ public class WebSetting : Config<WebSetting>, ITokenSetting
         if (Port == 0) Port = 1080;
 
         if (TokenSecret.IsNullOrEmpty() || TokenSecret.Split(':').Length != 2) TokenSecret = $"HS256:{Rand.NextString(16)}";
-
-        if (Services == null || Services.Length == 0)
-        {
-            var si = new ServiceItem
-            {
-                Name = "test",
-                Url = "http://127.0.0.1:8000",
-                Delay = 0,
-            };
-            var si2 = new ServiceItem
-            {
-                Name = "test2",
-                Url = "http://127.0.0.1:8100",
-                Delay = 100,
-            };
-
-            Services = new[] { si, si2 };
-        }
+        
 
         base.OnLoaded();
     }

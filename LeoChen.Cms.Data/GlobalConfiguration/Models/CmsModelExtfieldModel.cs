@@ -7,21 +7,21 @@ using System.Xml.Serialization;
 
 namespace LeoChen.Cms.Data;
 
-/// <summary>扩展字段表</summary>
-public partial class CmsExtfieldModel
+/// <summary>模型扩展</summary>
+public partial class CmsModelExtfieldModel
 {
     #region 属性
     /// <summary>主键ID</summary>
     public Int32 ID { get; set; }
 
     /// <summary>模型代码</summary>
-    public Int32 ContentSortID { get; set; }
+    public Int32 ModelID { get; set; }
 
     /// <summary>名称</summary>
     public String Name { get; set; }
 
     /// <summary>类型</summary>
-    public String Type { get; set; }
+    public LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
     /// <summary>值</summary>
     public String Value { get; set; }
@@ -54,12 +54,12 @@ public partial class CmsExtfieldModel
     #region 拷贝
     /// <summary>拷贝模型对象</summary>
     /// <param name="model">模型</param>
-    public void Copy(ICmsExtfield model)
+    public void Copy(ICmsModelExtfield model)
     {
         ID = model.ID;
-        ContentSortID = model.ContentSortID;
+        ModelID = model.ModelID;
         Name = model.Name;
-        Type = model.Type;
+        FieldType = model.FieldType;
         Value = model.Value;
         Description = model.Description;
         Sorting = model.Sorting;

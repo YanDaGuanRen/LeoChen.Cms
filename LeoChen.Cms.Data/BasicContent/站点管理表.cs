@@ -43,7 +43,7 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     /// <summary>标题</summary>
     [DisplayName("标题")]
     [Description("标题")]
-    [DataObjectField(false, false, true, 100)]
+    [DataObjectField(false, false, false, 100)]
     [BindColumn("Title", "标题", "", Master = true)]
     public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 

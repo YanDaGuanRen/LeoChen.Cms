@@ -18,25 +18,18 @@
 
     var hasChildren = entity.Children != null && entity.Children.Count > 0;
     var indent = level * 24;
-    
+
     <tr class="ccsrow" data-id="@entity.ID" data-pid="@entity.Pid">
         @foreach (var item in fields)
         {
-            if (item.Name=="ID")
-            {
-                <td class="text-center">
-                    <div>
-                        @entity.ID
-                    </div>
-                </td>
-            }else if (item.Name == "Name")
+   if (item.Name == "Name")
             {
                 <td class="text-left">
-                    <div style="padding-left: @(indent)px; display: flex; align-items: center;">
+                    <div style="padding-left: @(indent)px; display: flex; align-items: center; padding-top:5px">
                         @if (hasChildren)
                         {
                             <!-- 有子节点：用Glyphicons箭头图标（初始展开状态→右箭头） -->
-                            <i class="toggle-icon glyphicon glyphicon-chevron-right" 
+                            <i class="toggle-icon glyphicon glyphicon-chevron-right"
                                style="cursor: pointer; width: 18px; height: 18px; margin-right: 4px; text-align: center; color:#337ab7;"></i>
                         }
                         else
@@ -47,31 +40,45 @@
                         @entity.Name
                     </div>
                 </td>
-            }else if (item.Name == "Sorting")
+            }
+            else if (item.Name == "Sorting")
             {
-                <td class="text-right" style="width: 100px;"> 
-                    <input type="number" 
-                           class="form-control input-sm" 
-                           style=" text-align: right; padding: 2px 5px;" 
+                <td class="text-right" style="width: 100px;">
+                    <input type="number"
+                           class="form-control input-sm"
+                           style=" text-align: right; padding: 2px 5px;"
                            name="sorting"
-                           value="@entity.Sorting" 
+                           value="@entity.Sorting"
                            data-id="@entity.ID"
                            title="可输入排序值（未启用保存功能）">
                 </td>
             }
+            else if (item.Name == "Enable")
+            {
+                <td class="text-center" style="padding-top:10px">
+                    <a href="@Url.Action("SetEnable", null, new { id = @entity.ID, enable = !@entity.Enable })" data-action="action">
+                        @await Html.PartialAsync("_Icon_Boolean", @entity.Enable)
+                    </a>
+                </td>
+            }
             else
             {
-                @await Html.PartialAsync("_List_Data_Item", new EntityField(entity, item))
+                <td class="text-center">
+                    <div style="padding-top:5px">
+                        @entity[item.Name]
+                    </div>
+                </td>
             }
         }
         @if (this.Has(PermissionFlags.Detail, PermissionFlags.Update, PermissionFlags.Delete))
         {
-            <td class="text-center">
+            <td class="text-center"  style="padding-top:10px">
                 @await Html.PartialAsync("_List_Data_Action", (Object)entity)
             </td>
         }
-        <td type="hidden"  class="hidden" style="width: 0px;"><input type="text" name="oldsorting" value="@entity.Sorting" /> </td>
-        <td type="hidden"  class="hidden" style="width: 0px;"><input type="text" name="id" value="@entity.ID" /> </td>
+        <td type="hidden" class="hidden" style="width: 0px;"><input type="text" name="oldsorting"
+                                                                    value="@entity.Sorting"/></td>
+        <td type="hidden" class="hidden" style="width: 0px;"><input type="text" name="id" value="@entity.ID"/></td>
     </tr>
 
     @if (hasChildren)

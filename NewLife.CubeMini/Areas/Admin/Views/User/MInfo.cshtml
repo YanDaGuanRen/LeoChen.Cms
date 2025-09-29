@@ -1,9 +1,9 @@
 ﻿@model XCode.Membership.User
 @using System.Linq
 @using System.Reflection
+@using NewLife.Cube.Entity
 @using XCode
-@using XCode.Configuration
-@using NewLife.Cube.Entity;
+@using XCode.Configuration;
 @{
     var fact = EntityFactory.CreateFactory(ViewData.ModelMetadata.ModelType);
     var user = Model as IUser;

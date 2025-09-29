@@ -34,133 +34,6 @@
         background: #FFF
     }
 </style>
-<h3>区域管理（CmsArea）</h3>
-<table>
-    <thead>
-        <tr>
-            <th>名称</th>
-            <th>显示名</th>
-            <th>类型</th>
-            <th>长度</th>
-            <th>精度</th>
-            <th>主键</th>
-            <th>允许空</th>
-            <th>备注</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>ID</td>
-            <td>主键ID</td>
-            <td>Int32</td>
-            <td></td>
-            <td></td>
-            <td title="自增">AI</td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>Name</td>
-            <td>名称</td>
-            <td>String</td>
-            <td>50</td>
-            <td></td>
-            <td title="唯一索引">UQ</td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>Domain</td>
-            <td>域名</td>
-            <td>String</td>
-            <td>100</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>IsSystem</td>
-            <td>是否默认</td>
-            <td>Boolean</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>CreateUserID</td>
-            <td>创建者</td>
-            <td>Int32</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>CreateTime</td>
-            <td>创建时间</td>
-            <td>DateTime</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>CreateIP</td>
-            <td>创建地址</td>
-            <td>String</td>
-            <td>50</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>UpdateUserID</td>
-            <td>更新者</td>
-            <td>Int32</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>UpdateTime</td>
-            <td>更新时间</td>
-            <td>DateTime</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>UpdateIP</td>
-            <td>更新地址</td>
-            <td>String</td>
-            <td>50</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
-    </tbody>
-</table>
-<br></br>
 <h3>定制标签（CmsLabel）</h3>
 <table>
     <thead>
@@ -199,25 +72,25 @@
         </tr>
 
         <tr>
-            <td>Value</td>
-            <td>值</td>
-            <td>LONGTEXT</td>
-            <td>65535</td>
+            <td>Enable</td>
+            <td>状态</td>
+            <td>Boolean</td>
             <td></td>
             <td></td>
-            <td></td>
+            <td title="唯一索引">UQ</td>
+            <td>N</td>
             <td></td>
         </tr>
 
         <tr>
             <td>LabelType</td>
-            <td>类型</td>
+            <td>标签类型</td>
             <td>Int32</td>
             <td></td>
             <td></td>
             <td></td>
             <td>N</td>
-            <td></td>
+            <td>,修改后先保存再编辑</td>
         </tr>
 
         <tr>
@@ -225,6 +98,17 @@
             <td>描述</td>
             <td>String</td>
             <td>30</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Value</td>
+            <td>值</td>
+            <td>String</td>
+            <td>50</td>
             <td></td>
             <td></td>
             <td></td>
@@ -299,7 +183,7 @@
     </tbody>
 </table>
 <br></br>
-<h3>模型管理表（CmsModel）</h3>
+<h3>模型管理（CmsModel）</h3>
 <table>
     <thead>
         <tr>
@@ -339,7 +223,7 @@
         <tr>
             <td>ModelType</td>
             <td>类型</td>
-            <td>Boolean</td>
+            <td>Int32</td>
             <td></td>
             <td></td>
             <td></td>
@@ -381,7 +265,7 @@
         </tr>
 
         <tr>
-            <td>Status</td>
+            <td>Enable</td>
             <td>状态</td>
             <td>Boolean</td>
             <td></td>
@@ -470,7 +354,7 @@
     </tbody>
 </table>
 <br></br>
-<h3>扩展字段表（CmsExtfield）</h3>
+<h3>模型扩展（CmsModelExtfield）</h3>
 <table>
     <thead>
         <tr>
@@ -497,7 +381,7 @@
         </tr>
 
         <tr>
-            <td>ContentSortID</td>
+            <td>ModelID</td>
             <td>模型代码</td>
             <td>Int32</td>
             <td></td>
@@ -519,13 +403,13 @@
         </tr>
 
         <tr>
-            <td>Type</td>
+            <td>FieldType</td>
             <td>类型</td>
-            <td>String</td>
-            <td>2</td>
+            <td>Int32</td>
             <td></td>
             <td></td>
             <td></td>
+            <td>N</td>
             <td></td>
         </tr>
 
@@ -533,7 +417,7 @@
             <td>Value</td>
             <td>值</td>
             <td>String</td>
-            <td>500</td>
+            <td>2000</td>
             <td></td>
             <td></td>
             <td></td>

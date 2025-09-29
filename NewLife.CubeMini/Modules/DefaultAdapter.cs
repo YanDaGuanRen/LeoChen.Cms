@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using NewLife.Serialization;
 using NewLife.Cube.ViewModels;
+using NewLife.Serialization;
 
 namespace NewLife.Cube.Modules;
 

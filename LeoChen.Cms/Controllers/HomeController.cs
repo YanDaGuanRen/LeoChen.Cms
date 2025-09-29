@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using NewLife.Cube.ViewModels;
 
-namespace leochen.Cms.Controllers;
+namespace Leochen.Cms.Controllers;
 
 /// <summary>主页面</summary>
 //[AllowAnonymous]

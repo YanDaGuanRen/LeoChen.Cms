@@ -7,21 +7,21 @@ using System.Xml.Serialization;
 
 namespace LeoChen.Cms.Data;
 
-/// <summary>扩展字段表</summary>
-public partial interface ICmsExtfield
+/// <summary>模型扩展</summary>
+public partial interface ICmsModelExtfield
 {
     #region 属性
     /// <summary>主键ID</summary>
     Int32 ID { get; set; }
 
     /// <summary>模型代码</summary>
-    Int32 ContentSortID { get; set; }
+    Int32 ModelID { get; set; }
 
     /// <summary>名称</summary>
     String Name { get; set; }
 
     /// <summary>类型</summary>
-    String Type { get; set; }
+    LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
     /// <summary>值</summary>
     String Value { get; set; }

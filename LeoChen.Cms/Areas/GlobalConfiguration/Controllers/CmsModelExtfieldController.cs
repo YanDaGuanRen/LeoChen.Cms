@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LeoChen.Cms.Data;
+﻿using LeoChen.Cms.Data;
+using Microsoft.AspNetCore.Mvc;
 using NewLife;
 using NewLife.Cube;
 using NewLife.Cube.Extensions;
@@ -7,21 +7,21 @@ using NewLife.Cube.ViewModels;
 using NewLife.Log;
 using NewLife.Web;
 using XCode.Membership;
-using static LeoChen.Cms.Data.CmsExtfield;
+using static LeoChen.Cms.Data.CmsModelExtfield;
 
 namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>扩展字段表</summary>
 [Menu(10, true, Icon = "fa-table")]
 [GlobalConfigurationArea]
-public class CmsExtfieldController : EntityController<CmsExtfield>
+public class CmsModelExtfieldController : EntityController<CmsModelExtfield>
 {
-    static CmsExtfieldController()
+    static CmsModelExtfieldController()
     {
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        ListFields.RemoveCreateField().RemoveRemarkField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -32,19 +32,19 @@ public class CmsExtfieldController : EntityController<CmsExtfield>
         //    var df = ListFields.AddListField("devices", null, "Onlines");
         //    df.DisplayName = "查看设备";
         //    df.Url = "Device?groupId={Id}";
-        //    df.DataVisible = e => (e as CmsExtfield).Devices > 0;
+        //    df.DataVisible = e => (e as CmsModelExtfield).Devices > 0;
         //    df.Target = "_frame";
         //}
         //{
         //    var df = ListFields.GetField("Kind") as ListField;
-        //    df.GetValue = e => ((Int32)(e as CmsExtfield).Kind).ToString("X4");
+        //    df.GetValue = e => ((Int32)(e as CmsModelExtfield).Kind).ToString("X4");
         //}
         //ListFields.TraceUrl("TraceId");
     }
 
     //private readonly ITracer _tracer;
 
-    //public CmsExtfieldController(ITracer tracer)
+    //public CmsModelExtfieldController(ITracer tracer)
     //{
     //    _tracer = tracer;
     //}
@@ -52,13 +52,14 @@ public class CmsExtfieldController : EntityController<CmsExtfield>
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>
     /// <param name="p">分页器。包含分页排序参数，以及Http请求参数</param>
     /// <returns></returns>
-    protected override IEnumerable<CmsExtfield> Search(Pager p)
+    protected override IEnumerable<CmsModelExtfield> Search(Pager p)
     {
-        var contentSortId = p["contentSortId"].ToInt(-1);
+        var modelId = p["modelId"].ToInt(-1);
+        var type = (LeoChen.Cms.Data.CmsItemType)p["type"].ToInt(-1);
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsExtfield.Search(contentSortId, start, end, p["Q"], p);
+        return CmsModelExtfield.Search(modelId, type, start, end, p["Q"], p);
     }
 }

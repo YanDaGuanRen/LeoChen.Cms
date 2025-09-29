@@ -50,6 +50,7 @@ public partial class CmsSite : Entity<CmsSite>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        if (Title.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Title),nameof(Title)+ "不能为空");
         AreaID = CmsAreaContext.CurrentId;
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理

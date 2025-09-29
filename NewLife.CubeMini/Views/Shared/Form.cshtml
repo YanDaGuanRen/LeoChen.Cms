@@ -1,8 +1,8 @@
-﻿@using NewLife;
-@using System.Reflection
+﻿@using System.Reflection;
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using NewLife
 @using XCode
-@using XCode.Configuration
-@using Microsoft.AspNetCore.Mvc.Rendering;
+@using XCode.Configuration;
 @{
     // 强制设置Layout，因为最终项目可能给前端设置Layout，会覆盖影响魔方内部页面
     var theme = NewLife.Cube.CubeSetting.Current.Theme;

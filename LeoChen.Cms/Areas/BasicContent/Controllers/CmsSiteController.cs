@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
-using Microsoft.AspNetCore.Mvc;
 using LeoChen.Cms.Data;
+using Microsoft.AspNetCore.Mvc;
 using NewLife;
 using NewLife.Cube;
 using NewLife.Cube.Common;
@@ -30,6 +30,7 @@ public class CmsSiteController : EntityController<CmsSite>
         if (entity == null)
         {
             entity = new CmsSite();
+            entity.Title = "a";
             Valid(entity, DataObjectMethodType.Insert, false);
             var key = $"Cube_Add_LeoChen.Cms.Data.CmsSite";
             Session[key] = Request.Path.ToString();

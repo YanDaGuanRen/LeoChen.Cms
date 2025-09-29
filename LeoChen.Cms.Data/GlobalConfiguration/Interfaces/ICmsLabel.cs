@@ -17,14 +17,17 @@ public partial interface ICmsLabel
     /// <summary>名称</summary>
     String Name { get; set; }
 
-    /// <summary>值</summary>
-    String Value { get; set; }
+    /// <summary>状态</summary>
+    Boolean Enable { get; set; }
 
-    /// <summary>类型</summary>
+    /// <summary>标签类型,修改后先保存再编辑</summary>
     LeoChen.Cms.Data.CmsItemType LabelType { get; set; }
 
     /// <summary>描述</summary>
     String Description { get; set; }
+
+    /// <summary>值</summary>
+    String Value { get; set; }
 
     /// <summary>创建者</summary>
     Int32 CreateUserID { get; set; }

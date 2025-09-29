@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LeoChen.Cms.Data;
+﻿using LeoChen.Cms.Data;
+using Microsoft.AspNetCore.Mvc;
 using NewLife;
 using NewLife.Cube;
 using NewLife.Cube.Extensions;
@@ -68,7 +68,7 @@ public class CmsLabelController : EntityController<CmsLabel>
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
-
-        return CmsLabel.Search(labelType, start, end, p["Q"], p);
+        var enable = p["Enable"].ToBoolean();
+        return CmsLabel.Search(enable,labelType, start, end, p["Q"], p);
     }
 }

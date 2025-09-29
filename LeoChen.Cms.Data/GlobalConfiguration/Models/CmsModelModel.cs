@@ -7,7 +7,7 @@ using System.Xml.Serialization;
 
 namespace LeoChen.Cms.Data;
 
-/// <summary>模型管理表</summary>
+/// <summary>模型管理</summary>
 public partial class CmsModelModel
 {
     #region 属性
@@ -18,7 +18,7 @@ public partial class CmsModelModel
     public String Name { get; set; }
 
     /// <summary>类型</summary>
-    public Boolean ModelType { get; set; }
+    public LeoChen.Cms.Data.CmsModelType ModelType { get; set; }
 
     /// <summary>Url</summary>
     public String Url { get; set; }
@@ -30,7 +30,7 @@ public partial class CmsModelModel
     public String ContentTpl { get; set; }
 
     /// <summary>状态</summary>
-    public Boolean Status { get; set; }
+    public Boolean Enable { get; set; }
 
     /// <summary>是否系统模型</summary>
     public Boolean IsSystem { get; set; }
@@ -65,7 +65,7 @@ public partial class CmsModelModel
         Url = model.Url;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
-        Status = model.Status;
+        Enable = model.Enable;
         IsSystem = model.IsSystem;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;

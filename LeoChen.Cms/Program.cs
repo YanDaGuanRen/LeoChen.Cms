@@ -1,5 +1,6 @@
 ﻿using LenChen.Cms;
 using LenChen.Cms.Services;
+using NewLife;
 using NewLife.Log;
 using XCode;
 
@@ -66,7 +67,8 @@ app.Run();
 
 static void InitConfig()
 {
-    // 把数据目录指向上层，例如部署到 /root/iot/edge/，这些目录放在 /root/iot/
+    "wwwroot".GetFullPath().EnsureDirectory(false);
+    // 把数据目录指向根目录，可以使用../指向上一级目录
     var set = NewLife.Setting.Current;
     if (set.IsNew)
     {
@@ -76,6 +78,10 @@ static void InitConfig()
         set.Save();
     }
 
+    set.LogPath.EnsureDirectory(false);
+    set.DataPath.EnsureDirectory(false);
+    set.BackupPath.EnsureDirectory(false);
+
     var set2 = CubeSetting.Current;
     if (set2.IsNew)
     {
@@ -83,14 +89,15 @@ static void InitConfig()
         set2.UploadPath = "Uploads";
         set2.Save();
     }
-
+    set2.UploadPath.EnsureDirectory(false);
+    
     var set3 = XCodeSetting.Current;
     if (set3.IsNew)
     {
         // 关闭SQL日志输出
         set3.ShowSQL = false;
-        //set3.EntityCacheExpire = 60;
-        //set3.SingleCacheExpire = 60;
+        set3.EntityCacheExpire = 60;
+        set3.SingleCacheExpire = 60;
         set3.Save();
     }
 }

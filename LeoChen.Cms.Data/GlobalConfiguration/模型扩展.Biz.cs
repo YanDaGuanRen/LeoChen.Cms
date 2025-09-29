@@ -26,14 +26,14 @@ using XCode.Shards;
 
 namespace LeoChen.Cms.Data;
 
-public partial class CmsModel : Entity<CmsModel>
+public partial class CmsModelExtfield : Entity<CmsModelExtfield>
 {
     #region 对象操作
-    static CmsModel()
+    static CmsModelExtfield()
     {
         // 累加字段，生成 Update xx Set Count=Count+1234 Where xxx
         //var df = Meta.Factory.AdditionalFields;
-        //df.Add(nameof(CreateUserID));
+        //df.Add(nameof(ModelID));
 
         // 过滤器 UserModule、TimeModule、IPModule
         Meta.Modules.Add(new UserModule { AllowEmpty = false });
@@ -89,19 +89,18 @@ public partial class CmsModel : Entity<CmsModel>
     //    // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
     //    if (Meta.Session.Count > 0) return;
 
-    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsModel[模型管理表]数据……");
+    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsModelExtfield[模型扩展]数据……");
 
-    //    var entity = new CmsModel();
+    //    var entity = new CmsModelExtfield();
+    //    entity.ModelID = 0;
     //    entity.Name = "abc";
-    //    entity.ModelType = true;
-    //    entity.Url = "abc";
-    //    entity.ListTpl = "abc";
-    //    entity.ContentTpl = "abc";
-    //    entity.Status = true;
-    //    entity.IsSystem = true;
+    //    entity.FieldType = 0;
+    //    entity.Value = "abc";
+    //    entity.Description = "abc";
+    //    entity.Sorting = 0;
     //    entity.Insert();
 
-    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsModel[模型管理表]数据！");
+    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsModelExtfield[模型扩展]数据！");
     //}
 
     ///// <summary>已重载。基类先调用Valid(true)验证数据，然后在事务保护内调用OnInsert</summary>
@@ -124,8 +123,8 @@ public partial class CmsModel : Entity<CmsModel>
 
     #region 高级查询
 
-    // Select Count(ID) as ID,Category From CmsModel Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
-    //static readonly FieldCache<CmsModel> _CategoryCache = new(nameof(Category))
+    // Select Count(ID) as ID,Category From CmsModelExtfield Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
+    //static readonly FieldCache<CmsModelExtfield> _CategoryCache = new(nameof(Category))
     //{
     //Where = _.CreateTime > DateTime.Today.AddDays(-30) & Expression.Empty
     //};
@@ -136,9 +135,9 @@ public partial class CmsModel : Entity<CmsModel>
     #endregion
 
     #region 业务操作
-    public ICmsModel ToModel()
+    public ICmsModelExtfield ToModel()
     {
-        var model = new CmsModel();
+        var model = new CmsModelExtfield();
         model.Copy(this);
 
         return model;

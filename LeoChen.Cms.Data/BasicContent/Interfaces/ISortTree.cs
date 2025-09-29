@@ -11,7 +11,10 @@ public interface ICmsTree<T>
     /// <summary>
     /// 子节点集合
     /// </summary>
-    static IList<T> Children { get; }
-
-    static extern IList<T> BuildTree(IList<T> flatList = null, int parentId = 0);
+    IList<T>  MyChildren { get; set; }
+    /// <summary>子孙实体集合。以深度层次树结构输出</summary>
+    IList<int> AllChildsID { get; set; }
+    /// <summary>树形节点名，根据深度带全角空格前缀</summary>
+    String TreeNodeText { get; }
+    IList<T> FindAllChildsExcept(IList<T> flatList = null, int parentId = 0);
 }

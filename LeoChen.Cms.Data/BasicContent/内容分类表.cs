@@ -415,7 +415,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     /// <returns>实体对象</returns>
     public static CmsContent_Sort FindByID(Int32 id)
     {
-        if (id < 0) return null;
+        if (id <= 0) return null;
 
         var areaid = CmsAreaContext.CurrentId;
 

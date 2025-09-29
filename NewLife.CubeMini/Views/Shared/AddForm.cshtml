@@ -1,8 +1,8 @@
-﻿@using NewLife;
-@using System.Reflection
+﻿@using System.Reflection;
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using NewLife
 @using XCode
-@using XCode.Configuration
-@using Microsoft.AspNetCore.Mvc.Rendering;
+@using XCode.Configuration;
 @{
     var theme = NewLife.Cube.CubeSetting.Current.Theme;
     if (String.IsNullOrEmpty(theme)) theme = "ACE";

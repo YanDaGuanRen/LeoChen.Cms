@@ -1,5 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LeoChen.Cms.Data;
+﻿using LeoChen.Cms.Data;
+using Microsoft.AspNetCore.Mvc;
 using NewLife;
 using NewLife.Cube;
 using NewLife.Cube.Extensions;
@@ -45,7 +45,7 @@ public class CmsModelController : EntityController<CmsModel>
     public override ActionResult Add()
     {
         var e = new CmsModel();
-        e.Status = true;
+        e.Enable = true;
         return AddEntity(e);
     }
     //private readonly ITracer _tracer;
@@ -60,10 +60,10 @@ public class CmsModelController : EntityController<CmsModel>
     /// <returns></returns>
     protected override IEnumerable<CmsModel> Search(Pager p)
     {
-        var modelType = p["modelType"]?.ToBoolean();
+        var modelType = (LeoChen.Cms.Data.CmsModelType)p["modelType"].ToInt(-1);
         var status = p["status"]?.ToBoolean();
         var isSystem = p["isSystem"]?.ToBoolean();
-
+        var enable = p["Enable"]?.ToBoolean();
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 

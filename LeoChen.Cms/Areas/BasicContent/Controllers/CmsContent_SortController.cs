@@ -1,16 +1,16 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using LeoChen.Cms.Data;
+﻿using LeoChen.Cms.Data;
+using Microsoft.AspNetCore.Mvc;
+using NewLife;
 using NewLife;
 using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Log;
 using NewLife.Web;
 using XCode.Membership;
-using static LeoChen.Cms.Data.CmsContent_Sort;
-using NewLife;
-using NewLife.Cube.Common;
 using XCode.Model;
+using static LeoChen.Cms.Data.CmsContent_Sort;
 
 namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 
@@ -24,9 +24,19 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
     }
 
+    public override ActionResult Add()
+    {
+        var e = new CmsContent_Sort();
+        e.Enable = true;
+        return base.AddEntity(e);
+    }
+    
+
     public override Task<ActionResult> Edit(CmsContent_Sort model)
     {
-        return base.Edit(model);
+        ViewData["PidList"] = GetTree();
+       return base.Edit(model);
+
     }
 
     public override ActionResult Edit(string id)
@@ -48,7 +58,7 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
         PageSetting.EnableAdd = true;
         var areaid = CmsAreaContext.CurrentId;
 
-        var list = FindAllByAreaIDAndPid(areaid, 0);
+        var list = GetTree();
         // 用于显示的列
         ViewBag.Fields = OnGetFields(ViewKinds.List, list);
         ViewBag.SearchFields = OnGetFields(ViewKinds.Search, list);
