@@ -31,26 +31,12 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
         return base.AddEntity(e);
     }
     
-
-    public override Task<ActionResult> Edit(CmsContent_Sort model)
-    {
-        ViewData["PidList"] = GetTree();
-       return base.Edit(model);
-
-    }
-
-    public override ActionResult Edit(string id)
-    {
-        return base.Edit(id);
-    }
-
     protected override WhereBuilder CreateWhere()
     {
         HttpContext.Items["AreaID"] = CmsAreaContext.CurrentId;
         return base.CreateWhere();
     }
     
-
     public override ActionResult Index(Pager p = null)
     {
         PageSetting.EnableTableDoubleClick = false;

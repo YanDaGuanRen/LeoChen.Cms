@@ -74,7 +74,7 @@ public partial class CmsSite : Entity<CmsSite>
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(AreaID));
+        CheckExist(method == DataMethod.Insert, nameof(AreaID));
 
         return true;
     }
