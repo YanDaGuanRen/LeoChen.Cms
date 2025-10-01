@@ -115,7 +115,7 @@
                 closebtn = "<span class='cube_clear'><img src='/CubeContent/city_picker/images/clear.png'></span>",// 清空按钮
                 textspan = '<span class="city-picker-span" style="' +
                     this.getWidthStyle(p.width) + 'height:' +
-                    p.height + 'px;line-height:' + (p.height - 1) + 'px;float:left;">' +
+                    p.height + 'px;line-height:' + (p.height - 1) + 'px;float:left;margin-left: 15px;">' +
                     (placeholder ? '<span class="placeholder">' + placeholder + '</span>' : '') +
                     closebtn +
                     '<span class="title"></span><div class="arrow"></div>' + '</span>',

@@ -548,9 +548,7 @@ public static class ViewHelper
         sb.Append(str);
 
         var set = CubeSetting.Current;
-        var cls = set.FormGroupClass;
-        if (cls.IsNullOrEmpty()) cls = "form-group col-xs-12 col-sm-6 col-lg-4";
-
+        var cls = "form-group col-xs-12 col-sm-12";
         var groupList = fields.GroupBy(x => x.Category + "");
         if (groupList.Count() > 1)
         {
@@ -859,7 +857,6 @@ public static class ViewHelper
     }
 
 
-
     private static Boolean? _IsDevelop;
 
     /// <summary>当前是否开发环境。判断csproj文件</summary>
@@ -990,10 +987,12 @@ public static class ViewHelper
 
         return ms;
     }
+
     /// <summary>是否附件列</summary>
     /// <param name="dc"></param>
     /// <returns></returns>
-    public static Boolean IsAttachment(this IDataColumn dc) => dc.ItemType.EqualIgnoreCase("file", "image") || dc.ItemType.StartsWithIgnoreCase("file-", "image-");
+    public static Boolean IsAttachment(this IDataColumn dc) => dc.ItemType.EqualIgnoreCase("file", "image") ||
+                                                               dc.ItemType.StartsWithIgnoreCase("file-", "image-");
 
 
     /// <summary>格式化数据用于显示</summary>

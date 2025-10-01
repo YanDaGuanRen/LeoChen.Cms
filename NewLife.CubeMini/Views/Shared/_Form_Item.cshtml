@@ -33,19 +33,9 @@
             des = time.ToString("yyyy-MM-dd HH:mm:ss.fff");
         }
     }
-
-    var total = 12;
-    var label = 3;
+    var label = 2;
     var span = 4;
-    if (err == 0 && des.IsNullOrEmpty())
-    {
-        span = 0;
-    }
-    else if (item.Type == typeof(Boolean) || item.Type.IsEnum)
-    {
-        span += 1;
-    }
-    var input = total - label - span;
+    var input = 6;
 }
 <label class="control-label col-xs-12 col-sm-@label">@display</label>
 <div class="input-group col-xs-12 col-sm-@input">

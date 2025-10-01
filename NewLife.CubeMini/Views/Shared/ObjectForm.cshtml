@@ -53,14 +53,13 @@
                                         var dis = pi.DisplayName;
                                         var des = pi.Description;
                                         var dataSource = pi.DataSource;
-
-                                        <div class="form-group col-sm-12 col-md-12">
-                                            <label class="control-label col-xs-2 col-md-3 no-padding-left" for="@name">
-                                                @(
-                                                    dis
-                                                    )
+                                        var disinput = des.IsNullOrEmpty()?8:6;
+                                        var noleft = " no-padding-left";
+                                         <div class="form-group col-sm-12 col-md-12 no-padding-left">
+                                            <label class="control-label col-xs-12 col-md-2" for="@name">
+                                                @(dis)
                                             </label>
-                                            <div class="input-group col-xs-10 col-md-4">
+                                            <div class="input-group col-xs-12 col-md-@disinput">
                                                 @if (dataSource != null)
                                                 {
                                                     @await Html.PartialAsync("_Form_DropDownList", new ListBoxModel(name, dataSource(group.Value), val))
@@ -71,7 +70,9 @@
                                                 }
                                                 @Html.ValidationMessage(name)
                                             </div>
-                                            <span class="hidden-xs col-md-5">&nbsp; @des</span>
+                                            @if(!des.IsNullOrEmpty()){
+                                                <span class="hidden-xs col-md-4">&nbsp; @des</span>
+                                            }
                                         </div>
                                     }
                                 </div>
@@ -87,7 +88,7 @@
                         if (dic.Count > 1)
                         {
                             <div class="form-group col-sm-12 col-md-12 col-xd-12">
-                                <label class="control-label col-xs-2 col-md-3 no-padding-left">
+                                <label class="control-label col-xs-12 col-md-2 no-padding-left">
                                     <h2>@item.Key</h2>
                                 </label>
                             </div>
@@ -99,10 +100,10 @@
                             var dis = pi.DisplayName;
                             var des = pi.Description;
                             var dataSource = pi.DataSource;
-
-                            <div class="form-group col-sm-12 col-md-12">
-                                <label class="control-label col-xs-2 col-md-3 no-padding-left" for="@name">@(dis)</label>
-                                <div class="input-group col-xs-10 col-md-4">
+                            var disinput = des.IsNullOrEmpty()?8:6;
+                            <div class="form-group col-sm-12 col-md-12 no-padding-left">
+                                <label class="control-label col-xs-12 col-md-2" for="@name">@(dis)</label>
+                                <div class="input-group col-xs-12 col-md-@disinput">
                                     @if (dataSource != null)
                                     {
                                         @await Html.PartialAsync("_Form_DropDownList", new ListBoxModel(name, dataSource(item.Value), val))
@@ -113,7 +114,9 @@
                                     }
                                     @Html.ValidationMessage(name)
                                 </div>
-                                <span class="hidden-xs col-md-5">&nbsp; @des</span>
+                                @if(!des.IsNullOrEmpty()){
+                                    <span class="hidden-xs col-md-4">&nbsp; @des</span>
+                                }
                             </div>
                         }
                     }
