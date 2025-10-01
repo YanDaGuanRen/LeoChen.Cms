@@ -1,4 +1,5 @@
-﻿using NewLife.Log;
+﻿using System.Text.RegularExpressions;
+using NewLife.Log;
 using XCode.Membership;
 
 namespace NewLife.Cube;
@@ -8,47 +9,153 @@ namespace NewLife.Cube;
 /// </summary>
 public static class FileUploadHelper
 {
+
     /// <summary>
     /// 保存文件到指定目录
     /// </summary>
     /// <param name="file">上传的文件</param>
     /// <param name="category">文件分类（用于构建目录结构）</param>
-    /// <param name="isDateSplit">是否按日期分目录</param>
-    /// <param name="savefileName">保存的文件名带后缀</param>
+    /// <param name="savefileName">保存的文件名不带后缀</param>
     /// <returns>文件的相对路径URL</returns>
-    public static async Task<string> SaveFile(IFormFile file, string? category = "File",bool isDateSplit = true,string savefileName="")
+    public static async Task<string> SaveFile(IFormFile file, string category="File", string savefileName = null)
     {
-        if (file == null) return null;
-        // 构建文件保存路径
-        var set = CubeSetting.Current;
-        var date = "";
-        if (isDateSplit && !set.DateSplitFormat.IsNullOrEmpty())
+        var cubeset = CubeSetting.Current;
+        if (category == "Avatar")
         {
-            date ="/" + DateTime.Now.ToString(set.DateSplitFormat);
+            return await SaveFile(file,category,"","",savefileName);
         }
-        var tpath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
-       var uploadPath = $"{set.WebRootPath}{tpath}/{set.UploadPath}/{category}{date}".GetFullPath();
-        uploadPath.EnsureDirectory(false);
-        var fileName =savefileName.IsNullOrEmpty()? $"{Guid.NewGuid():N}{Path.GetExtension(file.FileName)}":savefileName;
-        var savePath = Path.Combine(uploadPath, fileName);
-        // 保存文件
-        using (var stream = new FileStream(savePath, FileMode.Create))
+        return await SaveFile(file,category,cubeset.PathFormat,cubeset.SaveFileFormat,savefileName);
+    }
+    
+
+    /// <summary>
+    /// 保存文件到指定目录
+    /// </summary>
+    /// <param name="file">上传的文件</param>
+    /// <param name="category">文件分类（用于构建目录结构）</param>
+    /// <param name="pathFormat">文件保存路径格式</param>
+    /// <param name="fileNameFormat">文件保存名称格式</param>
+    /// <param name="savefileName">保存的文件名不带后缀</param>
+    /// <returns>文件的相对路径URL</returns>
+    public static async Task<string> SaveFile(IFormFile file, string category, string pathFormat, string fileNameFormat, string savefileName = null)
+    {
+        try
         {
-            await file.CopyToAsync(stream);
+            if (file == null) return null;
+            var extension = Path.GetExtension(file.FileName);
+            var (uploadPath, relativeUrl) =
+                GeneratePaths(category, pathFormat, fileNameFormat, savefileName, extension);
+            uploadPath.EnsureDirectory();
+            using (var stream = new FileStream(uploadPath, FileMode.Create))
+            {
+                await file.CopyToAsync(stream);
+            }
+            return relativeUrl;
         }
-        // 返回相对URL路径
-        return $"/{set.UploadPath}{tpath}/{category}{date}/{fileName}";
+        catch (Exception e)
+        {
+            XTrace.WriteException(e);
+            return null;
+        }
+        
     }
 
     /// <summary>
-    /// 保存头像文件
+    /// 保存文件到指定目录
     /// </summary>
-    /// <param name="file">上传的文件</param>
-    /// <param name="savefileName">保存的文件名带后缀</param>
-    /// <returns>头像的相对路径URL</returns>
-    public static async Task<string> SaveAvatar(IFormFile file, string savefileName)
+    /// <param name="imageBytes">图片字节数组</param>
+    /// <param name="category">文件分类（用于构建目录结构）</param>
+    /// <param name="pathFormat">文件保存路径格式</param>
+    /// <param name="fileNameFormat">文件保存名称格式</param>
+    /// <param name="extension">文件扩展名</param>
+    /// <returns>文件的相对路径URL</returns>
+    public static async Task<string> SaveFile(byte[] imageBytes, string category, string pathFormat, string fileNameFormat, string extension)
     {
-        return await SaveFile(file, "Avatar", false, savefileName);
+        try
+        {
+            if (imageBytes == null || imageBytes.Length <= 0) return null;
+            extension = extension.EnsureStart(".");
+            var (uploadPath, relativeUrl) = GeneratePaths(category, pathFormat, fileNameFormat, null, extension);
+            uploadPath.EnsureDirectory();
+            await System.IO.File.WriteAllBytesAsync(uploadPath, imageBytes);
+            return relativeUrl;
+        }
+        catch (Exception e)
+        {
+            XTrace.WriteException(e);
+            return null;
+        }
 
+    }
+    private static (string uploadPath, string relativeUrl) GeneratePaths(string category, string pathFormat, string fileNameFormat, string savefileName, string extension)
+    {
+        if (!category.IsNullOrEmpty())
+        {
+            category = category.EnsureStart("/");
+        }
+        var other = "";
+        if (!pathFormat.IsNullOrEmpty())
+        {
+            other = GetSavePath(pathFormat).EnsureStart("/");
+        }
+        var fileName = "";
+        if (!savefileName.IsNullOrEmpty())
+        {
+            fileName = savefileName + extension;
+        }
+        else if (!fileNameFormat.IsNullOrEmpty())
+        {
+            fileName = GetSavePath(fileNameFormat, extension);
+        }
+        else
+        {
+            fileName = $"{Guid.NewGuid():N}{extension}";
+        }
+        fileName = fileName.EnsureStart("/");
+        var cubeset = CubeSetting.Current;
+        var tenantPath = TenantContext.CurrentId != 0 ? "/" + TenantContext.CurrentId : "";
+        var basePath = $"{cubeset.WebRootPath.TrimStart("/").TrimEnd("/")}{tenantPath}{cubeset.UploadPath.EnsureStart("/")}";
+        var uploadPath = $"{basePath}{category}{other}{fileName}".GetFullPath();
+        var relativeUrl = $"{tenantPath}{cubeset.UploadPath.EnsureStart("/")}{category}{other}{fileName}";
+        return (uploadPath, relativeUrl);
+    }
+    
+    /// <summary>
+    /// 获取保存路径
+    /// </summary>
+    /// <param name="pathFormat">路径格式</param>
+    /// <param name="extension">文件扩展名 为空不添加后缀中处理路径</param>
+    /// <returns></returns>
+    public static string GetSavePath(string pathFormat, string extension=null)
+    {
+        var now = DateTime.Now;
+        pathFormat = pathFormat
+            .Replace("{yyyy}", now.Year.ToString())
+            .Replace("{yy}", now.ToString("yy"))
+            .Replace("{mm}", now.Month.ToString("D2"))
+            .Replace("{dd}", now.Day.ToString("D2"))
+            .Replace("{hh}", now.Hour.ToString("D2"))
+            .Replace("{ii}", now.Minute.ToString("D2"))
+            .Replace("{ss}", now.Second.ToString("D2"))
+            .Replace("{time}", DateTimeOffset.Now.ToUnixTimeSeconds().ToString());
+        var rand = new Random();
+        pathFormat = Regex.Replace(
+            pathFormat, 
+            @"\{rand:(\d+)\}", 
+            match => {
+                var length = int.Parse(match.Groups[1].Value);
+                var result = "";
+                for (int i = 0; i < length; i++)
+                {
+                    result += rand.Next(0, 10);
+                }
+                return result;
+                
+            });
+        if (!extension.IsNullOrEmpty())
+        {
+            if (!pathFormat.EndsWith(extension, StringComparison.OrdinalIgnoreCase)) pathFormat += extension.EnsureStart(".");
+        }
+        return Regex.Replace(pathFormat, @"[\|\?""<>\*\+\\\[\]]+", "").EnsureStart("/");
     }
 }

@@ -16,6 +16,11 @@
     <div class="@cls">
         @await Html.PartialAsync("_Form_Item", Model)
     </div>
+}else if (field.IsUeText())
+{
+    <div class="form-group col-xs-12 col-sm-12">
+        @await Html.PartialAsync("_Form_UeText", Model)
+    </div>
 }
 else if (field.IsBigText())
 {

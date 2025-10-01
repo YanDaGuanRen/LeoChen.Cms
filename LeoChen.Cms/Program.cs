@@ -85,7 +85,6 @@ static void InitConfig()
     var set2 = CubeSetting.Current;
     if (set2.IsNew)
     {
-        set2.DateSplitFormat = "yyyyMMdd";
         set2.UploadPath = "Uploads";
         set2.Save();
     }

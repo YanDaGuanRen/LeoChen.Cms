@@ -655,8 +655,8 @@ public class UserController : EntityController<User, UserModel>
                 throw new Exception("仅支持上传图片文件！");
 
             //var set = CubeSetting.Current;
-            var fileName = user.ID + ext;
-            var url = await SaveFile(user, file,false ,fileName);
+
+            var url = await SaveFile(user, file ,user.ID+"");
             if (url != null) user.Avatar =url;
         }
 

@@ -33,11 +33,15 @@ public class CubeSetting : Config<CubeSetting>
     [Category("通用")]
     public Boolean ShowRunTime { get; set; } = true;
 
-    /// <summary>上传目录日期分割格式。默认是按天yyyyMMdd</summary>
-    [Description("上传目录日期分割格式。默认是按天yyyyMMdd 或 按月yyyyMM 或 按年yyyy")]
+    /// <summary>上传目录分割格式。默认是按天{yyyy}{mm}{dd},支持{yyyy}{yy}{mm}{dd}{hh}{ii}{ss}{time}{filename}{rand:随机数}</summary>
+    [Description("上传目录分割格式。默认是按天{yyyy}{mm}{dd},支持{yyyy}{yy}{mm}{dd}{hh}{ii}{ss}{time}{filename}{rand:随机数}")]
     [Category("通用")]
-    public String DateSplitFormat { get; set; } = "yyyyMMdd";
-
+    public String PathFormat { get; set; } = "{yyyy}{mm}{dd}";
+    
+    /// <summary>上传文件名称格式。默认是按天yyyyMMdd</summary>
+    [Description("上传文件名称格式。,支持{yyyy}{yy}{mm}{dd}{hh}{ii}{ss}{time}{filename}{rand:随机数}")]
+    [Category("通用")]
+    public String SaveFileFormat { get; set; } = "{yyyy}{MM}{dd}";
     /// <summary>上传目录。默认Uploads 它只能在wwwroot目录下面,因为租户问题所以不需要添加wwwroot系统会自动添加,</summary>
     [Description("上传目录。默认Uploads")]
     [Category("通用")]

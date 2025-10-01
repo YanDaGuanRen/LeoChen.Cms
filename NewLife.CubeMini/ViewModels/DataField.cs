@@ -259,6 +259,10 @@ public class DataField
     /// <returns></returns>
     public virtual Boolean IsBigText() => Type == typeof(String) && (Length < 0 || Length >= 300 || Length >= 200 && Name.EqualIgnoreCase("Remark", "Description", "Comment"));
 
+    /// <summary>是否富文本字段</summary>
+    /// <returns></returns>
+    public virtual Boolean IsUeText() => Type == typeof(String) && (Length >= 50 && Name.EqualIgnoreCase("Value"));
+
     /// <summary>是否附件列</summary>
     /// <returns></returns>
     public Boolean IsAttachment() => ItemType.EqualIgnoreCase("file", "image") || ItemType.StartsWithIgnoreCase("file-", "image-");

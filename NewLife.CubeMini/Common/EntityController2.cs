@@ -19,19 +19,26 @@ namespace NewLife.Cube;
 
 /// <summary>实体控制器基类</summary>
 /// <typeparam name="TEntity"></typeparam>
-public partial class EntityController<TEntity> : EntityController<TEntity, TEntity> where TEntity : Entity<TEntity>, new() { }
+public partial class EntityController<TEntity> : EntityController<TEntity, TEntity>
+    where TEntity : Entity<TEntity>, new()
+{
+}
 
 /// <summary>实体控制器基类</summary>
 /// <typeparam name="TEntity"></typeparam>
 /// <typeparam name="TModel"></typeparam>
-public partial class EntityController<TEntity, TModel> : ReadOnlyEntityController<TEntity> where TEntity : Entity<TEntity>, new()
+public partial class EntityController<TEntity, TModel> : ReadOnlyEntityController<TEntity>
+    where TEntity : Entity<TEntity>, new()
 {
     #region 构造
+
     /// <summary>实例化</summary>
     public EntityController() => PageSetting.IsReadOnly = false;
+
     #endregion
 
     #region 默认Action
+
     private String ProcessDelete(TEntity entity)
     {
         // 假删除与恢复。首次删除标记假删除，假删除后再删除则是真正删除
@@ -81,13 +88,14 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
         return act;
     }
 
-    private static FieldItem GetDeleteField() => Factory.Fields.FirstOrDefault(e => e.Name.EqualIgnoreCase("Deleted", "IsDelete", "IsDeleted") && e.Type == typeof(Boolean));
+    private static FieldItem GetDeleteField() => Factory.Fields.FirstOrDefault(e =>
+        e.Name.EqualIgnoreCase("Deleted", "IsDelete", "IsDeleted") && e.Type == typeof(Boolean));
 
     /// <summary>保存所有上传文件，并保存附件访问路径到实体对象的对应属性</summary>
     /// <param name="entity">实体对象</param>
     /// <param name="uploadPath">上传目录。为空时默认UploadPath配置</param>
     /// <returns></returns>
-    protected virtual async Task<IList<String>> SaveFiles(TEntity entity, bool dateSplit = true)
+    protected virtual async Task<IList<String>> SaveFiles(TEntity entity)
     {
         var rs = new List<String>();
         var list = new List<String>();
@@ -106,7 +114,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
                 {
                     if (file.Name.EqualIgnoreCase(fi.Name, fi.Name + "_attachment"))
                     {
-                        var url = await SaveFile(entity, file, dateSplit);
+                        var url = await SaveFile(entity, file);
                         if (url != null)
                         {
                             list.Add(url);
@@ -129,29 +137,40 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
     /// <summary>保存单个文件。新建附件</summary>
     /// <param name="entity">实体对象。读取主键与标题，不修改实体对象</param>
     /// <param name="file">文件</param>
-    /// <param name="isDateSplit">是否按日期分目录</param>
     /// <param name="savefileName">保存的文件名</param>
     /// <returns></returns>
-    protected virtual async Task<String> SaveFile(TEntity entity, IFormFile file, bool isDateSplit = true,string savefileName="")
+    protected virtual async Task<String> SaveFile(TEntity entity, IFormFile file, string savefileName = "")
     {
-        var category = typeof(TEntity).Name;
+        if (file == null) throw new ArgumentNullException(nameof(file));
+        var category = "";
+        
         if (entity is User userinfo)
         {
             category = "Avatar";
-            if (savefileName.IsNullOrEmpty()) savefileName = userinfo.ID + Path.GetExtension(file.FileName);
-            isDateSplit = false;
+            savefileName = userinfo.ID + "";
         }
 
-        if (file == null) throw new ArgumentNullException(nameof(file));
+        var ext = Path.GetExtension(file.FileName);
+        var ueset = UEditorSetting.Current;
+        if (ueset.CatcherAllowFiles.Contains(ext) || ueset.ImageAllowFiles.Contains(ext))
+        {
+            category = "image";
+        }
+        else if (ueset.VideoAllowFiles.Contains(ext))
+        {
+            category = "video";
+        }
+        else
+        {
+            category = "file";
+        }
 
-        using var span = DefaultTracer.Instance?.NewSpan(nameof(SaveFile), new { name = file.Name, dateSplit = isDateSplit, deffileName = savefileName });
-
-
+        using var span = DefaultTracer.Instance?.NewSpan(nameof(SaveFile), new { name = file.Name, Category = category, Entity = typeof(TEntity).Name });
         var rs = "";
         var msg = "";
         try
         {
-            rs = await FileUploadHelper.SaveFile(file, category, isDateSplit,savefileName);
+            rs = await FileUploadHelper.SaveFile(file, category, savefileName);
         }
         catch (Exception ex)
         {
@@ -164,13 +183,13 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
         {
             // 写日志
             var type = entity.GetType();
-            var log = LogProvider.Provider.CreateLog(type, "上传", !rs.IsNullOrEmpty(), $"上传 {file.FileName}  ，保存为 {rs} " + msg, 0, null, UserHost);
+            var log = LogProvider.Provider.CreateLog(type, "上传", !rs.IsNullOrEmpty(),
+                $"上传 {file.FileName}  ，保存为 {rs} " + msg, 0, null, UserHost);
             log.SaveAsync();
         }
 
         return rs;
     }
-
 
 
     /// <summary>
@@ -219,9 +238,11 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
 
         return true;
     }
+
     #endregion
 
     #region 实体操作重载
+
     /// <summary>添加实体对象</summary>
     /// <param name="entity"></param>
     /// <returns></returns>
@@ -259,9 +280,11 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
     /// <param name="entity"></param>
     /// <returns></returns>
     protected virtual Int32 OnDelete(TEntity entity) => entity.Delete();
+
     #endregion
-    
+
     #region 导入Excel/Csv/Json/Zip
+
     /// <summary>导入数据，保存落库</summary>
     /// <remarks>
     /// 此时得到的实体列表，都是全新创建，用于接收上传数据。
@@ -301,6 +324,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
                     {
                         exp &= fi.Equal(entity[fi.Name]);
                     }
+
                     var old = Factory.Find(exp) as TEntity;
                     if (old != null) list[i] = CopyFrom(old, entity, fields);
                 }
@@ -321,6 +345,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
 
         return entity;
     }
+
     /// <summary>导入数据默认保存</summary>
     /// <param name="factory"></param>
     /// <param name="list"></param>
@@ -613,6 +638,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
                 type = Factory.EntityType;
                 if (entryName.EqualIgnoreCase(type.Name, type.FullName)) factory2 = Factory;
             }
+
             factory2 ??= factory;
 
             // 仅解析当前控制器对应的数据集，其它数据交给 OnImportZip 重载处理
@@ -673,5 +699,6 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
 
         return 0;
     }
+
     #endregion
 }
