@@ -61,6 +61,9 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     public override Boolean Valid(DataMethod method)
     {
         AreaID = CmsAreaContext.CurrentId;
+        if (ModelID <= 0) throw new ArgumentNullException(nameof(ModelID), "不能为空");
+        if (Name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Name), "不能为空");
+
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;

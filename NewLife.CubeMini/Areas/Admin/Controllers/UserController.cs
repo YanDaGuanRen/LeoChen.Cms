@@ -333,6 +333,7 @@ public class UserController : EntityController<User, UserModel>
         var dicKey = _cache.GetOrAdd(key, k => NCreateKeyPair(), 300);
         ViewData["pKey"] = new KeyValuePair<String, String>(key, dicKey.Item1);
 
+        return View(model);
         return _isMobile ? View("MLogin", model) : View(model);
     }
 
@@ -499,6 +500,7 @@ public class UserController : EntityController<User, UserModel>
         var model = GetViewModel(returnUrl);
         model.OAuthItems = OAuthConfig.GetVisibles();
 
+        return  View(model);
         return _isMobile ? View("MLogin", model) : View(model);
     }
 
@@ -625,6 +627,7 @@ public class UserController : EntityController<User, UserModel>
 
         // 必须指定视图名，因为其它action会调用
         //return View("Info", user);
+        return View("Info", user);
         return _isMobile ? View("MInfo", user) : View("Info", user);
     }
 
@@ -696,6 +699,7 @@ public class UserController : EntityController<User, UserModel>
             SsoName = name,
         };
 
+        return View("ChangePassword", model);
         return _isMobile ? View("MChangePassword", model) : View("ChangePassword", model);
     }
 

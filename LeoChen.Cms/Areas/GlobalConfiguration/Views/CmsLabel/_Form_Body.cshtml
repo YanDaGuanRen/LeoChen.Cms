@@ -13,84 +13,113 @@
 
 <ul class="nav nav-tabs" role="tablist">
     <li class="active"><a href="#item0" data-toggle="tab">默认</a></li>
-    <li class=""><a href="#item1" data-toggle="tab">扩展信息</a></li>
+    <li class=""><a href="#item1" data-toggle="tab">值内容</a></li>
+    <li class=""><a href="#item2" data-toggle="tab">扩展信息</a></li>
 </ul>
 <div class="tab-content">
     <div class="tab-pane fade in active" id="item0">
-        <div class="row">
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">名称</label>
-                <div class="input-group col-xs-9 col-sm-9">
+        <div class="form-group">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">名称</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <input class="form-control" id="Name" name="Name" type="text" value="@entity.Name"/>
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">状态</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">状态</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     @Html.CheckBox("Enable", @entity.Enable, new { @class = "chkSwitch" })
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">标签类型</label>
-                <div class="input-group col-xs-9 col-sm-4">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">标签类型</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     @Html.ForEnum("LabelType", @entity.LabelType)
                 </div>
-                <span class="hidden-xs col-sm-5"><span class="middle">修改后先保存再编辑</span></span>
+                <span class="hidden-xs col-sm-4"><span class="middle">修改后先保存再编辑</span></span>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">描述</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">描述</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <input class="form-control" id="Description" name="Description" type="text"
                            value="@entity.Description"/>
-                </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-xs-12 col-sm-12">
-                    <label class="control-label col-xs-3 col-sm-3">值</label>
-                    <div class="input-group col-xs-9 col-sm-9">
-                        <input class="form-control" id="Value" name="Value" type="text" value="@entity.Value"/>
-                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div class="tab-pane fade in " id="item1">
-        <div class="row">
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">创建者</label>
-                <div class="input-group col-xs-9 col-sm-9">
+        <div class="form-horizontal">
+                <div class="widget-body">
+                    <div class="widget-main">
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <label class="ace-file-input"><input type="file" id="id-input-file-2"><span class="ace-file-container" data-title="Choose"><span class="ace-file-name" data-title="No File ..."><i class=" ace-icon fa fa-upload"></i></span></span><a class="remove" href="#"><i class=" ace-icon fa fa-times"></i></a></label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div class="col-xs-12">
+                                <label class="ace-file-input ace-file-multiple"><input multiple="" type="file" id="id-input-file-3"><span class="ace-file-container" data-title="Drop files here or click to choose"><span class="ace-file-name" data-title="No File ..."><i class=" ace-icon ace-icon fa fa-cloud-upload"></i></span></span><a class="remove" href="#"><i class=" ace-icon fa fa-times"></i></a></label>
+                            </div>
+                        </div>
+
+                        <label>
+                            <input type="checkbox" name="file-format" id="id-file-format" class="ace">
+                            <span class="lbl"> Allow only images</span>
+                        </label>
+                    </div>
+                </div>
+      
+            <div class="widget-main">
+                <div class="form-group">
+                    <label class="control-label col-xs-12">值</label>
+                    <div class="input-group col-xs-12">
+                        <label>
+                            <input class="form-control" id="Value" name="Value" type="text" value="@entity.Value"/>
+                        </label>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tab-pane fade in " id="item2">
+        <div class="form-group">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">创建者</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     @Html.TextBox("CreateUserID", @entity.CreateUserID, new { @class = "form-control", role = "number" })
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">创建时间</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">创建时间</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     @Html.TextBox("CreateTime", @entity.CreateTime.ToFullString(""), new { @class = "form-control date form_datetime" })
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">创建地址</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">创建地址</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <input class="form-control" id="CreateIP" name="CreateIP" type="text" value="@entity.CreateIP"/>
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">更新者</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">更新者</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     @Html.TextBox("UpdateUserID", @entity.UpdateUserID, new { @class = "form-control", role = "number" })
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">更新时间</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">更新时间</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <span class="input-group-addon"><i class="fa fa-calendar"></i></span>
                     @Html.TextBox("UpdateTime", @entity.UpdateTime.ToFullString(""), new { @class = "form-control date form_datetime" })
                 </div>
             </div>
-            <div class="form-group col-xs-12 col-sm-6">
-                <label class="control-label col-xs-3 col-sm-3">更新地址</label>
-                <div class="input-group col-xs-9 col-sm-9">
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-2 col-sm-2">更新地址</label>
+                <div class="input-group col-xs-10 col-sm-6">
                     <input class="form-control" id="UpdateIP" name="UpdateIP" type="text" value="@entity.UpdateIP"/>
                 </div>
             </div>

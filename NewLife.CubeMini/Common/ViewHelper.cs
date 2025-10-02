@@ -506,7 +506,7 @@ public static class ViewHelper
                           @foreach (var group in groupFields)
                           {
                               <div class="tab-pane fade in @(j==0?"active":"")" id="@("item"+j)">
-                                  <div class="row">
+                                  <div class="form-horizontal">
                                       @foreach (var item in group.Value)
                                       {
                                           if ((!item.PrimaryKey || item.Field != null && !item.Field.IsIdentity) && (item.DataVisible == null || item.DataVisible(entity, item)))
@@ -623,24 +623,13 @@ public static class ViewHelper
         var des = field.Description.TrimStart(field.DisplayName).TrimStart(",", ".", "，", "。");
 
         var err = 0;
-
-        var total = 12;
-        var label = 3;
+        var label = 2;
         var span = 4;
-        if (err == 0 && des.IsNullOrEmpty())
-        {
-            span = 0;
-        }
-        else if (field.Type == typeof(Boolean) || field.Type.IsEnum)
-        {
-            span += 1;
-        }
-
-        var input = total - label - span;
+        var input = 6;
         var ident = new String(' ', 4 * 1);
 
-        sb.AppendLine($"    <label class=\"control-label col-xs-{label} col-sm-{label}\">{field.DisplayName}</label>");
-        sb.AppendLine($"    <div class=\"input-group col-xs-{total - label} col-sm-{input}\">");
+        sb.AppendLine($"    <label class=\"control-label col-xs-12 col-sm-{label}\">{field.DisplayName}</label>");
+        sb.AppendLine($"    <div class=\"input-group col-xs-12 col-sm-{input}\">");
 
         // 优先处理映射。因为映射可能是字符串
         if (!field.MapField.IsNullOrEmpty() && field.MapProvider != null)

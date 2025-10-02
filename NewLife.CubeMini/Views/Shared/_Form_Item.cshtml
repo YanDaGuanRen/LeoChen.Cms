@@ -163,13 +163,5 @@
 }
 else if (!des.IsNullOrEmpty())
 {
-    <span class="hidden-xs col-sm-@span">
-        @{
-            //var des = item.Description.TrimStart(item.DisplayName).TrimStart(",", ".", "，", "。");
-            if (!des.IsNullOrWhiteSpace())
-            {
-                <span class="middle">@des</span>
-            }
-        }
-    </span>
+    <label class="control-label align-left hidden-xs col-sm-@span" style="text-align: left;">@des</label>
 }
