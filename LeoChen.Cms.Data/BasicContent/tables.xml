@@ -43,7 +43,7 @@
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
-        <Column Name="Title" DataType="String" Master="True"  Length="100" Description="标题" />
+        <Column Name="Title" DataType="String" Master="True" Length="100" Description="标题" />
         <Column Name="Subtitle" DataType="String" Length="200" Description="副标题" />
         <Column Name="Domain" DataType="String" Description="域名" />
         <Column Name="Logo" DataType="String" Length="100" Description="logo" />
@@ -62,13 +62,13 @@
       </Columns>
       <Indexes>
         <Index Columns="AreaID" Unique="True" />
-        <Index Columns="Title"/>
+        <Index Columns="Title" />
       </Indexes>
     </Table>
     <Table Name="CmsCompany" Description="公司信息表">
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
-        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name"  Description="站点代码" />
+        <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="站点代码" />
         <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
         <Column Name="Address" DataType="String" Length="200" Description="地址" />
         <Column Name="Postcode" DataType="String" Length="6" Description="邮编" />

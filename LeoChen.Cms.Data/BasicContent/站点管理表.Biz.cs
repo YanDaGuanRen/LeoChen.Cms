@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube;
 using NewLife.Cube.Common;
 using NewLife.Data;
 using NewLife.Log;

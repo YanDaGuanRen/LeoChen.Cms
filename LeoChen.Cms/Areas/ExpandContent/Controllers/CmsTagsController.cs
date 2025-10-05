@@ -1,7 +1,8 @@
-﻿using LeoChen.Cms.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Log;
@@ -21,7 +22,7 @@ public class CmsTagsController : EntityController<CmsTags>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        ListFields.RemoveCreateField().RemoveRemarkField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -54,7 +55,7 @@ public class CmsTagsController : EntityController<CmsTags>
     /// <returns></returns>
     protected override IEnumerable<CmsTags> Search(Pager p)
     {
-        var areaId = p["areaId"].ToInt(-1);
+        var areaId = CmsAreaContext.CurrentId;
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();

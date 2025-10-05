@@ -33,11 +33,11 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
 
     private Int32 _AreaID;
-    /// <summary>区域代码</summary>
-    [DisplayName("区域代码")]
-    [Description("区域代码")]
+    /// <summary>区域名称</summary>
+    [DisplayName("区域名称")]
+    [Description("区域名称")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("AreaID", "区域代码", "")]
+    [BindColumn("AreaID", "区域名称", "")]
     public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private String _Name;
@@ -49,11 +49,11 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
     private String _Link;
-    /// <summary>link</summary>
-    [DisplayName("link")]
-    [Description("link")]
+    /// <summary>链接</summary>
+    [DisplayName("链接")]
+    [Description("链接")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Link", "link", "")]
+    [BindColumn("Link", "链接", "")]
     public String Link { get => _Link; set { if (OnPropertyChanging("Link", value)) { _Link = value; OnPropertyChanged("Link"); } } }
 
     private Int32 _CreateUserID;
@@ -170,11 +170,11 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
     #endregion
 
     #region 关联映射
-    /// <summary>区域代码</summary>
+    /// <summary>区域名称</summary>
     [XmlIgnore, IgnoreDataMember, ScriptIgnore]
     public CmsArea Area => Extends.Get(nameof(Area), k => CmsArea.FindByID(AreaID));
 
-    /// <summary>区域代码</summary>
+    /// <summary>区域名称</summary>
     [Map(nameof(AreaID), typeof(CmsArea), "ID")]
     public String AreaName => Area?.Name;
 
@@ -197,8 +197,8 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
         //return Find(_.ID == id);
     }
 
-    /// <summary>根据区域代码查找</summary>
-    /// <param name="areaId">区域代码</param>
+    /// <summary>根据区域名称查找</summary>
+    /// <param name="areaId">区域名称</param>
     /// <returns>实体列表</returns>
     public static IList<CmsTags> FindAllByAreaID(Int32 areaId)
     {
@@ -229,7 +229,7 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
 
     #region 高级查询
     /// <summary>高级查询</summary>
-    /// <param name="areaId">区域代码</param>
+    /// <param name="areaId">区域名称</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
@@ -254,13 +254,13 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
         /// <summary>主键ID</summary>
         public static readonly Field ID = FindByName("ID");
 
-        /// <summary>区域代码</summary>
+        /// <summary>区域名称</summary>
         public static readonly Field AreaID = FindByName("AreaID");
 
         /// <summary>名称</summary>
         public static readonly Field Name = FindByName("Name");
 
-        /// <summary>link</summary>
+        /// <summary>链接</summary>
         public static readonly Field Link = FindByName("Link");
 
         /// <summary>创建者</summary>
@@ -290,13 +290,13 @@ public partial class CmsTags : ICmsTags, IEntity<ICmsTags>
         /// <summary>主键ID</summary>
         public const String ID = "ID";
 
-        /// <summary>区域代码</summary>
+        /// <summary>区域名称</summary>
         public const String AreaID = "AreaID";
 
         /// <summary>名称</summary>
         public const String Name = "Name";
 
-        /// <summary>link</summary>
+        /// <summary>链接</summary>
         public const String Link = "Link";
 
         /// <summary>创建者</summary>

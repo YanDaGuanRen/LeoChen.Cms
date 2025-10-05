@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Entity;
 using NewLife.Data;
 using XCode;
 using XCode.Cache;
@@ -17,6 +18,7 @@ namespace LeoChen.Cms.Data;
 [Serializable]
 [DataObject]
 [Description("友情链接")]
+[BindIndex("IX_CmsLink_AreaID", false, "AreaID")]
 [BindIndex("IX_CmsLink_Sorting", false, "Sorting")]
 [BindIndex("IX_CmsLink_LinkGroupID", false, "LinkGroupID")]
 [BindTable("CmsLink", Description = "友情链接", ConnName = "Membership", DbType = DatabaseType.None)]
@@ -30,6 +32,14 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
     [DataObjectField(true, true, false, 0)]
     [BindColumn("ID", "主键ID", "")]
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
+
+    private Int32 _AreaID;
+    /// <summary>区域名称</summary>
+    [DisplayName("区域名称")]
+    [Description("区域名称")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("AreaID", "区域名称", "")]
+    public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private Int32 _LinkGroupID;
     /// <summary>组ID</summary>
@@ -62,6 +72,14 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
     [DataObjectField(false, false, true, 100)]
     [BindColumn("Logo", "图标", "")]
     public String Logo { get => _Logo; set { if (OnPropertyChanging("Logo", value)) { _Logo = value; OnPropertyChanged("Logo"); } } }
+
+    private Boolean _Enable;
+    /// <summary>状态</summary>
+    [DisplayName("状态")]
+    [Description("状态")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("Enable", "状态", "")]
+    public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private Int32 _Sorting;
     /// <summary>排序</summary>
@@ -132,10 +150,12 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
     public void Copy(ICmsLink model)
     {
         ID = model.ID;
+        AreaID = model.AreaID;
         LinkGroupID = model.LinkGroupID;
         Name = model.Name;
         Link = model.Link;
         Logo = model.Logo;
+        Enable = model.Enable;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
@@ -155,10 +175,12 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
         get => name switch
         {
             "ID" => _ID,
+            "AreaID" => _AreaID,
             "LinkGroupID" => _LinkGroupID,
             "Name" => _Name,
             "Link" => _Link,
             "Logo" => _Logo,
+            "Enable" => _Enable,
             "Sorting" => _Sorting,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
@@ -173,10 +195,12 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
             switch (name)
             {
                 case "ID": _ID = value.ToInt(); break;
+                case "AreaID": _AreaID = value.ToInt(); break;
                 case "LinkGroupID": _LinkGroupID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
                 case "Link": _Link = Convert.ToString(value); break;
                 case "Logo": _Logo = Convert.ToString(value); break;
+                case "Enable": _Enable = value.ToBoolean(); break;
                 case "Sorting": _Sorting = value.ToInt(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
@@ -191,6 +215,14 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
     #endregion
 
     #region 关联映射
+    /// <summary>区域名称</summary>
+    [XmlIgnore, IgnoreDataMember, ScriptIgnore]
+    public CmsArea Area => Extends.Get(nameof(Area), k => CmsArea.FindByID(AreaID));
+
+    /// <summary>区域名称</summary>
+    [Map(nameof(AreaID), typeof(CmsArea), "ID")]
+    public String AreaName => Area?.Name;
+
     #endregion
 
     #region 扩展查询
@@ -208,6 +240,19 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
         return Meta.SingleCache[id];
 
         //return Find(_.ID == id);
+    }
+
+    /// <summary>根据区域名称查找</summary>
+    /// <param name="areaId">区域名称</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsLink> FindAllByAreaID(Int32 areaId)
+    {
+        if (areaId < 0) return [];
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.AreaID == areaId);
+
+        return FindAll(_.AreaID == areaId);
     }
 
     /// <summary>根据排序查找</summary>
@@ -239,19 +284,23 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
 
     #region 高级查询
     /// <summary>高级查询</summary>
+    /// <param name="areaId">区域名称</param>
     /// <param name="linkGroupId">组ID</param>
     /// <param name="sorting">排序</param>
+    /// <param name="enable">状态</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsLink> Search(Int32 linkGroupId, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsLink> Search(Int32 areaId, Int32 linkGroupId, Int32 sorting, Boolean? enable, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
+        if (areaId >= 0) exp &= _.AreaID == areaId;
         if (linkGroupId >= 0) exp &= _.LinkGroupID == linkGroupId;
         if (sorting >= 0) exp &= _.Sorting == sorting;
+        if (enable != null) exp &= _.Enable == enable;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
 
@@ -266,6 +315,9 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
         /// <summary>主键ID</summary>
         public static readonly Field ID = FindByName("ID");
 
+        /// <summary>区域名称</summary>
+        public static readonly Field AreaID = FindByName("AreaID");
+
         /// <summary>组ID</summary>
         public static readonly Field LinkGroupID = FindByName("LinkGroupID");
 
@@ -277,6 +329,9 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
 
         /// <summary>图标</summary>
         public static readonly Field Logo = FindByName("Logo");
+
+        /// <summary>状态</summary>
+        public static readonly Field Enable = FindByName("Enable");
 
         /// <summary>排序</summary>
         public static readonly Field Sorting = FindByName("Sorting");
@@ -308,6 +363,9 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
         /// <summary>主键ID</summary>
         public const String ID = "ID";
 
+        /// <summary>区域名称</summary>
+        public const String AreaID = "AreaID";
+
         /// <summary>组ID</summary>
         public const String LinkGroupID = "LinkGroupID";
 
@@ -319,6 +377,9 @@ public partial class CmsLink : ICmsLink, IEntity<ICmsLink>
 
         /// <summary>图标</summary>
         public const String Logo = "Logo";
+
+        /// <summary>状态</summary>
+        public const String Enable = "Enable";
 
         /// <summary>排序</summary>
         public const String Sorting = "Sorting";

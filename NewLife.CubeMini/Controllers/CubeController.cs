@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Controllers;
 using Microsoft.AspNetCore.Mvc.Filters;
 using NewLife.Cube.Areas.Cube.Controllers;
+using NewLife.Cube.Common;
 using NewLife.Cube.Entity;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.Services;
@@ -30,6 +31,20 @@ public class CubeController(TokenService tokenService, IEnumerable<EndpointDataS
 {
     private readonly IList<EndpointDataSource> _sources = sources.ToList();
 
+    /// <summary>
+    /// 验证码
+    /// </summary>
+    /// <returns></returns>
+    [HttpGet]
+    [AllowAnonymous]
+    public IActionResult Captcha()
+    {
+        var captchaText = CaptchaHelper.GenerateCaptcha();
+        HttpContext.Session.SetString("captcha", captchaText.ToUpper());
+        var imageBytes = CaptchaHelper.GenerateCaptchaImage(captchaText);
+        return File(imageBytes, "image/png");
+    }
+    
     #region 拦截
     /// <summary>执行前</summary>
     public override void OnActionExecuting(ActionExecutingContext context)

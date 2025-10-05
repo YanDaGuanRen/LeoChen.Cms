@@ -1,4 +1,4 @@
-﻿namespace NewLife.Cube.Common;
+﻿namespace NewLife.Cube;
 /// <summary>区域上下文</summary>
 public class CmsAreaContext
 {

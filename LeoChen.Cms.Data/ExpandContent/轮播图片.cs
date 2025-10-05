@@ -5,6 +5,7 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube.Entity;
 using NewLife.Data;
 using XCode;
 using XCode.Cache;
@@ -17,6 +18,7 @@ namespace LeoChen.Cms.Data;
 [Serializable]
 [DataObject]
 [Description("轮播图片")]
+[BindIndex("IX_CmsSlide_AreaID", false, "AreaID")]
 [BindIndex("IX_CmsSlide_Sorting", false, "Sorting")]
 [BindIndex("IX_CmsSlide_SlideGroupID", false, "SlideGroupID")]
 [BindTable("CmsSlide", Description = "轮播图片", ConnName = "Membership", DbType = DatabaseType.None)]
@@ -30,6 +32,14 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
     [DataObjectField(true, true, false, 0)]
     [BindColumn("ID", "主键ID", "")]
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
+
+    private Int32 _AreaID;
+    /// <summary>区域名称</summary>
+    [DisplayName("区域名称")]
+    [Description("区域名称")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("AreaID", "区域名称", "")]
+    public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private Int32 _SlideGroupID;
     /// <summary>组ID</summary>
@@ -64,12 +74,20 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
     public String Pic { get => _Pic; set { if (OnPropertyChanging("Pic", value)) { _Pic = value; OnPropertyChanged("Pic"); } } }
 
     private String _Link;
-    /// <summary>link</summary>
-    [DisplayName("link")]
-    [Description("link")]
+    /// <summary>链接</summary>
+    [DisplayName("链接")]
+    [Description("链接")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Link", "link", "")]
+    [BindColumn("Link", "链接", "")]
     public String Link { get => _Link; set { if (OnPropertyChanging("Link", value)) { _Link = value; OnPropertyChanged("Link"); } } }
+
+    private Boolean _Enable;
+    /// <summary>状态</summary>
+    [DisplayName("状态")]
+    [Description("状态")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("Enable", "状态", "")]
+    public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private Int32 _Sorting;
     /// <summary>排序</summary>
@@ -140,11 +158,13 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
     public void Copy(ICmsSlide model)
     {
         ID = model.ID;
+        AreaID = model.AreaID;
         SlideGroupID = model.SlideGroupID;
         Title = model.Title;
         Subtitle = model.Subtitle;
         Pic = model.Pic;
         Link = model.Link;
+        Enable = model.Enable;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
@@ -164,11 +184,13 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         get => name switch
         {
             "ID" => _ID,
+            "AreaID" => _AreaID,
             "SlideGroupID" => _SlideGroupID,
             "Title" => _Title,
             "Subtitle" => _Subtitle,
             "Pic" => _Pic,
             "Link" => _Link,
+            "Enable" => _Enable,
             "Sorting" => _Sorting,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
@@ -183,11 +205,13 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
             switch (name)
             {
                 case "ID": _ID = value.ToInt(); break;
+                case "AreaID": _AreaID = value.ToInt(); break;
                 case "SlideGroupID": _SlideGroupID = value.ToInt(); break;
                 case "Title": _Title = Convert.ToString(value); break;
                 case "Subtitle": _Subtitle = Convert.ToString(value); break;
                 case "Pic": _Pic = Convert.ToString(value); break;
                 case "Link": _Link = Convert.ToString(value); break;
+                case "Enable": _Enable = value.ToBoolean(); break;
                 case "Sorting": _Sorting = value.ToInt(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
@@ -202,6 +226,14 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
     #endregion
 
     #region 关联映射
+    /// <summary>区域名称</summary>
+    [XmlIgnore, IgnoreDataMember, ScriptIgnore]
+    public CmsArea Area => Extends.Get(nameof(Area), k => CmsArea.FindByID(AreaID));
+
+    /// <summary>区域名称</summary>
+    [Map(nameof(AreaID), typeof(CmsArea), "ID")]
+    public String AreaName => Area?.Name;
+
     #endregion
 
     #region 扩展查询
@@ -219,6 +251,19 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         return Meta.SingleCache[id];
 
         //return Find(_.ID == id);
+    }
+
+    /// <summary>根据区域名称查找</summary>
+    /// <param name="areaId">区域名称</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsSlide> FindAllByAreaID(Int32 areaId)
+    {
+        if (areaId < 0) return [];
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.AreaID == areaId);
+
+        return FindAll(_.AreaID == areaId);
     }
 
     /// <summary>根据排序查找</summary>
@@ -250,19 +295,23 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
 
     #region 高级查询
     /// <summary>高级查询</summary>
+    /// <param name="areaId">区域名称</param>
     /// <param name="slideGroupId">组ID</param>
     /// <param name="sorting">排序</param>
+    /// <param name="enable">状态</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsSlide> Search(Int32 slideGroupId, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsSlide> Search(Int32 areaId, Int32 slideGroupId, Int32 sorting, Boolean? enable, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
+        if (areaId >= 0) exp &= _.AreaID == areaId;
         if (slideGroupId >= 0) exp &= _.SlideGroupID == slideGroupId;
         if (sorting >= 0) exp &= _.Sorting == sorting;
+        if (enable != null) exp &= _.Enable == enable;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
 
@@ -277,6 +326,9 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         /// <summary>主键ID</summary>
         public static readonly Field ID = FindByName("ID");
 
+        /// <summary>区域名称</summary>
+        public static readonly Field AreaID = FindByName("AreaID");
+
         /// <summary>组ID</summary>
         public static readonly Field SlideGroupID = FindByName("SlideGroupID");
 
@@ -289,8 +341,11 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         /// <summary>图片</summary>
         public static readonly Field Pic = FindByName("Pic");
 
-        /// <summary>link</summary>
+        /// <summary>链接</summary>
         public static readonly Field Link = FindByName("Link");
+
+        /// <summary>状态</summary>
+        public static readonly Field Enable = FindByName("Enable");
 
         /// <summary>排序</summary>
         public static readonly Field Sorting = FindByName("Sorting");
@@ -322,6 +377,9 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         /// <summary>主键ID</summary>
         public const String ID = "ID";
 
+        /// <summary>区域名称</summary>
+        public const String AreaID = "AreaID";
+
         /// <summary>组ID</summary>
         public const String SlideGroupID = "SlideGroupID";
 
@@ -334,8 +392,11 @@ public partial class CmsSlide : ICmsSlide, IEntity<ICmsSlide>
         /// <summary>图片</summary>
         public const String Pic = "Pic";
 
-        /// <summary>link</summary>
+        /// <summary>链接</summary>
         public const String Link = "Link";
+
+        /// <summary>状态</summary>
+        public const String Enable = "Enable";
 
         /// <summary>排序</summary>
         public const String Sorting = "Sorting";

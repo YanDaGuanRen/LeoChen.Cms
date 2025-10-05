@@ -14,6 +14,9 @@ public partial interface ICmsSlide
     /// <summary>主键ID</summary>
     Int32 ID { get; set; }
 
+    /// <summary>区域名称</summary>
+    Int32 AreaID { get; set; }
+
     /// <summary>组ID</summary>
     Int32 SlideGroupID { get; set; }
 
@@ -26,8 +29,11 @@ public partial interface ICmsSlide
     /// <summary>图片</summary>
     String Pic { get; set; }
 
-    /// <summary>link</summary>
+    /// <summary>链接</summary>
     String Link { get; set; }
+
+    /// <summary>状态</summary>
+    Boolean Enable { get; set; }
 
     /// <summary>排序</summary>
     Int32 Sorting { get; set; }

@@ -127,14 +127,15 @@ public partial class CmsFormField : Entity<CmsFormField>
     #region 高级查询
 
     // Select Count(ID) as ID,Category From CmsFormField Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
-    //static readonly FieldCache<CmsFormField> _CategoryCache = new(nameof(Category))
-    //{
+    static readonly FieldCache<CmsFormField> _CategoryCache = new(nameof(Name))
+    {
+        Where = _.Enable == true & Expression.Empty
     //Where = _.CreateTime > DateTime.Today.AddDays(-30) & Expression.Empty
-    //};
+    };
 
-    ///// <summary>获取类别列表，字段缓存10分钟，分组统计数据最多的前20种，用于魔方前台下拉选择</summary>
-    ///// <returns></returns>
-    //public static IDictionary<String, String> GetCategoryList() => _CategoryCache.FindAllName();
+    /// <summary>获取类别列表，字段缓存10分钟，分组统计数据最多的前20种，用于魔方前台下拉选择</summary>
+    /// <returns></returns>
+    public static IDictionary<String, String> GetCategoryList() => _CategoryCache.FindAllName();
     #endregion
 
     #region 业务操作

@@ -5,25 +5,28 @@
     var fs = Model as List<FileItem>;
     var r = ViewBag.Current as String;
     var clips = ViewBag.Clip as ICollection<FileItem>;
-    var message = ViewBag.Message as String;
+    var messages = ViewBag.Messages as IList<string>;
 }
-@if (!message.IsNullOrEmpty())
+@if (messages is {Count: > 0})
 {
-    <div class="alert alert-info alert-dismissible fade in" role="alert" id="messageAlert">
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-        @message
-    </div>
-    <script>  
+    @foreach(var msg in messages)
+    {
+        <div class="cube-message-alert alert alert-info alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @msg
+        </div>
+    }
+    <script>
         setTimeout(function() {
-            var alert = document.getElementById('messageAlert');
-            if (alert) {
+            var alerts = document.querySelectorAll('.cube-message-alert');
+            alerts.forEach(function(alert) {
                 alert.classList.remove('in');
                 setTimeout(function() {
                     alert.style.display = 'none';
                 }, 200);
-            }
+            });
         }, 2000);
     </script>
 }

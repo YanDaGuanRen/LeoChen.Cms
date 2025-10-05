@@ -265,7 +265,7 @@ public class DataField
 
     /// <summary>是否附件列</summary>
     /// <returns></returns>
-    public Boolean IsAttachment() => ItemType.EqualIgnoreCase("file", "image") || ItemType.StartsWithIgnoreCase("file-", "image-");
+    public Boolean IsAttachment() =>  ItemType.IsAttachment();
 
     /// <summary>格式化数据用于显示</summary>
     /// <param name="value"></param>

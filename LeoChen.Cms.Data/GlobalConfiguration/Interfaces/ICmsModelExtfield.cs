@@ -20,6 +20,9 @@ public partial interface ICmsModelExtfield
     /// <summary>名称</summary>
     String Name { get; set; }
 
+    /// <summary>显示名称</summary>
+    String DisplayName { get; set; }
+
     /// <summary>类型</summary>
     LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 

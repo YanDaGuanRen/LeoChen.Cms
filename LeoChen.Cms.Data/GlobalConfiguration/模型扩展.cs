@@ -47,6 +47,14 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
     [BindColumn("Name", "名称", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
+    private String _DisplayName;
+    /// <summary>显示名称</summary>
+    [DisplayName("显示名称")]
+    [Description("显示名称")]
+    [DataObjectField(false, false, true, 50)]
+    [BindColumn("DisplayName", "显示名称", "")]
+    public String DisplayName { get => _DisplayName; set { if (OnPropertyChanging("DisplayName", value)) { _DisplayName = value; OnPropertyChanged("DisplayName"); } } }
+
     private LeoChen.Cms.Data.CmsItemType _FieldType;
     /// <summary>类型</summary>
     [DisplayName("类型")]
@@ -142,6 +150,7 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         ID = model.ID;
         ModelID = model.ModelID;
         Name = model.Name;
+        DisplayName = model.DisplayName;
         FieldType = model.FieldType;
         Value = model.Value;
         Description = model.Description;
@@ -166,6 +175,7 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
             "ID" => _ID,
             "ModelID" => _ModelID,
             "Name" => _Name,
+            "DisplayName" => _DisplayName,
             "FieldType" => _FieldType,
             "Value" => _Value,
             "Description" => _Description,
@@ -185,6 +195,7 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
                 case "ID": _ID = value.ToInt(); break;
                 case "ModelID": _ModelID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
+                case "DisplayName": _DisplayName = Convert.ToString(value); break;
                 case "FieldType": _FieldType = (LeoChen.Cms.Data.CmsItemType)value.ToInt(); break;
                 case "Value": _Value = Convert.ToString(value); break;
                 case "Description": _Description = Convert.ToString(value); break;
@@ -294,6 +305,9 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         /// <summary>名称</summary>
         public static readonly Field Name = FindByName("Name");
 
+        /// <summary>显示名称</summary>
+        public static readonly Field DisplayName = FindByName("DisplayName");
+
         /// <summary>类型</summary>
         public static readonly Field FieldType = FindByName("FieldType");
 
@@ -338,6 +352,9 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
 
         /// <summary>名称</summary>
         public const String Name = "Name";
+
+        /// <summary>显示名称</summary>
+        public const String DisplayName = "DisplayName";
 
         /// <summary>类型</summary>
         public const String FieldType = "FieldType";

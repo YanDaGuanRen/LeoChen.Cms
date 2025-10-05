@@ -1,4 +1,5 @@
 ﻿@using System.Linq;
+@using System.Text.Json
 @using NewLife;
 @using NewLife.Web;
 @using XCode;
@@ -14,6 +15,12 @@
     var res = set.ResourceUrl;
     if (String.IsNullOrEmpty(res)) res = "/CubeContent";
     res = res.TrimEnd('/');
+    var defaultAlias = new Dictionary<string, string>
+    {
+        { "Id", "编号" },
+        { "code", "代码" },
+        { "name", "名称" }
+    };
 }
 
 <div class="form-group" style="position:relative">
@@ -34,7 +41,7 @@
         $("#@(id)_select").bsSuggest({
             url: "/cube/DepartmentSearch?key=",
             getDataMethod:"url",
-            effectiveFieldsAlias: { id:"编号",code:"代码",name: "名称",fullName:'全名',manager:'管理者'},
+            effectiveFieldsAlias:@Html.Raw(JsonSerializer.Serialize(defaultAlias)),
             ignorecase: true,
             showHeader: true,
             delayUntilKeyup: true, //获取数据的方式为 firstByUrl 时，延迟到有输入/获取到焦点时才请求数据

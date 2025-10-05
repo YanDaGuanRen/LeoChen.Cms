@@ -132,6 +132,7 @@ public class FileController : ControllerBaseX
     [EntityAuthorize(PermissionFlags.Detail)]
     public ActionResult Index(String r, String sort, String message = "")
     {
+        var messages = message.Split(",", StringSplitOptions.RemoveEmptyEntries);
         var di = GetDirectory(r) ?? Root.AsDirectory();
         // 计算当前路径
         var fd = di.FullName;
@@ -177,7 +178,7 @@ public class FileController : ControllerBaseX
         // 剪切板
         ViewBag.Clip = GetClip();
         // 提示信息
-        ViewBag.Message = message;
+        ViewBag.Messages = messages;
 
         return View("Index", list);
     }

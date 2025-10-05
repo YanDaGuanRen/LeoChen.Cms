@@ -14,14 +14,11 @@ public partial class CmsExtFormModel
     /// <summary>编号</summary>
     public Int32 ID { get; set; }
 
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     public Int32 FormID { get; set; }
 
-    /// <summary>字段编号</summary>
-    public Int32 FormFieldID { get; set; }
-
-    /// <summary>默认值</summary>
-    public String FieldValue { get; set; }
+    /// <summary>表单内容</summary>
+    public String FormValue { get; set; }
     #endregion
 
     #region 拷贝
@@ -31,8 +28,7 @@ public partial class CmsExtFormModel
     {
         ID = model.ID;
         FormID = model.FormID;
-        FormFieldID = model.FormFieldID;
-        FieldValue = model.FieldValue;
+        FormValue = model.FormValue;
     }
     #endregion
 }

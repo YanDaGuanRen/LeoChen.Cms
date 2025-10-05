@@ -9,7 +9,7 @@ XTrace.UseConsole();
 
 var builder = WebApplication.CreateBuilder(args);
 var services = builder.Services;
-// todo aaaa
+
 // 初始化配置文件
 InitConfig();
 

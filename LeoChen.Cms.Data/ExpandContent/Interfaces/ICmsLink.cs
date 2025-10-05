@@ -14,6 +14,9 @@ public partial interface ICmsLink
     /// <summary>主键ID</summary>
     Int32 ID { get; set; }
 
+    /// <summary>区域名称</summary>
+    Int32 AreaID { get; set; }
+
     /// <summary>组ID</summary>
     Int32 LinkGroupID { get; set; }
 
@@ -25,6 +28,9 @@ public partial interface ICmsLink
 
     /// <summary>图标</summary>
     String Logo { get; set; }
+
+    /// <summary>状态</summary>
+    Boolean Enable { get; set; }
 
     /// <summary>排序</summary>
     Int32 Sorting { get; set; }

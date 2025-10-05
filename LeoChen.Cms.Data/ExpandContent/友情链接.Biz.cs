@@ -11,6 +11,8 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Data;
 using NewLife.Log;
 using NewLife.Model;
@@ -33,7 +35,7 @@ public partial class CmsLink : Entity<CmsLink>
     {
         // 累加字段，生成 Update xx Set Count=Count+1234 Where xxx
         //var df = Meta.Factory.AdditionalFields;
-        //df.Add(nameof(LinkGroupID));
+        //df.Add(nameof(AreaID));
 
         // 过滤器 UserModule、TimeModule、IPModule
         Meta.Modules.Add(new UserModule { AllowEmpty = false });
@@ -49,6 +51,7 @@ public partial class CmsLink : Entity<CmsLink>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        AreaID = CmsAreaContext.CurrentId;
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;
@@ -83,10 +86,12 @@ public partial class CmsLink : Entity<CmsLink>
     //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsLink[友情链接]数据……");
 
     //    var entity = new CmsLink();
+    //    entity.AreaID = 0;
     //    entity.LinkGroupID = 0;
     //    entity.Name = "abc";
     //    entity.Link = "abc";
     //    entity.Logo = "abc";
+    //    entity.Enable = true;
     //    entity.Sorting = 0;
     //    entity.Insert();
 

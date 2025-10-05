@@ -14,13 +14,13 @@ public partial interface ICmsTags
     /// <summary>主键ID</summary>
     Int32 ID { get; set; }
 
-    /// <summary>区域代码</summary>
+    /// <summary>区域名称</summary>
     Int32 AreaID { get; set; }
 
     /// <summary>名称</summary>
     String Name { get; set; }
 
-    /// <summary>link</summary>
+    /// <summary>链接</summary>
     String Link { get; set; }
 
     /// <summary>创建者</summary>

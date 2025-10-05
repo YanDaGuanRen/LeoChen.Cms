@@ -14,13 +14,10 @@ public partial interface ICmsExtForm
     /// <summary>编号</summary>
     Int32 ID { get; set; }
 
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     Int32 FormID { get; set; }
 
-    /// <summary>字段编号</summary>
-    Int32 FormFieldID { get; set; }
-
-    /// <summary>默认值</summary>
-    String FieldValue { get; set; }
+    /// <summary>表单内容</summary>
+    String FormValue { get; set; }
     #endregion
 }

@@ -1,7 +1,8 @@
-﻿using LeoChen.Cms.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Log;
@@ -21,7 +22,7 @@ public class CmsLinkController : EntityController<CmsLink>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        ListFields.RemoveCreateField().RemoveRemarkField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -54,12 +55,14 @@ public class CmsLinkController : EntityController<CmsLink>
     /// <returns></returns>
     protected override IEnumerable<CmsLink> Search(Pager p)
     {
+        var areaId = CmsAreaContext.CurrentId;
         var linkGroupId = p["linkGroupId"].ToInt(-1);
         var sorting = p["sorting"].ToInt(-1);
+        var enable = p["enable"]?.ToBoolean();
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsLink.Search(linkGroupId, sorting, start, end, p["Q"], p);
+        return CmsLink.Search(areaId, linkGroupId, sorting, enable, start, end, p["Q"], p);
     }
 }

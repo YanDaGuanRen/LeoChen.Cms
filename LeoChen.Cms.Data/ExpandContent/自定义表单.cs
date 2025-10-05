@@ -39,20 +39,20 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
     [BindColumn("Name", "表单名称", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
-    private String _Description;
+    private String _FormDescription;
     /// <summary>描述</summary>
     [DisplayName("描述")]
     [Description("描述")]
-    [DataObjectField(false, false, true, 200)]
-    [BindColumn("Description", "描述", "")]
-    public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
+    [DataObjectField(false, false, true, 50)]
+    [BindColumn("FormDescription", "描述", "")]
+    public String FormDescription { get => _FormDescription; set { if (OnPropertyChanging("FormDescription", value)) { _FormDescription = value; OnPropertyChanged("FormDescription"); } } }
 
     private Boolean _Enable;
-    /// <summary>启用</summary>
-    [DisplayName("启用")]
-    [Description("启用")]
+    /// <summary>状态</summary>
+    [DisplayName("状态")]
+    [Description("状态")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Enable", "启用", "")]
+    [BindColumn("Enable", "状态", "")]
     public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private Int32 _CreateUserID;
@@ -117,7 +117,7 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
     {
         ID = model.ID;
         Name = model.Name;
-        Description = model.Description;
+        FormDescription = model.FormDescription;
         Enable = model.Enable;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
@@ -138,7 +138,7 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
         {
             "ID" => _ID,
             "Name" => _Name,
-            "Description" => _Description,
+            "FormDescription" => _FormDescription,
             "Enable" => _Enable,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
@@ -154,7 +154,7 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
             {
                 case "ID": _ID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
-                case "Description": _Description = Convert.ToString(value); break;
+                case "FormDescription": _FormDescription = Convert.ToString(value); break;
                 case "Enable": _Enable = value.ToBoolean(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
@@ -207,7 +207,7 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
 
     #region 高级查询
     /// <summary>高级查询</summary>
-    /// <param name="enable">启用</param>
+    /// <param name="enable">状态</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
@@ -236,9 +236,9 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
         public static readonly Field Name = FindByName("Name");
 
         /// <summary>描述</summary>
-        public static readonly Field Description = FindByName("Description");
+        public static readonly Field FormDescription = FindByName("FormDescription");
 
-        /// <summary>启用</summary>
+        /// <summary>状态</summary>
         public static readonly Field Enable = FindByName("Enable");
 
         /// <summary>创建者</summary>
@@ -272,9 +272,9 @@ public partial class CmsForm : ICmsForm, IEntity<ICmsForm>
         public const String Name = "Name";
 
         /// <summary>描述</summary>
-        public const String Description = "Description";
+        public const String FormDescription = "FormDescription";
 
-        /// <summary>启用</summary>
+        /// <summary>状态</summary>
         public const String Enable = "Enable";
 
         /// <summary>创建者</summary>

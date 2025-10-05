@@ -19,6 +19,7 @@ namespace LeoChen.Cms.Data;
 [DataObject]
 [Description("站点管理表")]
 [BindIndex("IU_CmsSite_AreaID", true, "AreaID")]
+[BindIndex("IX_CmsSite_Title", false, "Title")]
 [BindTable("CmsSite", Description = "站点管理表", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
 {
@@ -43,7 +44,7 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     /// <summary>标题</summary>
     [DisplayName("标题")]
     [Description("标题")]
-    [DataObjectField(false, false, false, 100)]
+    [DataObjectField(false, false, true, 100)]
     [BindColumn("Title", "标题", "", Master = true)]
     public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
@@ -295,6 +296,19 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.AreaID == areaId);
 
         return Find(_.AreaID == areaId);
+    }
+
+    /// <summary>根据标题查找</summary>
+    /// <param name="title">标题</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsSite> FindAllByTitle(String title)
+    {
+        if (title.IsNullOrEmpty()) return [];
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.Title.EqualIgnoreCase(title));
+
+        return FindAll(_.Title == title);
     }
     #endregion
 

@@ -1,5 +1,5 @@
-﻿using LeoChen.Cms.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
 using NewLife.Cube.Extensions;
@@ -12,7 +12,7 @@ using static LeoChen.Cms.Data.CmsFormField;
 namespace LeoChen.Cms.Areas.ExpandContent.Controllers;
 
 /// <summary>自定义表单字段</summary>
-[Menu(20, true, Icon = "fa-table")]
+[Menu(20, false, Icon = "fa-table")]
 [ExpandContentArea]
 public class CmsFormFieldController : EntityController<CmsFormField>
 {
@@ -21,8 +21,12 @@ public class CmsFormFieldController : EntityController<CmsFormField>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        ListFields.RemoveCreateField().RemoveRemarkField();
+        
+        {
+            var df = SearchFields.AddSearchField("FormID", "enable", null);
 
+        }
         //{
         //    var df = ListFields.GetField("Code") as ListField;
         //    df.Url = "?code={Code}";
@@ -54,13 +58,14 @@ public class CmsFormFieldController : EntityController<CmsFormField>
     /// <returns></returns>
     protected override IEnumerable<CmsFormField> Search(Pager p)
     {
-        var formId = p["formId"].ToInt(-1);
+        var formId = p["formid"].ToInt(-1);
+        var sorting = p["sorting"].ToInt(-1);
         var enable = p["enable"]?.ToBoolean();
         var fieldType = (LeoChen.Cms.Data.CmsItemType)p["fieldType"].ToInt(-1);
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsFormField.Search(formId, enable, fieldType, start, end, p["Q"], p);
+        return CmsFormField.Search(formId, sorting, enable, fieldType, start, end, p["Q"], p);
     }
 }

@@ -1,7 +1,8 @@
-﻿using LeoChen.Cms.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
+using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Log;
@@ -21,7 +22,7 @@ public class CmsSlideController : EntityController<CmsSlide>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+        ListFields.RemoveCreateField().RemoveRemarkField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -54,12 +55,14 @@ public class CmsSlideController : EntityController<CmsSlide>
     /// <returns></returns>
     protected override IEnumerable<CmsSlide> Search(Pager p)
     {
+        var areaId = CmsAreaContext.CurrentId;
         var slideGroupId = p["slideGroupId"].ToInt(-1);
         var sorting = p["sorting"].ToInt(-1);
+        var enable = p["enable"]?.ToBoolean();
 
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsSlide.Search(slideGroupId, sorting, start, end, p["Q"], p);
+        return CmsSlide.Search(areaId, slideGroupId, sorting, enable, start, end, p["Q"], p);
     }
 }

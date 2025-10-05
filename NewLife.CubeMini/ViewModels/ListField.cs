@@ -238,8 +238,10 @@ public class ListField : DataField
         var txt = Text;
         if (txt.IsNullOrEmpty())
         {
-            // 在数据列中，实体对象取属性值优先于显示名
-            if (Field != null && DisplayName == Field.DisplayName)
+            if (Field == null && !DisplayName.IsNullOrEmpty() && GetValue != null)
+            {
+                return GetValue?.Invoke(data);
+            } else if (Field != null && DisplayName == Field.DisplayName)
             {
                 var val = GetValue?.Invoke(data) ?? data[Name];
                 if (val is DateTime dt)

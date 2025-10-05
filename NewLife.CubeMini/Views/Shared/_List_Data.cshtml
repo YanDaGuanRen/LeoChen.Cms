@@ -8,6 +8,30 @@
     var fields = ViewBag.Fields as FieldCollection;
     var ukey = fact.Unique;
     var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+    var messages = ViewBag.Messages as IList<string>;
+}
+@if (messages is {Count: > 0})
+{
+    @foreach(var msg in messages)
+    {
+        <div class="cube-message-alert alert alert-info alert-dismissible fade in" role="alert">
+            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+            </button>
+            @msg
+        </div>
+    }
+    <script>
+        setTimeout(function() {
+            var alerts = document.querySelectorAll('.cube-message-alert');
+            alerts.forEach(function(alert) {
+                alert.classList.remove('in');
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 200);
+            });
+        }, 2000);
+    </script>
 }
 <table class="table table-bordered table-hover table-striped table-condensed table-data-list">
     <thead>

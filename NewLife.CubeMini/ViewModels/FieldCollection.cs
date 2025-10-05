@@ -46,12 +46,20 @@ public class FieldCollection : List<DataField>
     /// <summary>是否显示分组</summary>
     [XmlIgnore, IgnoreDataMember, JsonIgnore]
     public GroupVisibleDelegate GroupVisible { get; set; }
+    
+    /// <summary>名称列表</summary>
+    [XmlIgnore, IgnoreDataMember, JsonIgnore]
+    public HashSet<String> OriginalNameList { get;} 
     #endregion
 
     #region 构造
     /// <summary>实例化一个字段集合</summary>
     /// <param name="kind"></param>
-    public FieldCollection(ViewKinds kind) => Kind = kind;
+    public FieldCollection(ViewKinds kind)
+    {
+        Kind = kind;
+        OriginalNameList = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
+    }
 
     /// <summary>使用工厂实例化一个字段集合</summary>
     /// <param name="factory"></param>
@@ -60,9 +68,8 @@ public class FieldCollection : List<DataField>
     {
         Kind = kind;
         Factory = factory;
-
+        OriginalNameList = new HashSet<String>(StringComparer.OrdinalIgnoreCase);
         if (factory == null) return;
-
         foreach (var item in factory.Fields)
         {
             if (!item.Field.ShowIn.IsNullOrEmpty())
@@ -79,6 +86,7 @@ public class FieldCollection : List<DataField>
                 };
                 if (!flag) continue;
             }
+            OriginalNameList.Add(item.Name);
             Add(item);
         }
 
@@ -103,6 +111,7 @@ public class FieldCollection : List<DataField>
                 var builder = new SearchBuilder(factory.Table.DataTable);
 
                 Clear();
+                OriginalNameList.Clear();
                 foreach (var dc in builder.GetColumns())
                 {
                     var field = factory.Table.FindByName(dc.Name);
@@ -115,7 +124,7 @@ public class FieldCollection : List<DataField>
                     {
                         sf.Multiple = true;
                     }
-
+                    OriginalNameList.Add(sf.Name);
                     Add(sf);
                 }
                 break;
@@ -142,7 +151,6 @@ public class FieldCollection : List<DataField>
         //df.Sort = Count + 1;
         //df.Sort = Count == 0 ? 1 : (this[Count - 1].Sort + 1);
         if (field != null) df.Fill(field);
-
         return df;
     }
 
@@ -175,10 +183,26 @@ public class FieldCollection : List<DataField>
         if (property != null) df.Fill(property);
 
         Add(df);
-
         return df;
     }
 
+    /// <summary>
+    /// 重置列表 只删除不添加
+    /// </summary>
+    public void RecoveryList()
+    {
+        // if (OriginalNameList is { Count: > 0 })
+        // {
+        //     foreach (var item in this)
+        //     {
+        //         if (!OriginalNameList.Contains(item.Name))
+        //         {
+        //             Remove(item);
+        //         }
+        //     }
+        // }
+         RemoveAll(field => !OriginalNameList.Contains(field.Name));
+    }
     /// <summary>设置扩展关系</summary>
     /// <param name="isForm">是否表单使用</param>
     /// <returns></returns>
@@ -210,7 +234,8 @@ public class FieldCollection : List<DataField>
                         // 如果本身就存在目标项，则删除
                         var idx2 = FindIndex(e => e.Name.EqualIgnoreCase(fi.Name));
                         if (idx2 >= 0) RemoveAt(idx2);
-
+                        OriginalNameList.Remove(oldField.Name);
+                        OriginalNameList.Add(newField.Name);
                         this[idx] = newField;
                     }
                 }
@@ -233,6 +258,7 @@ public class FieldCollection : List<DataField>
             var fi = this[i];
             if (fi.Type == typeof(String) && fi.MapField.IsNullOrEmpty())
             {
+                
                 if (fi.Length <= 0 || fi.Length > 1000 ||
                     fi.Name.EqualIgnoreCase("password", "pass", "pwd", "Secret"))
                 {
@@ -271,9 +297,16 @@ public class FieldCollection : List<DataField>
             {
                 // 模糊匹配
                 if (item.Contains('*'))
+                {
                     RemoveAll(e => item.IsMatch(e.Name));
+                    // NameList.RemoveWhere(e => item.IsMatch(e));
+                }
                 else
+                {
                     RemoveAll(e => e.Name.EqualIgnoreCase(item));
+                    // NameList.Remove(item);
+                }
+                   
             }
         }
 
@@ -329,7 +362,10 @@ public class FieldCollection : List<DataField>
     public FieldCollection RemoveCreateField()
     {
         RemoveAll(e => e.Name.EqualIgnoreCase("CreateUserID", "CreateUser", "CreateTime", "CreateIP"));
-
+        // NameList.Remove("CreateUserID");
+        // NameList.Remove("CreateUser");
+        // NameList.Remove("CreateTime");
+        // NameList.Remove("CreateIP");
         return this;
     }
 
@@ -338,7 +374,10 @@ public class FieldCollection : List<DataField>
     public FieldCollection RemoveUpdateField()
     {
         RemoveAll(e => e.Name.EqualIgnoreCase("UpdateUserID", "UpdateUser", "UpdateTime", "UpdateIP"));
-
+        // NameList.Remove("UpdateUserID");
+        // NameList.Remove("UpdateUser");
+        // NameList.Remove("UpdateTime");
+        // NameList.Remove("UpdateIP");
         return this;
     }
 
@@ -347,7 +386,8 @@ public class FieldCollection : List<DataField>
     public FieldCollection RemoveRemarkField()
     {
         RemoveAll(e => e.Name.EqualIgnoreCase("Remark", "Description"));
-
+        // NameList.Remove("Remark");
+        // NameList.Remove("Description");
         return this;
     }
     #endregion
@@ -385,9 +425,16 @@ public class FieldCollection : List<DataField>
         }
         else
             Add(field);
-
+        
+        // NameList.Add(name);
         return field;
     }
+    /// <summary>添加定制字段，插入指定列前后</summary>
+    /// <param name="name"></param>
+    /// <param name="beforeName"></param>
+    /// <param name="afterName"></param>
+    /// <returns></returns>
+    public SearchField AddSearchField(String name, String beforeName = null, String afterName = null)=> AddDataField(name, beforeName, afterName) as SearchField;
 
     /// <summary>添加定制字段，插入指定列前后</summary>
     /// <param name="name"></param>
@@ -440,9 +487,9 @@ public class FieldCollection : List<DataField>
 
         foreach (var item in this)
         {
+            fs.OriginalNameList.Add(item.Name);
             fs.Add(item.Clone());
         }
-
         return fs;
     }
     #endregion

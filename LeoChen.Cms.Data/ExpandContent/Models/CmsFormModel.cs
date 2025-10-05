@@ -18,9 +18,9 @@ public partial class CmsFormModel
     public String Name { get; set; }
 
     /// <summary>描述</summary>
-    public String Description { get; set; }
+    public String FormDescription { get; set; }
 
-    /// <summary>启用</summary>
+    /// <summary>状态</summary>
     public Boolean Enable { get; set; }
 
     /// <summary>创建者</summary>
@@ -49,7 +49,7 @@ public partial class CmsFormModel
     {
         ID = model.ID;
         Name = model.Name;
-        Description = model.Description;
+        FormDescription = model.FormDescription;
         Enable = model.Enable;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;

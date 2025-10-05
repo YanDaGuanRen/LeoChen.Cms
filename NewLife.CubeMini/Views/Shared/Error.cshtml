@@ -1,6 +1,7 @@
 ﻿@model ErrorModel;
 @using Microsoft.AspNetCore.Mvc.Filters;
 @using NewLife.Cube.ViewModels
+@using NewLife.Log
 @{
     //Layout = "_Ace_Layout.cshtml";
     Layout = "_Layout.cshtml";
@@ -14,11 +15,11 @@
     {
         if (NewLife.Cube.CubeSetting.Current.Debug)
         {
-            error = ex + "";
+            error = ex+"";
         }
         else
         {
-            error = "内部错误：" + ex.GetTrue().GetType().FullName;
+            error = ex.GetTrue().GetType().FullName;
         }
         error = error?.Replace("--->", "--->" + Environment.NewLine);
     }

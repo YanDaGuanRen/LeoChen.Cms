@@ -14,17 +14,17 @@ public partial class CmsFormFieldModel
     /// <summary>编号</summary>
     public Int32 ID { get; set; }
 
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     public Int32 FormID { get; set; }
 
     /// <summary>字段名</summary>
     public String Name { get; set; }
 
-    /// <summary>字段类型</summary>
-    public LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
-
     /// <summary>显示名</summary>
     public String DisplayName { get; set; }
+
+    /// <summary>字段类型</summary>
+    public LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
     /// <summary>长度</summary>
     public Int32 Length { get; set; }
@@ -33,12 +33,12 @@ public partial class CmsFormFieldModel
     public String DefaultValue { get; set; }
 
     /// <summary>描述</summary>
-    public String Description { get; set; }
+    public String FieldDescription { get; set; }
 
     /// <summary>排序</summary>
     public Int32 Sorting { get; set; }
 
-    /// <summary>启用</summary>
+    /// <summary>状态</summary>
     public Boolean Enable { get; set; }
 
     /// <summary>创建者</summary>
@@ -68,11 +68,11 @@ public partial class CmsFormFieldModel
         ID = model.ID;
         FormID = model.FormID;
         Name = model.Name;
-        FieldType = model.FieldType;
         DisplayName = model.DisplayName;
+        FieldType = model.FieldType;
         Length = model.Length;
         DefaultValue = model.DefaultValue;
-        Description = model.Description;
+        FieldDescription = model.FieldDescription;
         Sorting = model.Sorting;
         Enable = model.Enable;
         CreateUserID = model.CreateUserID;

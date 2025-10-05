@@ -20,6 +20,7 @@ namespace LeoChen.Cms.Data;
 [BindIndex("IU_CmsFormField_Name", true, "Name")]
 [BindIndex("IX_CmsFormField_FormID", false, "FormID")]
 [BindIndex("IX_CmsFormField_Enable", false, "Enable")]
+[BindIndex("IX_CmsFormField_Sorting", false, "Sorting")]
 [BindTable("CmsFormField", Description = "自定义表单字段", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
 {
@@ -33,11 +34,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
 
     private Int32 _FormID;
-    /// <summary>表单编号</summary>
-    [DisplayName("表单编号")]
-    [Description("表单编号")]
+    /// <summary>表单名</summary>
+    [DisplayName("表单名")]
+    [Description("表单名")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("FormID", "表单编号", "")]
+    [BindColumn("FormID", "表单名", "")]
     public Int32 FormID { get => _FormID; set { if (OnPropertyChanging("FormID", value)) { _FormID = value; OnPropertyChanged("FormID"); } } }
 
     private String _Name;
@@ -48,14 +49,6 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     [BindColumn("Name", "字段名", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
-    private LeoChen.Cms.Data.CmsItemType _FieldType;
-    /// <summary>字段类型</summary>
-    [DisplayName("字段类型")]
-    [Description("字段类型")]
-    [DataObjectField(false, false, false, 0)]
-    [BindColumn("FieldType", "字段类型", "")]
-    public LeoChen.Cms.Data.CmsItemType FieldType { get => _FieldType; set { if (OnPropertyChanging("FieldType", value)) { _FieldType = value; OnPropertyChanged("FieldType"); } } }
-
     private String _DisplayName;
     /// <summary>显示名</summary>
     [DisplayName("显示名")]
@@ -63,6 +56,14 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     [DataObjectField(false, false, true, 50)]
     [BindColumn("DisplayName", "显示名", "")]
     public String DisplayName { get => _DisplayName; set { if (OnPropertyChanging("DisplayName", value)) { _DisplayName = value; OnPropertyChanged("DisplayName"); } } }
+
+    private LeoChen.Cms.Data.CmsItemType _FieldType;
+    /// <summary>字段类型</summary>
+    [DisplayName("字段类型")]
+    [Description("字段类型")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("FieldType", "字段类型", "")]
+    public LeoChen.Cms.Data.CmsItemType FieldType { get => _FieldType; set { if (OnPropertyChanging("FieldType", value)) { _FieldType = value; OnPropertyChanged("FieldType"); } } }
 
     private Int32 _Length;
     /// <summary>长度</summary>
@@ -76,17 +77,17 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     /// <summary>默认值</summary>
     [DisplayName("默认值")]
     [Description("默认值")]
-    [DataObjectField(false, false, true, 200)]
+    [DataObjectField(false, false, true, 50)]
     [BindColumn("DefaultValue", "默认值", "")]
     public String DefaultValue { get => _DefaultValue; set { if (OnPropertyChanging("DefaultValue", value)) { _DefaultValue = value; OnPropertyChanged("DefaultValue"); } } }
 
-    private String _Description;
+    private String _FieldDescription;
     /// <summary>描述</summary>
     [DisplayName("描述")]
     [Description("描述")]
-    [DataObjectField(false, false, true, 200)]
-    [BindColumn("Description", "描述", "")]
-    public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
+    [DataObjectField(false, false, true, 50)]
+    [BindColumn("FieldDescription", "描述", "")]
+    public String FieldDescription { get => _FieldDescription; set { if (OnPropertyChanging("FieldDescription", value)) { _FieldDescription = value; OnPropertyChanged("FieldDescription"); } } }
 
     private Int32 _Sorting;
     /// <summary>排序</summary>
@@ -97,11 +98,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     public Int32 Sorting { get => _Sorting; set { if (OnPropertyChanging("Sorting", value)) { _Sorting = value; OnPropertyChanged("Sorting"); } } }
 
     private Boolean _Enable;
-    /// <summary>启用</summary>
-    [DisplayName("启用")]
-    [Description("启用")]
+    /// <summary>状态</summary>
+    [DisplayName("状态")]
+    [Description("状态")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Enable", "启用", "")]
+    [BindColumn("Enable", "状态", "")]
     public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private Int32 _CreateUserID;
@@ -167,11 +168,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         ID = model.ID;
         FormID = model.FormID;
         Name = model.Name;
-        FieldType = model.FieldType;
         DisplayName = model.DisplayName;
+        FieldType = model.FieldType;
         Length = model.Length;
         DefaultValue = model.DefaultValue;
-        Description = model.Description;
+        FieldDescription = model.FieldDescription;
         Sorting = model.Sorting;
         Enable = model.Enable;
         CreateUserID = model.CreateUserID;
@@ -194,11 +195,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
             "ID" => _ID,
             "FormID" => _FormID,
             "Name" => _Name,
-            "FieldType" => _FieldType,
             "DisplayName" => _DisplayName,
+            "FieldType" => _FieldType,
             "Length" => _Length,
             "DefaultValue" => _DefaultValue,
-            "Description" => _Description,
+            "FieldDescription" => _FieldDescription,
             "Sorting" => _Sorting,
             "Enable" => _Enable,
             "CreateUserID" => _CreateUserID,
@@ -216,11 +217,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
                 case "ID": _ID = value.ToInt(); break;
                 case "FormID": _FormID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
-                case "FieldType": _FieldType = (LeoChen.Cms.Data.CmsItemType)value.ToInt(); break;
                 case "DisplayName": _DisplayName = Convert.ToString(value); break;
+                case "FieldType": _FieldType = (LeoChen.Cms.Data.CmsItemType)value.ToInt(); break;
                 case "Length": _Length = value.ToInt(); break;
                 case "DefaultValue": _DefaultValue = Convert.ToString(value); break;
-                case "Description": _Description = Convert.ToString(value); break;
+                case "FieldDescription": _FieldDescription = Convert.ToString(value); break;
                 case "Sorting": _Sorting = value.ToInt(); break;
                 case "Enable": _Enable = value.ToBoolean(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
@@ -236,11 +237,11 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
     #endregion
 
     #region 关联映射
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     [XmlIgnore, IgnoreDataMember, ScriptIgnore]
     public CmsForm Form => Extends.Get(nameof(Form), k => CmsForm.FindByID(FormID));
 
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     [Map(nameof(FormID), typeof(CmsForm), "ID")]
     public String FormName => Form?.Name;
 
@@ -279,8 +280,8 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         //return Find(_.Name == name);
     }
 
-    /// <summary>根据表单编号查找</summary>
-    /// <param name="formId">表单编号</param>
+    /// <summary>根据表单名查找</summary>
+    /// <param name="formId">表单名</param>
     /// <returns>实体列表</returns>
     public static IList<CmsFormField> FindAllByFormID(Int32 formId)
     {
@@ -291,23 +292,38 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
 
         return FindAll(_.FormID == formId);
     }
+
+    /// <summary>根据排序查找</summary>
+    /// <param name="sorting">排序</param>
+    /// <returns>实体列表</returns>
+    public static IList<CmsFormField> FindAllBySorting(Int32 sorting)
+    {
+        if (sorting < 0) return [];
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.Sorting == sorting);
+
+        return FindAll(_.Sorting == sorting);
+    }
     #endregion
 
     #region 高级查询
     /// <summary>高级查询</summary>
-    /// <param name="formId">表单编号</param>
-    /// <param name="enable">启用</param>
+    /// <param name="formId">表单名</param>
+    /// <param name="sorting">排序</param>
+    /// <param name="enable">状态</param>
     /// <param name="fieldType">字段类型</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsFormField> Search(Int32 formId, Boolean? enable, LeoChen.Cms.Data.CmsItemType fieldType, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsFormField> Search(Int32 formId, Int32 sorting, Boolean? enable, LeoChen.Cms.Data.CmsItemType fieldType, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (formId >= 0) exp &= _.FormID == formId;
+        if (sorting >= 0) exp &= _.Sorting == sorting;
         if (enable != null) exp &= _.Enable == enable;
         if (fieldType >= 0) exp &= _.FieldType == fieldType;
         exp &= _.UpdateTime.Between(start, end);
@@ -324,17 +340,17 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         /// <summary>编号</summary>
         public static readonly Field ID = FindByName("ID");
 
-        /// <summary>表单编号</summary>
+        /// <summary>表单名</summary>
         public static readonly Field FormID = FindByName("FormID");
 
         /// <summary>字段名</summary>
         public static readonly Field Name = FindByName("Name");
 
-        /// <summary>字段类型</summary>
-        public static readonly Field FieldType = FindByName("FieldType");
-
         /// <summary>显示名</summary>
         public static readonly Field DisplayName = FindByName("DisplayName");
+
+        /// <summary>字段类型</summary>
+        public static readonly Field FieldType = FindByName("FieldType");
 
         /// <summary>长度</summary>
         public static readonly Field Length = FindByName("Length");
@@ -343,12 +359,12 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         public static readonly Field DefaultValue = FindByName("DefaultValue");
 
         /// <summary>描述</summary>
-        public static readonly Field Description = FindByName("Description");
+        public static readonly Field FieldDescription = FindByName("FieldDescription");
 
         /// <summary>排序</summary>
         public static readonly Field Sorting = FindByName("Sorting");
 
-        /// <summary>启用</summary>
+        /// <summary>状态</summary>
         public static readonly Field Enable = FindByName("Enable");
 
         /// <summary>创建者</summary>
@@ -378,17 +394,17 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         /// <summary>编号</summary>
         public const String ID = "ID";
 
-        /// <summary>表单编号</summary>
+        /// <summary>表单名</summary>
         public const String FormID = "FormID";
 
         /// <summary>字段名</summary>
         public const String Name = "Name";
 
-        /// <summary>字段类型</summary>
-        public const String FieldType = "FieldType";
-
         /// <summary>显示名</summary>
         public const String DisplayName = "DisplayName";
+
+        /// <summary>字段类型</summary>
+        public const String FieldType = "FieldType";
 
         /// <summary>长度</summary>
         public const String Length = "Length";
@@ -397,12 +413,12 @@ public partial class CmsFormField : ICmsFormField, IEntity<ICmsFormField>
         public const String DefaultValue = "DefaultValue";
 
         /// <summary>描述</summary>
-        public const String Description = "Description";
+        public const String FieldDescription = "FieldDescription";
 
         /// <summary>排序</summary>
         public const String Sorting = "Sorting";
 
-        /// <summary>启用</summary>
+        /// <summary>状态</summary>
         public const String Enable = "Enable";
 
         /// <summary>创建者</summary>

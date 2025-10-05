@@ -35,7 +35,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     /// <summary>名称</summary>
     [DisplayName("名称")]
     [Description("名称")]
-    [DataObjectField(false, false, true, 100)]
+    [DataObjectField(false, false, false, 100)]
     [BindColumn("Name", "名称", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
@@ -68,7 +68,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     [Category("值内容")]
     [DisplayName("值")]
     [Description("值")]
-    [DataObjectField(false, false, true, 50)]
+    [DataObjectField(false, false, true, 1000)]
     [BindColumn("Value", "值", "")]
     public String Value { get => _Value; set { if (OnPropertyChanging("Value", value)) { _Value = value; OnPropertyChanged("Value"); } } }
 

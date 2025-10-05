@@ -5,7 +5,6 @@ using System.Runtime.Serialization;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
-using NewLife.Cube.Common;
 using NewLife.Cube.Entity;
 using NewLife.Data;
 using XCode;
@@ -415,9 +414,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     /// <returns>实体对象</returns>
     public static CmsContent_Sort FindByID(Int32 id)
     {
-        if (id <= 0) return null;
-
-        var areaid = CmsAreaContext.CurrentId;
+        if (id < 0) return null;
 
         // 实体缓存
         if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.ID == id);
@@ -427,7 +424,6 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         //return Find(_.ID == id);
     }
-    
 
     /// <summary>根据区域代码查找</summary>
     /// <param name="areaId">区域代码</param>
@@ -454,7 +450,6 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         return FindAll(_.Pid == pid);
     }
-    
 
     /// <summary>根据区域代码、父级代码查找</summary>
     /// <param name="areaId">区域代码</param>

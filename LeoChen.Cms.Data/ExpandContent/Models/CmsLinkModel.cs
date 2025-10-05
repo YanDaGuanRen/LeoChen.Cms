@@ -14,6 +14,9 @@ public partial class CmsLinkModel
     /// <summary>主键ID</summary>
     public Int32 ID { get; set; }
 
+    /// <summary>区域名称</summary>
+    public Int32 AreaID { get; set; }
+
     /// <summary>组ID</summary>
     public Int32 LinkGroupID { get; set; }
 
@@ -25,6 +28,9 @@ public partial class CmsLinkModel
 
     /// <summary>图标</summary>
     public String Logo { get; set; }
+
+    /// <summary>状态</summary>
+    public Boolean Enable { get; set; }
 
     /// <summary>排序</summary>
     public Int32 Sorting { get; set; }
@@ -54,10 +60,12 @@ public partial class CmsLinkModel
     public void Copy(ICmsLink model)
     {
         ID = model.ID;
+        AreaID = model.AreaID;
         LinkGroupID = model.LinkGroupID;
         Name = model.Name;
         Link = model.Link;
         Logo = model.Logo;
+        Enable = model.Enable;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;

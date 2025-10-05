@@ -20,6 +20,9 @@ public partial class CmsModelExtfieldModel
     /// <summary>名称</summary>
     public String Name { get; set; }
 
+    /// <summary>显示名称</summary>
+    public String DisplayName { get; set; }
+
     /// <summary>类型</summary>
     public LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
@@ -59,6 +62,7 @@ public partial class CmsModelExtfieldModel
         ID = model.ID;
         ModelID = model.ModelID;
         Name = model.Name;
+        DisplayName = model.DisplayName;
         FieldType = model.FieldType;
         Value = model.Value;
         Description = model.Description;

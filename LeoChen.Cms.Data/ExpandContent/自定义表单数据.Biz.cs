@@ -56,7 +56,7 @@ public partial class CmsExtForm : Entity<CmsExtForm>
         // 在新插入数据或者修改了指定字段时进行修正
 
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(FormFieldID), nameof(FormID));
+        // CheckExist(method == DataMethod.Insert, nameof(FormID));
 
         return true;
     }
@@ -72,7 +72,6 @@ public partial class CmsExtForm : Entity<CmsExtForm>
 
     //    var entity = new CmsExtForm();
     //    entity.FormID = 0;
-    //    entity.FormFieldID = 0;
     //    entity.FieldValue = "abc";
     //    entity.Insert();
 

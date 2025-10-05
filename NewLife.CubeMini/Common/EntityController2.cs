@@ -107,7 +107,7 @@ public partial class EntityController<TEntity, TModel> : ReadOnlyEntityControlle
         foreach (var fi in fields)
         {
             var dc = fi.Field;
-            if (dc.IsAttachment())
+            if (dc.ItemType.IsAttachment())
             {
                 // 允许一次性上传多个文件到服务端
                 foreach (var file in files)

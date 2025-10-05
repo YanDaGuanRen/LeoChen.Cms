@@ -14,17 +14,17 @@ public partial interface ICmsFormField
     /// <summary>编号</summary>
     Int32 ID { get; set; }
 
-    /// <summary>表单编号</summary>
+    /// <summary>表单名</summary>
     Int32 FormID { get; set; }
 
     /// <summary>字段名</summary>
     String Name { get; set; }
 
-    /// <summary>字段类型</summary>
-    LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
-
     /// <summary>显示名</summary>
     String DisplayName { get; set; }
+
+    /// <summary>字段类型</summary>
+    LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
     /// <summary>长度</summary>
     Int32 Length { get; set; }
@@ -33,12 +33,12 @@ public partial interface ICmsFormField
     String DefaultValue { get; set; }
 
     /// <summary>描述</summary>
-    String Description { get; set; }
+    String FieldDescription { get; set; }
 
     /// <summary>排序</summary>
     Int32 Sorting { get; set; }
 
-    /// <summary>启用</summary>
+    /// <summary>状态</summary>
     Boolean Enable { get; set; }
 
     /// <summary>创建者</summary>

@@ -470,8 +470,6 @@ public partial class CmsContent : ICmsContent, IEntity<ICmsContent>
     #endregion
 
     #region 扩展查询
-
-    
     /// <summary>根据主键ID查找</summary>
     /// <param name="id">主键ID</param>
     /// <returns>实体对象</returns>

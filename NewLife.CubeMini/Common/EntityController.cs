@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
 using NewLife.Cube.ViewModels;
 using NewLife.Data;
@@ -61,6 +63,7 @@ public partial class EntityController<TEntity, TModel>
         var qs = Request.Query;
         foreach (var item in Factory.Fields)
         {
+            
             var v = qs[item.Name];
             if (v.Count > 0) entity[item.Name] = v[0];
         }
@@ -87,7 +90,7 @@ public partial class EntityController<TEntity, TModel>
 
         return View("AddForm", entity);
     }
-
+    
     /// <summary>保存</summary>
     /// <param name="model"></param>
     /// <returns></returns>

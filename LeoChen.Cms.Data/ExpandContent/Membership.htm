@@ -61,6 +61,17 @@
         </tr>
 
         <tr>
+            <td>AreaID</td>
+            <td>区域名称</td>
+            <td>Int32</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>N</td>
+            <td></td>
+        </tr>
+
+        <tr>
             <td>SlideGroupID</td>
             <td>组ID</td>
             <td>Int32</td>
@@ -106,12 +117,23 @@
 
         <tr>
             <td>Link</td>
-            <td>link</td>
+            <td>链接</td>
             <td>String</td>
             <td>100</td>
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Enable</td>
+            <td>状态</td>
+            <td>Boolean</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>N</td>
             <td></td>
         </tr>
 
@@ -221,6 +243,17 @@
         </tr>
 
         <tr>
+            <td>AreaID</td>
+            <td>区域名称</td>
+            <td>Int32</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>N</td>
+            <td></td>
+        </tr>
+
+        <tr>
             <td>LinkGroupID</td>
             <td>组ID</td>
             <td>Int32</td>
@@ -261,6 +294,17 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>Enable</td>
+            <td>状态</td>
+            <td>Boolean</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>N</td>
             <td></td>
         </tr>
 
@@ -371,7 +415,7 @@
 
         <tr>
             <td>AreaID</td>
-            <td>区域代码</td>
+            <td>区域名称</td>
             <td>Int32</td>
             <td></td>
             <td></td>
@@ -393,7 +437,7 @@
 
         <tr>
             <td>Link</td>
-            <td>link</td>
+            <td>链接</td>
             <td>String</td>
             <td>200</td>
             <td></td>
@@ -508,10 +552,10 @@
         </tr>
 
         <tr>
-            <td>Description</td>
+            <td>FormDescription</td>
             <td>描述</td>
             <td>String</td>
-            <td>200</td>
+            <td>50</td>
             <td></td>
             <td></td>
             <td></td>
@@ -520,7 +564,7 @@
 
         <tr>
             <td>Enable</td>
-            <td>启用</td>
+            <td>状态</td>
             <td>Boolean</td>
             <td></td>
             <td></td>
@@ -625,7 +669,7 @@
 
         <tr>
             <td>FormID</td>
-            <td>表单编号</td>
+            <td>表单名</td>
             <td>Int32</td>
             <td></td>
             <td></td>
@@ -646,17 +690,6 @@
         </tr>
 
         <tr>
-            <td>FieldType</td>
-            <td>字段类型</td>
-            <td>Int32</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
             <td>DisplayName</td>
             <td>显示名</td>
             <td>String</td>
@@ -664,6 +697,17 @@
             <td></td>
             <td></td>
             <td></td>
+            <td></td>
+        </tr>
+
+        <tr>
+            <td>FieldType</td>
+            <td>字段类型</td>
+            <td>Int32</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>N</td>
             <td></td>
         </tr>
 
@@ -682,7 +726,7 @@
             <td>DefaultValue</td>
             <td>默认值</td>
             <td>String</td>
-            <td>200</td>
+            <td>50</td>
             <td></td>
             <td></td>
             <td></td>
@@ -690,10 +734,10 @@
         </tr>
 
         <tr>
-            <td>Description</td>
+            <td>FieldDescription</td>
             <td>描述</td>
             <td>String</td>
-            <td>200</td>
+            <td>50</td>
             <td></td>
             <td></td>
             <td></td>
@@ -713,7 +757,7 @@
 
         <tr>
             <td>Enable</td>
-            <td>启用</td>
+            <td>状态</td>
             <td>Boolean</td>
             <td></td>
             <td></td>
@@ -818,7 +862,7 @@
 
         <tr>
             <td>FormID</td>
-            <td>表单编号</td>
+            <td>表单名</td>
             <td>Int32</td>
             <td></td>
             <td></td>
@@ -828,21 +872,10 @@
         </tr>
 
         <tr>
-            <td>FormFieldID</td>
-            <td>字段编号</td>
-            <td>Int32</td>
-            <td></td>
-            <td></td>
-            <td></td>
-            <td>N</td>
-            <td></td>
-        </tr>
-
-        <tr>
-            <td>FieldValue</td>
-            <td>默认值</td>
+            <td>FormValue</td>
+            <td>表单内容</td>
             <td>String</td>
-            <td>600</td>
+            <td>2000</td>
             <td></td>
             <td></td>
             <td></td>

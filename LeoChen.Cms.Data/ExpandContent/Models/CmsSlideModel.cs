@@ -14,6 +14,9 @@ public partial class CmsSlideModel
     /// <summary>主键ID</summary>
     public Int32 ID { get; set; }
 
+    /// <summary>区域名称</summary>
+    public Int32 AreaID { get; set; }
+
     /// <summary>组ID</summary>
     public Int32 SlideGroupID { get; set; }
 
@@ -26,8 +29,11 @@ public partial class CmsSlideModel
     /// <summary>图片</summary>
     public String Pic { get; set; }
 
-    /// <summary>link</summary>
+    /// <summary>链接</summary>
     public String Link { get; set; }
+
+    /// <summary>状态</summary>
+    public Boolean Enable { get; set; }
 
     /// <summary>排序</summary>
     public Int32 Sorting { get; set; }
@@ -57,11 +63,13 @@ public partial class CmsSlideModel
     public void Copy(ICmsSlide model)
     {
         ID = model.ID;
+        AreaID = model.AreaID;
         SlideGroupID = model.SlideGroupID;
         Title = model.Title;
         Subtitle = model.Subtitle;
         Pic = model.Pic;
         Link = model.Link;
+        Enable = model.Enable;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;

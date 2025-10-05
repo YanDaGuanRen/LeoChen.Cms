@@ -18,9 +18,9 @@ public partial interface ICmsForm
     String Name { get; set; }
 
     /// <summary>描述</summary>
-    String Description { get; set; }
+    String FormDescription { get; set; }
 
-    /// <summary>启用</summary>
+    /// <summary>状态</summary>
     Boolean Enable { get; set; }
 
     /// <summary>创建者</summary>
