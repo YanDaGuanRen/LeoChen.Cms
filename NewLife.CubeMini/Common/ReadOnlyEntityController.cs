@@ -401,7 +401,7 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
                 }
             }
 
-            return new ExcelResult { Fields = GetFields(fs, list), Data = list };
+            return new ExcelResult { Fields = GetFields(fs, list), Data = list, HttpContext = HttpContext };
         }
         catch (Exception ex)
         {
@@ -518,11 +518,11 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
             }
         }
 
-        var name = GetAttachment(null, ".xls", true);
+        var name = GetAttachment(null, ".xlsx", true);
 
         var list = ExportData();
 
-        return new ExcelResult { Fields = GetFields(fs, list), Data = list, AttachmentName = name };
+        return new ExcelResult { Fields = GetFields(fs, list), Data = list, AttachmentName = name, HttpContext = HttpContext };
     }
 
     /// <summary>导出Excel模板</summary>
@@ -567,11 +567,11 @@ public partial class ReadOnlyEntityController<TEntity> : ControllerBaseX where T
             }
         }
 
-        var name = GetAttachment(null, ".xls", true);
+        var name = GetAttachment(null, ".xlsx", true);
 
         var list = ExportData(1);
 
-        return new ExcelResult { Fields = GetFields(fs, list), Data = list, AttachmentName = name };
+        return new ExcelResult { Fields = GetFields(fs, list), Data = list, AttachmentName = name, HttpContext = HttpContext };
     }
 
     /// <summary>导出Csv</summary>
