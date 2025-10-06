@@ -42,12 +42,6 @@ public class CmsModelController : EntityController<CmsModel>
         //ListFields.TraceUrl("TraceId");
     }
 
-    public override ActionResult Add()
-    {
-        var e = new CmsModel();
-        e.Enable = true;
-        return AddEntity(e);
-    }
     //private readonly ITracer _tracer;
 
     //public CmsModelController(ITracer tracer)

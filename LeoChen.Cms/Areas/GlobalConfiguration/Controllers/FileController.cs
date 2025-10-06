@@ -4,12 +4,12 @@ using NewLife.Cube.Areas.Admin.Models;
 using NewLife.Log;
 using XCode.Membership;
 
-namespace NewLife.Cube.Areas.Admin.Controllers;
+namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>文件管理</summary>
 [DisplayName("文件")]
 [EntityAuthorize(PermissionFlags.Detail)]
-[AdminArea]
+[GlobalConfigurationArea]
 [Menu(28, true, Icon = "fa-file")]
 public class FileController : ControllerBaseX
 {

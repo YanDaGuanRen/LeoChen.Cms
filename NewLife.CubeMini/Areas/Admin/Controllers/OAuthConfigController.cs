@@ -7,13 +7,12 @@ namespace NewLife.Cube.Areas.Admin.Controllers;
 
 /// <summary>OAuth配置</summary>
 [AdminArea]
-[Menu(0, false)]
+[Menu(0, true)]
 public class OAuthConfigController : EntityController<OAuthConfig, OAuthConfigModel>
 {
     static OAuthConfigController()
     {
         LogOnChange = true;
-
         ListFields.RemoveField("Secret", "Logo", "Server", "Scope", "AccessServer", "AuthUrl", "AccessUrl", "UserUrl", "AppUrl", "SecurityKey", "FieldMap", "AutoRole", "Remark");
         ListFields.RemoveCreateField();
         SearchFields.RemoveField("Debug", "AutoRegister", "FetchAvatar");
@@ -22,7 +21,7 @@ public class OAuthConfigController : EntityController<OAuthConfig, OAuthConfigMo
     /// <summary>首页</summary>
     public override ActionResult Index(Pager p = null)
     {
-        PageSetting.NavView = "_Object_Nav";
+        //.NavView = "_Object_Nav";
 
         return base.Index(p);
     }

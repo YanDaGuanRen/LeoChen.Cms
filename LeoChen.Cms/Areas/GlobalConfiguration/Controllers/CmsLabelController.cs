@@ -132,13 +132,7 @@ public class CmsLabelController : EntityController<CmsLabel>
 
         return fields;
     }
-
-
-    public override ActionResult Add()
-    {
-        var e = new CmsLabel();
-        return AddEntity(e);
-    }
+    
     //private readonly ITracer _tracer;
 
     //public CmsLabelController(ITracer tracer)

@@ -19,9 +19,7 @@ public class CmsFormController : EntityController<CmsForm>
 {
     static CmsFormController()
     {
-        //LogOnChange = true;
 
-        //ListFields.RemoveField("Id", "Creator");
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
         {
@@ -60,11 +58,7 @@ public class CmsFormController : EntityController<CmsForm>
                 }
             };
         }
-        //{
-        //    var df = ListFields.GetField("Kind") as ListField;
-        //    df.GetValue = e => ((Int32)(e as CmsForm).Kind).ToString("X4");
-        //}
-        //ListFields.TraceUrl("TraceId");
+
     }
     
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>

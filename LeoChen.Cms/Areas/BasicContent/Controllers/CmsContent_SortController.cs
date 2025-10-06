@@ -23,13 +23,6 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
     {
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
     }
-
-    public override ActionResult Add()
-    {
-        var e = new CmsContent_Sort();
-        e.Enable = true;
-        return base.AddEntity(e);
-    }
     
     protected override WhereBuilder CreateWhere()
     {
@@ -82,10 +75,6 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
     }
 
 
-    public override ActionResult DeleteSelect()
-    {
-        return base.DeleteSelect();
-    }
 
     protected override FieldCollection OnGetFields(ViewKinds kind, Object model)
     {

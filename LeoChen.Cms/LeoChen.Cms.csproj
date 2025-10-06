@@ -60,4 +60,9 @@
     </ItemGroup>
 
 
+    <ItemGroup>
+      <AdditionalFiles Include="Areas\GlobalConfiguration\Views\File\Index.cshtml" />
+    </ItemGroup>
+
+
 </Project>

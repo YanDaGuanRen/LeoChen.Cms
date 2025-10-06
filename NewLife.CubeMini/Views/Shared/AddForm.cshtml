@@ -15,6 +15,10 @@
 
     Object htmlAttributes = null;
     if (fields != null && fields.Any(e => e.IsAttachment())) htmlAttributes = new { enctype = "multipart/form-data" };
+    foreach (var field in fields.Where(e=>e.Name.EqualIgnoreCase("Enable")))
+    {
+        entity[field.Name] = true;
+    }
 }
 @if (!set.NavView.IsNullOrEmpty())
 {

@@ -11,7 +11,7 @@ namespace NewLife.Cube.Areas.Admin.Controllers;
 
 /// <summary>区域管理</summary>
 [AdminArea]
-[Menu(0, true, Icon = "fa-table")]
+[Menu(999, true, Icon = "fa-table")]
 public class CmsAreaController : EntityController<CmsArea>
 {
     static CmsAreaController()

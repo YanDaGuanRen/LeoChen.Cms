@@ -1,0 +1,12 @@
+﻿@using NewLife.Common;
+@using NewLife.Cube
+@using NewLife.Web
+@using XCode
+@{
+    var fact = ViewBag.Factory as IEntityFactory;
+    var set = ViewBag.PageSetting as PageSetting ?? PageSetting.Global;
+    var set1 = ViewBag.Page as Pager;
+    var formid = @set1["formid"];
+}
+
+<a class="btn btn-success btn-sm" href="/ExpandContent/CmsExtForm/ExportCsvExt?id=@formid">下载数据</a>

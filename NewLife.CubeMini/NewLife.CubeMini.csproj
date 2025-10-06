@@ -39,5 +39,9 @@
   <ItemGroup>
     <EmbeddedResource Include="wwwroot\**\*" />
   </ItemGroup>
+
+  <ItemGroup>
+    <_ContentIncludedByDefault Remove="Areas\Admin\Views\File\Index.cshtml" />
+  </ItemGroup>
       
 </Project>

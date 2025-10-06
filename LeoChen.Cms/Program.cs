@@ -3,6 +3,7 @@ using LenChen.Cms.Services;
 using NewLife;
 using NewLife.Log;
 using XCode;
+using XCode.Membership;
 
 // 启用控制台日志，拦截所有异常
 XTrace.UseConsole();
@@ -50,6 +51,21 @@ if (Environment.GetEnvironmentVariable("__ASPNETCORE_BROWSER_TOOLS") is null)
 // 使用魔方
 app.UseCube(app.Environment);
 
+if (Menu.FindCount() > 0)
+{
+   var aaa = Menu.FindByName("GlobalConfiguration");
+   aaa.Sort = 900;
+   aaa.Update();
+   aaa = Menu.FindByName("BasicContent");
+   aaa.Sort = 800;
+   aaa.Update();
+   aaa = Menu.FindByName("ArticleContent");
+   aaa.Sort = 700;
+   aaa.Update();
+   aaa = Menu.FindByName("ExpandContent");
+   aaa.Sort = 600;
+   aaa.Update();
+}
 
 app.UseAuthorization();
 

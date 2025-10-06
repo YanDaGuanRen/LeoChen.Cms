@@ -492,5 +492,17 @@ public class FieldCollection : List<DataField>
         }
         return fs;
     }
+    
+    public FieldCollection CloneCopy()
+    {
+        var fs = new FieldCollection(Kind);
+
+        foreach (var item in this)
+        {
+            fs.OriginalNameList.Add(item.Name);
+            fs.Add(item.Clone());
+        }
+        return fs;
+    }
     #endregion
 }

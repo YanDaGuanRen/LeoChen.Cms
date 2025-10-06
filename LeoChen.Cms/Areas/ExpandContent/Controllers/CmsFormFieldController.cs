@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Diagnostics;
+using Microsoft.AspNetCore.Mvc;
 using LeoChen.Cms.Data;
 using NewLife;
 using NewLife.Cube;
@@ -21,12 +22,8 @@ public class CmsFormFieldController : EntityController<CmsFormField>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
         
-        {
-            var df = SearchFields.AddSearchField("FormID", "enable", null);
-
-        }
         //{
         //    var df = ListFields.GetField("Code") as ListField;
         //    df.Url = "?code={Code}";
@@ -52,6 +49,32 @@ public class CmsFormFieldController : EntityController<CmsFormField>
     //{
     //    _tracer = tracer;
     //}
+
+    protected override ActionResult IndexView(Pager p)
+    {
+        if (p == null || p["formid"].IsNullOrEmpty())
+        {
+            var ex = new ErrorModel();
+            ex.Exception = new ArgumentException("未指定访问所需要的参数");
+            ex.RequestId = DefaultSpan.Current?.TraceId ?? Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            ex.Uri = HttpContext.Request.GetRawUrl();
+            return View("Error", ex);
+        }
+
+        // 需要总记录数来分页
+        p.RetrieveTotalCount = true;
+
+        var list = SearchData(p);
+
+        // 用于显示的列
+        ViewBag.Fields = OnGetFields(ViewKinds.List, list);
+        ViewBag.SearchFields = OnGetFields(ViewKinds.Search, list);
+
+        // Json输出
+        if (IsJsonRequest) return Json(0, null, list, new { page = p });
+
+        return View("List", list);
+    }
 
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>
     /// <param name="p">分页器。包含分页排序参数，以及Http请求参数</param>

@@ -2,6 +2,7 @@
 using System.Reflection.Metadata.Ecma335;
 using Microsoft.AspNetCore.Mvc;
 using LeoChen.Cms.Data;
+using Leochen.Cms.Results;
 using Microsoft.AspNetCore.Authorization;
 using NewLife;
 using NewLife.Caching;
@@ -45,8 +46,8 @@ public class CmsExtFormController : EntityController<CmsExtForm>
     {
         var userInputCaptcha = form["captchacode"].FirstOrDefault();
         var pageKey = form["captchapagekey"].FirstOrDefault() ?? "default";
-        var formid = form["captchapagekey"].FirstOrDefault() ?? "default";
-        var sessionCaptcha = HttpContext.Session.GetString($"Captcha_{pageKey}");
+        var formid = form["formid"].FirstOrDefault() ?? "0";
+        var sessionCaptcha = HttpContext.Session.GetString($"Captcha_{pageKey}_{formid}");
         if (string.IsNullOrEmpty(sessionCaptcha) ||
             !sessionCaptcha.Equals(userInputCaptcha, StringComparison.OrdinalIgnoreCase))
         {
@@ -55,8 +56,8 @@ public class CmsExtFormController : EntityController<CmsExtForm>
         }
 
         var entity = new CmsExtForm();
-        var filteredDict = form.Where(kv => kv.Key.StartsWithIgnoreCase("CmsExp_"))
-            .ToDictionary(kv => kv.Key, kv => kv.Value.FirstOrDefault());
+        var filteredDict = form.Where(kv => kv.Key.StartsWithIgnoreCase("CmsExt_"))
+            .ToDictionary(kv => kv.Key.Replace("CmsExt_", ""), kv => kv.Value.FirstOrDefault());
         entity.FormValue = JsonHelper.ToJson(filteredDict, false);
         entity.SaveAsync();
         return Json(new { Code = 0, Message = "提交成功" });
@@ -114,12 +115,13 @@ public class CmsExtFormController : EntityController<CmsExtForm>
         {
             var aaa = Request.Form;
             var filteredDict = Request.Form.Where(kv => kv.Key.StartsWithIgnoreCase("CmsExt_"))
-                .ToDictionary(kv => kv.Key.Replace("CmsExt_",""), kv => kv.Value.FirstOrDefault());
+                .ToDictionary(kv => kv.Key.Replace("CmsExt_", ""), kv => kv.Value.FirstOrDefault());
             if (filteredDict.Count > 0)
             {
                 entity.FormValue = JsonHelper.ToJson(filteredDict, false);
             }
         }
+
         return entity.Update();
     }
 
@@ -264,4 +266,46 @@ public class CmsExtFormController : EntityController<CmsExtForm>
 
         return CmsExtForm.Search(formId, p["Q"], p);
     }
+
+    public IActionResult ExportCsvExt(int id = 0)
+    {
+       var aaa = HttpContext.GetParams(true,true,false,false,false);
+        var name = "";
+        var entity = CmsForm.FindByID(id);
+        if (entity!= null && !entity.Name.IsNullOrEmpty())
+        {
+            name = entity.Name;
+        }
+        else
+        {
+            name = GetType().Name.TrimEnd("Controller");
+        }
+        name = GetAttachment(name, ".csv", true);
+        var list = ExportData();
+        var fieldlist = ListFields.CloneCopy();
+        fieldlist.RemoveField("FormName");
+
+        return new FormExtCsvResult()
+        {
+            Fields = fieldlist, Data = list, AttachmentName = name, ValueConverter =
+                (d, f) =>
+                {
+                    if (f is not ICmsExtForm) return "";
+                    if (f[d.Name] != null && !f[d.Name].ToString().IsNullOrEmpty())
+                    {
+                        return f[d.Name];
+                    }
+                    else if (!f[__.FormValue].ToString().IsNullOrEmpty())
+                    {
+                        var valuedic = f[__.FormValue].ToString().DecodeJson();
+                        if (valuedic.TryGetValue(d.Name,out var value))
+                        {
+                            return value;
+                        }
+                    }
+                    return "";
+                }
+        };
+    }
+
 }

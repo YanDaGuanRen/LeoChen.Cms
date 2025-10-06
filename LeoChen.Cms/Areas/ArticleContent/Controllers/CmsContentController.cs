@@ -21,7 +21,7 @@ public class CmsContentController : EntityController<CmsContent>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -42,6 +42,12 @@ public class CmsContentController : EntityController<CmsContent>
         //ListFields.TraceUrl("TraceId");
     }
 
+    protected override FieldCollection OnGetFields(ViewKinds kind, object model)
+    {
+        var rs = base.OnGetFields(kind, model);
+        rs.RemoveField("AreaID","AreaName");
+        return rs;
+    }
     //private readonly ITracer _tracer;
 
     //public CmsContentController(ITracer tracer)

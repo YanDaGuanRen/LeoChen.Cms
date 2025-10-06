@@ -22,7 +22,7 @@ public class CmsLinkController : EntityController<CmsLink>
         //LogOnChange = true;
 
         //ListFields.RemoveField("Id", "Creator");
-        ListFields.RemoveCreateField().RemoveRemarkField();
+        ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
         //{
         //    var df = ListFields.GetField("Code") as ListField;
@@ -43,12 +43,19 @@ public class CmsLinkController : EntityController<CmsLink>
         //ListFields.TraceUrl("TraceId");
     }
 
+    
     //private readonly ITracer _tracer;
 
     //public CmsLinkController(ITracer tracer)
     //{
     //    _tracer = tracer;
     //}
+    protected override FieldCollection OnGetFields(ViewKinds kind, object model)
+    {
+        var rs = base.OnGetFields(kind, model);
+        rs.RemoveField("AreaID","AreaName");
+        return rs;
+    }
 
     /// <summary>高级搜索。列表页查询、导出Excel、导出Json、分享页等使用</summary>
     /// <param name="p">分页器。包含分页排序参数，以及Http请求参数</param>
