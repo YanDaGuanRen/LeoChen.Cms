@@ -51,22 +51,6 @@ var abbbaa = CubeService.AreaNames;
 // 使用魔方
 app.UseCube(app.Environment);
 
-if (Menu.FindCount() > 0)
-{
-   var aaa = Menu.FindByName("GlobalConfiguration");
-   aaa.Sort = 900;
-   aaa.Update();
-   aaa = Menu.FindByName("BasicContent");
-   aaa.Sort = 800;
-   aaa.Update();
-   aaa = Menu.FindByName("ArticleContent");
-   aaa.Sort = 700;
-   aaa.Update();
-   aaa = Menu.FindByName("ExpandContent");
-   aaa.Sort = 600;
-   aaa.Update();
-}
-
 app.UseAuthorization();
 
 app.MapControllerRoute(
