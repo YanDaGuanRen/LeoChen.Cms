@@ -118,11 +118,11 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
         var pid = p["pid"].ToInt(-1);
         var modelId = p["modelId"].ToInt(-1);
         var sorting = p["sorting"].ToInt(-1);
+        var urlname = p["urlname"]?.ToString();
         var enable = p["enable"]?.ToBoolean();
-
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsContent_Sort.Search(areaId, pid, modelId, enable,sorting, start, end, p["Q"], p);
+        return CmsContent_Sort.Search(areaId, pid, modelId, urlname,enable,sorting, start, end, p["Q"], p);
     }
 }

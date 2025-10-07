@@ -56,11 +56,10 @@ public class CmsModelController : EntityController<CmsModel>
     {
         var modelType = (LeoChen.Cms.Data.CmsModelType)p["modelType"].ToInt(-1);
         var status = p["status"]?.ToBoolean();
-        var isSystem = p["isSystem"]?.ToBoolean();
         var enable = p["Enable"]?.ToBoolean();
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsModel.Search(modelType, status, isSystem, start, end, p["Q"], p);
+        return CmsModel.Search(modelType, status, start, end, p["Q"], p);
     }
 }

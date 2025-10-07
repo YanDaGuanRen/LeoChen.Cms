@@ -26,8 +26,11 @@ public partial interface ICmsModelExtfield
     /// <summary>类型</summary>
     LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
-    /// <summary>值</summary>
-    String Value { get; set; }
+    /// <summary>状态</summary>
+    Boolean Enable { get; set; }
+
+    /// <summary>默认值。只有在开关多选单选才有用</summary>
+    String DefaultValue { get; set; }
 
     /// <summary>描述</summary>
     String Description { get; set; }

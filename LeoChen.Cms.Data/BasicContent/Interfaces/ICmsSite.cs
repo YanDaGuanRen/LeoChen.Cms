@@ -17,34 +17,31 @@ public partial interface ICmsSite
     /// <summary>区域代码</summary>
     Int32 AreaID { get; set; }
 
-    /// <summary>标题</summary>
+    /// <summary>标题。{pboot:sitetitle}</summary>
     String Title { get; set; }
 
-    /// <summary>副标题</summary>
+    /// <summary>副标题。{pboot:sitesubtitle}</summary>
     String Subtitle { get; set; }
 
-    /// <summary>域名</summary>
-    String Domain { get; set; }
-
-    /// <summary>logo</summary>
+    /// <summary>logo。{pboot:sitelogo}</summary>
     String Logo { get; set; }
 
-    /// <summary>关键词</summary>
+    /// <summary>关键词。{pboot:sitekeywords}</summary>
     String Keywords { get; set; }
 
-    /// <summary>描述</summary>
+    /// <summary>描述。{pboot:sitedescription}</summary>
     String Description { get; set; }
 
-    /// <summary>备案信息</summary>
+    /// <summary>备案信息。{pboot:siteicp}</summary>
     String Icp { get; set; }
 
-    /// <summary>模板名</summary>
+    /// <summary>模板名。{pboot:sitetplpath} </summary>
     String Theme { get; set; }
 
-    /// <summary>统计代码</summary>
+    /// <summary>统计代码。{pboot:sitestatistical}</summary>
     String Statistical { get; set; }
 
-    /// <summary>版权</summary>
+    /// <summary>版权。{pboot:sitecopyright}</summary>
     String Copyright { get; set; }
 
     /// <summary>创建者</summary>

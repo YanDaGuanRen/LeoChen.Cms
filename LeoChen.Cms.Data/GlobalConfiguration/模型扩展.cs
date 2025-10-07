@@ -17,8 +17,8 @@ namespace LeoChen.Cms.Data;
 [Serializable]
 [DataObject]
 [Description("模型扩展")]
-[BindIndex("IU_CmsModelExtfield_Name", true, "Name")]
-[BindIndex("IX_CmsModelExtfield_ModelID", false, "ModelID")]
+[BindIndex("IU_CmsModelExtfield_ModelID_Name", true, "ModelID,Name")]
+[BindIndex("IX_CmsModelExtfield_Enable", false, "Enable")]
 [BindTable("CmsModelExtfield", Description = "模型扩展", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtfield>
 {
@@ -63,19 +63,27 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
     [BindColumn("FieldType", "类型", "")]
     public LeoChen.Cms.Data.CmsItemType FieldType { get => _FieldType; set { if (OnPropertyChanging("FieldType", value)) { _FieldType = value; OnPropertyChanged("FieldType"); } } }
 
-    private String _Value;
-    /// <summary>值</summary>
-    [DisplayName("值")]
-    [Description("值")]
-    [DataObjectField(false, false, true, 2000)]
-    [BindColumn("Value", "值", "")]
-    public String Value { get => _Value; set { if (OnPropertyChanging("Value", value)) { _Value = value; OnPropertyChanged("Value"); } } }
+    private Boolean _Enable;
+    /// <summary>状态</summary>
+    [DisplayName("状态")]
+    [Description("状态")]
+    [DataObjectField(false, false, false, 0)]
+    [BindColumn("Enable", "状态", "")]
+    public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
+
+    private String _DefaultValue;
+    /// <summary>默认值。只有在开关多选单选才有用</summary>
+    [DisplayName("默认值")]
+    [Description("默认值。只有在开关多选单选才有用")]
+    [DataObjectField(false, false, true, 100)]
+    [BindColumn("DefaultValue", "默认值。只有在开关多选单选才有用", "")]
+    public String DefaultValue { get => _DefaultValue; set { if (OnPropertyChanging("DefaultValue", value)) { _DefaultValue = value; OnPropertyChanged("DefaultValue"); } } }
 
     private String _Description;
     /// <summary>描述</summary>
     [DisplayName("描述")]
     [Description("描述")]
-    [DataObjectField(false, false, true, 30)]
+    [DataObjectField(false, false, true, 100)]
     [BindColumn("Description", "描述", "")]
     public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
@@ -152,7 +160,8 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         Name = model.Name;
         DisplayName = model.DisplayName;
         FieldType = model.FieldType;
-        Value = model.Value;
+        Enable = model.Enable;
+        DefaultValue = model.DefaultValue;
         Description = model.Description;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;
@@ -177,7 +186,8 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
             "Name" => _Name,
             "DisplayName" => _DisplayName,
             "FieldType" => _FieldType,
-            "Value" => _Value,
+            "Enable" => _Enable,
+            "DefaultValue" => _DefaultValue,
             "Description" => _Description,
             "Sorting" => _Sorting,
             "CreateUserID" => _CreateUserID,
@@ -197,7 +207,8 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
                 case "Name": _Name = Convert.ToString(value); break;
                 case "DisplayName": _DisplayName = Convert.ToString(value); break;
                 case "FieldType": _FieldType = (LeoChen.Cms.Data.CmsItemType)value.ToInt(); break;
-                case "Value": _Value = Convert.ToString(value); break;
+                case "Enable": _Enable = value.ToBoolean(); break;
+                case "DefaultValue": _DefaultValue = Convert.ToString(value); break;
                 case "Description": _Description = Convert.ToString(value); break;
                 case "Sorting": _Sorting = value.ToInt(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
@@ -240,20 +251,19 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         //return Find(_.ID == id);
     }
 
-    /// <summary>根据名称查找</summary>
+    /// <summary>根据模型代码、名称查找</summary>
+    /// <param name="modelId">模型代码</param>
     /// <param name="name">名称</param>
     /// <returns>实体对象</returns>
-    public static CmsModelExtfield FindByName(String name)
+    public static CmsModelExtfield FindByModelIDAndName(Int32 modelId, String name)
     {
+        if (modelId < 0) return null;
         if (name.IsNullOrEmpty()) return null;
 
         // 实体缓存
-        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.Name.EqualIgnoreCase(name));
+        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.ModelID == modelId && e.Name.EqualIgnoreCase(name));
 
-        // 单对象缓存
-        return Meta.SingleCache.GetItemWithSlaveKey(name) as CmsModelExtfield;
-
-        //return Find(_.Name == name);
+        return Find(_.ModelID == modelId & _.Name == name);
     }
 
     /// <summary>根据模型代码查找</summary>
@@ -273,17 +283,19 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
     #region 高级查询
     /// <summary>高级查询</summary>
     /// <param name="modelId">模型代码</param>
+    /// <param name="enable">状态</param>
     /// <param name="fieldType">类型</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsModelExtfield> Search(Int32 modelId, LeoChen.Cms.Data.CmsItemType fieldType, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsModelExtfield> Search(Int32 modelId, Boolean? enable, LeoChen.Cms.Data.CmsItemType fieldType, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (modelId >= 0) exp &= _.ModelID == modelId;
+        if (enable != null) exp &= _.Enable == enable;
         if (fieldType >= 0) exp &= _.FieldType == fieldType;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
@@ -311,8 +323,11 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         /// <summary>类型</summary>
         public static readonly Field FieldType = FindByName("FieldType");
 
-        /// <summary>值</summary>
-        public static readonly Field Value = FindByName("Value");
+        /// <summary>状态</summary>
+        public static readonly Field Enable = FindByName("Enable");
+
+        /// <summary>默认值。只有在开关多选单选才有用</summary>
+        public static readonly Field DefaultValue = FindByName("DefaultValue");
 
         /// <summary>描述</summary>
         public static readonly Field Description = FindByName("Description");
@@ -359,8 +374,11 @@ public partial class CmsModelExtfield : ICmsModelExtfield, IEntity<ICmsModelExtf
         /// <summary>类型</summary>
         public const String FieldType = "FieldType";
 
-        /// <summary>值</summary>
-        public const String Value = "Value";
+        /// <summary>状态</summary>
+        public const String Enable = "Enable";
+
+        /// <summary>默认值。只有在开关多选单选才有用</summary>
+        public const String DefaultValue = "DefaultValue";
 
         /// <summary>描述</summary>
         public const String Description = "Description";

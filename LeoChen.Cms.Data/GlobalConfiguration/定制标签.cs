@@ -18,7 +18,7 @@ namespace LeoChen.Cms.Data;
 [DataObject]
 [Description("定制标签")]
 [BindIndex("IU_CmsLabel_Name", true, "Name")]
-[BindIndex("IU_CmsLabel_Enable", true, "Enable")]
+[BindIndex("IX_CmsLabel_Enable", false, "Enable")]
 [BindTable("CmsLabel", Description = "定制标签", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
 {
@@ -35,7 +35,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     /// <summary>名称</summary>
     [DisplayName("名称")]
     [Description("名称")]
-    [DataObjectField(false, false, false, 100)]
+    [DataObjectField(false, false, true, 100)]
     [BindColumn("Name", "名称", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
@@ -48,11 +48,11 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private LeoChen.Cms.Data.CmsItemType _LabelType;
-    /// <summary>标签类型,修改后先保存再编辑</summary>
+    /// <summary>标签类型。修改后先保存再编辑</summary>
     [DisplayName("标签类型")]
-    [Description("标签类型,修改后先保存再编辑")]
+    [Description("标签类型。修改后先保存再编辑")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("LabelType", "标签类型,修改后先保存再编辑", "")]
+    [BindColumn("LabelType", "标签类型。修改后先保存再编辑", "")]
     public LeoChen.Cms.Data.CmsItemType LabelType { get => _LabelType; set { if (OnPropertyChanging("LabelType", value)) { _LabelType = value; OnPropertyChanged("LabelType"); } } }
 
     private String _Description;
@@ -63,14 +63,14 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     [BindColumn("Description", "描述", "")]
     public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
-    private String _Value;
+    private String _LabelValue;
     /// <summary>值</summary>
     [Category("值内容")]
     [DisplayName("值")]
     [Description("值")]
-    [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Value", "值", "")]
-    public String Value { get => _Value; set { if (OnPropertyChanging("Value", value)) { _Value = value; OnPropertyChanged("Value"); } } }
+    [DataObjectField(false, false, true, 2000)]
+    [BindColumn("LabelValue", "值", "")]
+    public String LabelValue { get => _LabelValue; set { if (OnPropertyChanging("LabelValue", value)) { _LabelValue = value; OnPropertyChanged("LabelValue"); } } }
 
     private Int32 _CreateUserID;
     /// <summary>创建者</summary>
@@ -137,7 +137,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
         Enable = model.Enable;
         LabelType = model.LabelType;
         Description = model.Description;
-        Value = model.Value;
+        LabelValue = model.LabelValue;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;
@@ -160,7 +160,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
             "Enable" => _Enable,
             "LabelType" => _LabelType,
             "Description" => _Description,
-            "Value" => _Value,
+            "LabelValue" => _LabelValue,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
             "CreateIP" => _CreateIP,
@@ -178,7 +178,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
                 case "Enable": _Enable = value.ToBoolean(); break;
                 case "LabelType": _LabelType = (LeoChen.Cms.Data.CmsItemType)value.ToInt(); break;
                 case "Description": _Description = Convert.ToString(value); break;
-                case "Value": _Value = Convert.ToString(value); break;
+                case "LabelValue": _LabelValue = Convert.ToString(value); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
                 case "CreateIP": _CreateIP = Convert.ToString(value); break;
@@ -231,7 +231,7 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
     #region 高级查询
     /// <summary>高级查询</summary>
     /// <param name="enable">状态</param>
-    /// <param name="labelType">标签类型,修改后先保存再编辑</param>
+    /// <param name="labelType">标签类型。修改后先保存再编辑</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
@@ -263,14 +263,14 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
         /// <summary>状态</summary>
         public static readonly Field Enable = FindByName("Enable");
 
-        /// <summary>标签类型,修改后先保存再编辑</summary>
+        /// <summary>标签类型。修改后先保存再编辑</summary>
         public static readonly Field LabelType = FindByName("LabelType");
 
         /// <summary>描述</summary>
         public static readonly Field Description = FindByName("Description");
 
         /// <summary>值</summary>
-        public static readonly Field Value = FindByName("Value");
+        public static readonly Field LabelValue = FindByName("LabelValue");
 
         /// <summary>创建者</summary>
         public static readonly Field CreateUserID = FindByName("CreateUserID");
@@ -305,14 +305,14 @@ public partial class CmsLabel : ICmsLabel, IEntity<ICmsLabel>
         /// <summary>状态</summary>
         public const String Enable = "Enable";
 
-        /// <summary>标签类型,修改后先保存再编辑</summary>
+        /// <summary>标签类型。修改后先保存再编辑</summary>
         public const String LabelType = "LabelType";
 
         /// <summary>描述</summary>
         public const String Description = "Description";
 
         /// <summary>值</summary>
-        public const String Value = "Value";
+        public const String LabelValue = "LabelValue";
 
         /// <summary>创建者</summary>
         public const String CreateUserID = "CreateUserID";

@@ -20,9 +20,6 @@ public partial interface ICmsModel
     /// <summary>类型</summary>
     LeoChen.Cms.Data.CmsModelType ModelType { get; set; }
 
-    /// <summary>Url</summary>
-    String Url { get; set; }
-
     /// <summary>列表模板</summary>
     String ListTpl { get; set; }
 
@@ -31,9 +28,6 @@ public partial interface ICmsModel
 
     /// <summary>状态</summary>
     Boolean Enable { get; set; }
-
-    /// <summary>是否系统模型</summary>
-    Boolean IsSystem { get; set; }
 
     /// <summary>创建者</summary>
     Int32 CreateUserID { get; set; }

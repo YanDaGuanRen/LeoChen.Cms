@@ -6,13 +6,16 @@ using System.Text.Unicode;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.ApplicationParts;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.WebEncoders;
 using Microsoft.Net.Http.Headers;
 using NewLife.Caching;
 using NewLife.Common;
 using NewLife.Configuration;
 using NewLife.Cube.Extensions;
+using NewLife.Cube.Middleware;
 using NewLife.Cube.Modules;
 using NewLife.Cube.Services;
 using NewLife.Cube.WebMiddleware;
@@ -35,6 +38,7 @@ public static class CubeService
     public static String[] AreaNames { get; set; }
 
     #region 配置魔方
+
     /// <summary>添加魔方，放在AddControllersWithViews之后</summary>
     /// <param name="services"></param>
     /// <returns></returns>o
@@ -103,16 +107,16 @@ public static class CubeService
         // CORS，全称 Cross-Origin Resource Sharing （跨域资源共享），是一种允许当前域的资源能被其他域访问的机制
         if (set.CorsOrigins == "*")
             services.AddCors(options => options.AddPolicy("cube_cors", builder => builder
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials()
-            .SetIsOriginAllowed(hostname => true)));
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .SetIsOriginAllowed(hostname => true)));
         else if (!set.CorsOrigins.IsNullOrEmpty())
             services.AddCors(options => options.AddPolicy("cube_cors", builder => builder
-            .AllowAnyMethod()
-            .AllowAnyHeader()
-            .AllowCredentials()
-            .WithOrigins(set.CorsOrigins)));
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials()
+                .WithOrigins(set.CorsOrigins)));
 
         services.Configure<MvcOptions>(options =>
         {
@@ -202,7 +206,7 @@ public static class CubeService
         return services;
     }
 
-    private static void  TryAddStardust(IServiceCollection services)
+    private static void TryAddStardust(IServiceCollection services)
     {
         if (!services.Any(e => e.ServiceType == typeof(StarFactory)))
         {
@@ -217,7 +221,8 @@ public static class CubeService
             star.SetLocalConfig(old);
 
             services.TryAddSingleton(star);
-            services.TryAddSingleton(p => star.Tracer ?? DefaultTracer.Instance ?? (DefaultTracer.Instance ??= new DefaultTracer()));
+            services.TryAddSingleton(p =>
+                star.Tracer ?? DefaultTracer.Instance ?? (DefaultTracer.Instance ??= new DefaultTracer()));
             //services.AddSingleton(p => star.Config);
             services.TryAddSingleton(p => star.Service!);
 
@@ -237,7 +242,9 @@ public static class CubeService
     {
         using var span = DefaultTracer.Instance?.NewSpan(nameof(AddCustomApplicationParts));
 
-        var manager = services.LastOrDefault(e => e.ServiceType == typeof(ApplicationPartManager))?.ImplementationInstance as ApplicationPartManager;
+        var manager =
+            services.LastOrDefault(e => e.ServiceType == typeof(ApplicationPartManager))?.ImplementationInstance as
+                ApplicationPartManager;
         manager ??= new ApplicationPartManager();
 
         var list = FindAllArea();
@@ -298,9 +305,11 @@ public static class CubeService
 
         return list;
     }
+
     #endregion
 
     #region 使用魔方
+
     /// <summary>使用魔方，放在UseEndpoints之前，自动探测是否UseRouting</summary>
     /// <param name="app"></param>
     /// <param name="env"></param>
@@ -369,7 +378,76 @@ public static class CubeService
         app.UseMiddleware<RunTimeMiddleware>();
         app.UseMiddleware<TenantMiddleware>();
         app.UseMiddleware<CmsAreaMiddleware>();
-        
+        var wwwrootpath = "wwwroot".GetFullPath();
+        var ctprovider = new FileExtensionContentTypeProvider();
+        ctprovider.Mappings.Remove(".html");
+        ctprovider.Mappings.Remove(".htm");
+        //前端路由
+        app.UseWhen(context =>
+        {
+            var path = context.Request.Path.Value?.ToLower();
+            var bo = string.IsNullOrEmpty(path) || (!IsAreaPath(path) && !path.ToLower().StartsWith("/cubecontent/"));
+            return bo;
+        }, appBuilder =>
+        {
+            // 先处理静态文件
+            appBuilder.UseStaticFiles(new StaticFileOptions
+            {
+                FileProvider = new PhysicalFileProvider(wwwrootpath),
+                RequestPath = "",
+                ContentTypeProvider = ctprovider,
+                OnPrepareResponse = ctx =>
+                {
+                    // 标记文件是否存在
+                    if (!File.Exists(ctx.File.PhysicalPath))
+                    {
+                        ctx.Context.Items["FileNotFound"] = true;
+                        XTrace.WriteLine("[StaticFiles] 文件未找到: {0}", ctx.File.PhysicalPath);
+                    }
+                    else
+                    {
+                        XTrace.WriteLine("[StaticFiles] 文件找到: {0}", ctx.File.PhysicalPath);
+                    }
+                }
+            });
+
+            appBuilder.Use(async (context, next) =>
+            {
+                XTrace.WriteLine("[CustomMiddleware] 请求路径: {0}", context.Request.Path);
+
+                // 检查是否有文件未找到的标记
+                if (context.Items.ContainsKey("FileNotFound") && (bool)context.Items["FileNotFound"])
+                {
+                    XTrace.WriteLine("[CustomMiddleware] 检测到文件未找到标记，返回404");
+                    context.Response.StatusCode = 404;
+                    return; // 直接返回，不调用next()
+                }
+
+                // 检查是否是静态资源请求但文件已被静态文件中间件处理
+                var path = context.Request.Path.Value;
+                if (!string.IsNullOrEmpty(path))
+                {
+                    var extension = Path.GetExtension(path)?.ToLowerInvariant();
+                    if (!string.IsNullOrEmpty(extension) && ctprovider.Mappings.ContainsKey(extension))
+                    {
+                        // 这是一个静态资源请求
+                        XTrace.WriteLine("[CustomMiddleware] 静态资源请求: {0}", path);
+                        // 如果走到这里说明文件不存在（因为如果存在会被StaticFiles处理）
+                        context.Response.StatusCode = 404;
+                        XTrace.WriteLine("[CustomMiddleware] 静态资源不存在，返回404");
+                        return;
+                    }
+                }
+
+                XTrace.WriteLine("[CustomMiddleware] 非静态资源请求，继续处理");
+                // 非静态资源请求，继续处理
+                await next();
+            });
+
+            XTrace.WriteLine("[Program] 注册UrlPreservingFallbackMiddleware");
+            appBuilder.UseMiddleware<UrlPreservingFallbackMiddleware>();
+        });
+
         //静态文件
         if (env != null) app.UseCubeDefaultUI(env);
 
@@ -445,7 +523,6 @@ public static class CubeService
     }
 
 
-
     //private static void FixOAuth()
     //{
     //    var list = OAuthConfig.FindAllWithCache();
@@ -469,7 +546,7 @@ public static class CubeService
             endpoints.MapControllerRoute(
                 "Default",
                 "{controller=CubeHome}/{action=Index}/{id?}"
-                );
+            );
         });
 
         return app;
@@ -492,10 +569,7 @@ public static class CubeService
         {
             app.UseRouting();
 
-            app.UseEndpoints(endpoints =>
-            {
-                configure(endpoints);
-            });
+            app.UseEndpoints(endpoints => { configure(endpoints); });
         }
 
         return app;
@@ -523,6 +597,7 @@ public static class CubeService
                         set.Save();
                     }
                 }
+
                 registry.Bind("StarWeb", (k, ms) =>
                 {
                     if (ms.Length == 0) return;
@@ -548,5 +623,16 @@ public static class CubeService
             }
         }
     }
+
     #endregion
+
+    public static bool IsAreaPath(string path)
+    {
+        if (string.IsNullOrEmpty(path) || AreaNames == null || AreaNames.Length == 0)
+            return false;
+
+        return AreaNames.Any(area =>
+            path.Equals("/" + area, StringComparison.OrdinalIgnoreCase) ||
+            path.StartsWith("/" + area + "/", StringComparison.OrdinalIgnoreCase));
+    }
 }

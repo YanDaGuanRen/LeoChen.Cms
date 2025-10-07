@@ -17,6 +17,7 @@ namespace NewLife.Cube.Entity;
 [Serializable]
 [DataObject]
 [Description("区域管理")]
+[BindIndex("IU_CmsArea_Domain", true, "Domain")]
 [BindIndex("IU_CmsArea_TenantId_Name", true, "TenantId,Name")]
 [BindIndex("IX_CmsArea_Name", false, "Name")]
 [BindIndex("IX_CmsArea_Enable", false, "Enable")]
@@ -208,6 +209,19 @@ public partial class CmsArea : IEntity<CmsAreaModel>
         //return Find(_.ID == id);
     }
 
+    /// <summary>根据域名查找</summary>
+    /// <param name="domain">域名</param>
+    /// <returns>实体对象</returns>
+    public static CmsArea FindByDomain(String domain)
+    {
+        if (domain.IsNullOrEmpty()) return null;
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.Domain.EqualIgnoreCase(domain));
+
+        return Find(_.Domain == domain);
+    }
+
     /// <summary>根据租户、名称查找</summary>
     /// <param name="tenantId">租户</param>
     /// <param name="name">名称</param>
@@ -253,17 +267,19 @@ public partial class CmsArea : IEntity<CmsAreaModel>
     #region 高级查询
     /// <summary>高级查询</summary>
     /// <param name="tenantId">租户</param>
+    /// <param name="domain">域名</param>
     /// <param name="enable">是否启用</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsArea> Search(Int32 tenantId, Boolean? enable, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsArea> Search(Int32 tenantId, String domain, Boolean? enable, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (tenantId >= 0) exp &= _.TenantId == tenantId;
+        if (!domain.IsNullOrEmpty()) exp &= _.Domain == domain;
         if (enable != null) exp &= _.Enable == enable;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);

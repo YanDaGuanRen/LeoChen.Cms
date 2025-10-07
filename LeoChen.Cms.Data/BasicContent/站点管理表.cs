@@ -41,83 +41,75 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private String _Title;
-    /// <summary>标题</summary>
+    /// <summary>标题。{pboot:sitetitle}</summary>
     [DisplayName("标题")]
-    [Description("标题")]
+    [Description("标题。{pboot:sitetitle}")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Title", "标题", "", Master = true)]
+    [BindColumn("Title", "标题。{pboot:sitetitle}", "", Master = true)]
     public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
     private String _Subtitle;
-    /// <summary>副标题</summary>
+    /// <summary>副标题。{pboot:sitesubtitle}</summary>
     [DisplayName("副标题")]
-    [Description("副标题")]
+    [Description("副标题。{pboot:sitesubtitle}")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Subtitle", "副标题", "")]
+    [BindColumn("Subtitle", "副标题。{pboot:sitesubtitle}", "")]
     public String Subtitle { get => _Subtitle; set { if (OnPropertyChanging("Subtitle", value)) { _Subtitle = value; OnPropertyChanged("Subtitle"); } } }
 
-    private String _Domain;
-    /// <summary>域名</summary>
-    [DisplayName("域名")]
-    [Description("域名")]
-    [DataObjectField(false, false, true, 50)]
-    [BindColumn("Domain", "域名", "")]
-    public String Domain { get => _Domain; set { if (OnPropertyChanging("Domain", value)) { _Domain = value; OnPropertyChanged("Domain"); } } }
-
     private String _Logo;
-    /// <summary>logo</summary>
+    /// <summary>logo。{pboot:sitelogo}</summary>
     [DisplayName("logo")]
-    [Description("logo")]
+    [Description("logo。{pboot:sitelogo}")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Logo", "logo", "")]
+    [BindColumn("Logo", "logo。{pboot:sitelogo}", "")]
     public String Logo { get => _Logo; set { if (OnPropertyChanging("Logo", value)) { _Logo = value; OnPropertyChanged("Logo"); } } }
 
     private String _Keywords;
-    /// <summary>关键词</summary>
+    /// <summary>关键词。{pboot:sitekeywords}</summary>
     [DisplayName("关键词")]
-    [Description("关键词")]
+    [Description("关键词。{pboot:sitekeywords}")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Keywords", "关键词", "")]
+    [BindColumn("Keywords", "关键词。{pboot:sitekeywords}", "")]
     public String Keywords { get => _Keywords; set { if (OnPropertyChanging("Keywords", value)) { _Keywords = value; OnPropertyChanged("Keywords"); } } }
 
     private String _Description;
-    /// <summary>描述</summary>
+    /// <summary>描述。{pboot:sitedescription}</summary>
     [DisplayName("描述")]
-    [Description("描述")]
+    [Description("描述。{pboot:sitedescription}")]
     [DataObjectField(false, false, true, 500)]
-    [BindColumn("Description", "描述", "")]
+    [BindColumn("Description", "描述。{pboot:sitedescription}", "")]
     public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
     private String _Icp;
-    /// <summary>备案信息</summary>
+    /// <summary>备案信息。{pboot:siteicp}</summary>
     [DisplayName("备案信息")]
-    [Description("备案信息")]
+    [Description("备案信息。{pboot:siteicp}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Icp", "备案信息", "")]
+    [BindColumn("Icp", "备案信息。{pboot:siteicp}", "")]
     public String Icp { get => _Icp; set { if (OnPropertyChanging("Icp", value)) { _Icp = value; OnPropertyChanged("Icp"); } } }
 
     private String _Theme;
-    /// <summary>模板名</summary>
+    /// <summary>模板名。{pboot:sitetplpath} </summary>
     [DisplayName("模板名")]
-    [Description("模板名")]
+    [Description("模板名。{pboot:sitetplpath} ")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Theme", "模板名", "")]
+    [BindColumn("Theme", "模板名。{pboot:sitetplpath} ", "")]
     public String Theme { get => _Theme; set { if (OnPropertyChanging("Theme", value)) { _Theme = value; OnPropertyChanged("Theme"); } } }
 
     private String _Statistical;
-    /// <summary>统计代码</summary>
+    /// <summary>统计代码。{pboot:sitestatistical}</summary>
     [DisplayName("统计代码")]
-    [Description("统计代码")]
+    [Description("统计代码。{pboot:sitestatistical}")]
     [DataObjectField(false, false, true, 500)]
-    [BindColumn("Statistical", "统计代码", "")]
+    [BindColumn("Statistical", "统计代码。{pboot:sitestatistical}", "")]
     public String Statistical { get => _Statistical; set { if (OnPropertyChanging("Statistical", value)) { _Statistical = value; OnPropertyChanged("Statistical"); } } }
 
     private String _Copyright;
-    /// <summary>版权</summary>
+    /// <summary>版权。{pboot:sitecopyright}</summary>
     [DisplayName("版权")]
-    [Description("版权")]
+    [Description("版权。{pboot:sitecopyright}")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Copyright", "版权", "")]
+    [BindColumn("Copyright", "版权。{pboot:sitecopyright}", "")]
     public String Copyright { get => _Copyright; set { if (OnPropertyChanging("Copyright", value)) { _Copyright = value; OnPropertyChanged("Copyright"); } } }
 
     private Int32 _CreateUserID;
@@ -184,7 +176,6 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         AreaID = model.AreaID;
         Title = model.Title;
         Subtitle = model.Subtitle;
-        Domain = model.Domain;
         Logo = model.Logo;
         Keywords = model.Keywords;
         Description = model.Description;
@@ -213,7 +204,6 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
             "AreaID" => _AreaID,
             "Title" => _Title,
             "Subtitle" => _Subtitle,
-            "Domain" => _Domain,
             "Logo" => _Logo,
             "Keywords" => _Keywords,
             "Description" => _Description,
@@ -237,7 +227,6 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
                 case "AreaID": _AreaID = value.ToInt(); break;
                 case "Title": _Title = Convert.ToString(value); break;
                 case "Subtitle": _Subtitle = Convert.ToString(value); break;
-                case "Domain": _Domain = Convert.ToString(value); break;
                 case "Logo": _Logo = Convert.ToString(value); break;
                 case "Keywords": _Keywords = Convert.ToString(value); break;
                 case "Description": _Description = Convert.ToString(value); break;
@@ -342,34 +331,31 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         /// <summary>区域代码</summary>
         public static readonly Field AreaID = FindByName("AreaID");
 
-        /// <summary>标题</summary>
+        /// <summary>标题。{pboot:sitetitle}</summary>
         public static readonly Field Title = FindByName("Title");
 
-        /// <summary>副标题</summary>
+        /// <summary>副标题。{pboot:sitesubtitle}</summary>
         public static readonly Field Subtitle = FindByName("Subtitle");
 
-        /// <summary>域名</summary>
-        public static readonly Field Domain = FindByName("Domain");
-
-        /// <summary>logo</summary>
+        /// <summary>logo。{pboot:sitelogo}</summary>
         public static readonly Field Logo = FindByName("Logo");
 
-        /// <summary>关键词</summary>
+        /// <summary>关键词。{pboot:sitekeywords}</summary>
         public static readonly Field Keywords = FindByName("Keywords");
 
-        /// <summary>描述</summary>
+        /// <summary>描述。{pboot:sitedescription}</summary>
         public static readonly Field Description = FindByName("Description");
 
-        /// <summary>备案信息</summary>
+        /// <summary>备案信息。{pboot:siteicp}</summary>
         public static readonly Field Icp = FindByName("Icp");
 
-        /// <summary>模板名</summary>
+        /// <summary>模板名。{pboot:sitetplpath} </summary>
         public static readonly Field Theme = FindByName("Theme");
 
-        /// <summary>统计代码</summary>
+        /// <summary>统计代码。{pboot:sitestatistical}</summary>
         public static readonly Field Statistical = FindByName("Statistical");
 
-        /// <summary>版权</summary>
+        /// <summary>版权。{pboot:sitecopyright}</summary>
         public static readonly Field Copyright = FindByName("Copyright");
 
         /// <summary>创建者</summary>
@@ -402,34 +388,31 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
         /// <summary>区域代码</summary>
         public const String AreaID = "AreaID";
 
-        /// <summary>标题</summary>
+        /// <summary>标题。{pboot:sitetitle}</summary>
         public const String Title = "Title";
 
-        /// <summary>副标题</summary>
+        /// <summary>副标题。{pboot:sitesubtitle}</summary>
         public const String Subtitle = "Subtitle";
 
-        /// <summary>域名</summary>
-        public const String Domain = "Domain";
-
-        /// <summary>logo</summary>
+        /// <summary>logo。{pboot:sitelogo}</summary>
         public const String Logo = "Logo";
 
-        /// <summary>关键词</summary>
+        /// <summary>关键词。{pboot:sitekeywords}</summary>
         public const String Keywords = "Keywords";
 
-        /// <summary>描述</summary>
+        /// <summary>描述。{pboot:sitedescription}</summary>
         public const String Description = "Description";
 
-        /// <summary>备案信息</summary>
+        /// <summary>备案信息。{pboot:siteicp}</summary>
         public const String Icp = "Icp";
 
-        /// <summary>模板名</summary>
+        /// <summary>模板名。{pboot:sitetplpath} </summary>
         public const String Theme = "Theme";
 
-        /// <summary>统计代码</summary>
+        /// <summary>统计代码。{pboot:sitestatistical}</summary>
         public const String Statistical = "Statistical";
 
-        /// <summary>版权</summary>
+        /// <summary>版权。{pboot:sitecopyright}</summary>
         public const String Copyright = "Copyright";
 
         /// <summary>创建者</summary>

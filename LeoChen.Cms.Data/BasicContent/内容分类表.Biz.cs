@@ -11,6 +11,7 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
+using NewLife.Common;
 using NewLife.Cube;
 using NewLife.Cube.Common;
 using NewLife.Data;
@@ -64,6 +65,7 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
         AreaID = CmsAreaContext.CurrentId;
         if (ModelID <= 0) throw new ArgumentNullException(nameof(ModelID), "不能为空");
         if (Name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Name), "不能为空");
+        if(UrlName.IsNullOrEmpty()) UrlName =PinYin.Get(Name); 
 
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
@@ -87,7 +89,8 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(Name));
+        CheckExist(method == DataMethod.Insert, nameof(Name),nameof(AreaID));
+        CheckExist(method == DataMethod.Insert, nameof(UrlName),nameof(AreaID));
 
         return true;
     }

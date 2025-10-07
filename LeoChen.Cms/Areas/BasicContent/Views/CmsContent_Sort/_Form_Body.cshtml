@@ -21,10 +21,18 @@
     <div class="tab-pane fade in active" id="item0">
         <div class="form-group">
             <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-12 col-sm-2">编码</label>
+                <div class="input-group col-xs-6 ">
+                    <input readonly="" type="text" class="col-xs-12" value="@entity.ID">
+                </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:scode]</label>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">父级</label>
                 <div class="input-group col-xs-12 col-sm-6">
-                    @Html.DropDownList("Pid", data, new { @class = "multiselect" });
+                    @Html.DropDownList("Pid", data, new { @class = "multiselect" })
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:pcode]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">模型</label>
@@ -37,80 +45,98 @@
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Name" name="Name" type="text" value="@entity.Name"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:name]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">副名称</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Subname" name="Subname" type="text" value="@entity.Subname"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:name]</label>
+            </div>
+            <div class="form-group col-xs-12 col-sm-12">
+                <label class="control-label col-xs-12 col-sm-2">Url名称</label>
+                <div class="input-group col-xs-12 col-sm-6">
+                    <input class="form-control" id="UrlName" name="UrlName" type="text" value="@entity.UrlName"/>
+                </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:link]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">列表模板</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="ListTpl" name="ListTpl" type="text" value="@entity.ListTpl"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:name]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">内容模板</label>
                 <div class="input-group col-xs-12 col-sm-6">
-                    <input class="form-control" id="ContentTpl" name="ContentTpl" type="text"
-                           value="@entity.ContentTpl"/>
+                    <input class="form-control" id="ContentTpl" name="ContentTpl" type="text" value="@entity.ContentTpl"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:name]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">状态</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     @Html.CheckBox("Enable", @entity.Enable, new { @class = "chkSwitch" })
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:name]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
-                <label class="control-label col-xs-12 col-sm-2">外部链接</label>
+                <label class="control-label col-xs-12 col-sm-2">跳转链接</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Outlink" name="Outlink" type="text" value="@entity.Outlink"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:outlink]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">图标</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Ico" name="Ico" type="text" value="@entity.Ico"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:ico]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">图片</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Pic" name="Pic" type="text" value="@entity.Pic"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:pic]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
-                <label class="control-label col-xs-12 col-sm-2">标题</label>
+                <label class="control-label col-xs-12 col-sm-2">Seo标题</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Title" name="Title" type="text" value="@entity.Title"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:title]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">关键词</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Keywords" name="Keywords" type="text" value="@entity.Keywords"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:keywords]</label>
             </div>
             <div class="form-group col-md-12">
                 <label class="control-label col-xs-12 col-sm-2">描述</label>
                 <div class="input-group col-xs-12 col-sm-6">
-                    <textarea class="form-control" cols="20" id="Description" name="Description"
-                              rows="3">@entity.Description</textarea>
+                    <textarea class="form-control" cols="20" id="Description" name="Description" rows="3">@entity.Description</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:description]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">文件名</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <input class="form-control" id="Filename" name="Filename" type="text" value="@entity.Filename"/>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:filename]</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">排序</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     @Html.TextBox("Sorting", @entity.Sorting, new { @class = "form-control", role = "number" })
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left"></label>
             </div>
         </div>
     </div>
@@ -121,36 +147,42 @@
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def1" name="Def1" rows="3">@entity.Def1</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def1]</label>
             </div>
             <div class="form-group col-md-12">
                 <label class="control-label col-xs-12 col-sm-2">预留字段2</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def2" name="Def2" rows="3">@entity.Def2</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def2]</label>
             </div>
             <div class="form-group col-md-12">
                 <label class="control-label col-xs-12 col-sm-2">预留字段3</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def3" name="Def3" rows="3">@entity.Def3</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def3]</label>
             </div>
             <div class="form-group col-md-12">
-                <label class="control-label col-xs-12 col-sm-2">预留字段1</label>
+                <label class="control-label col-xs-12 col-sm-2">预留字段4</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def4" name="Def4" rows="3">@entity.Def4</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def4]	</label>
             </div>
             <div class="form-group col-md-12">
-                <label class="control-label col-xs-12 col-sm-2">预留字段2</label>
+                <label class="control-label col-xs-12 col-sm-2">预留字段5</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def5" name="Def5" rows="3">@entity.Def5</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def5]	</label>
             </div>
             <div class="form-group col-md-12">
-                <label class="control-label col-xs-12 col-sm-2">预留字段3</label>
+                <label class="control-label col-xs-12 col-sm-2">预留字段6</label>
                 <div class="input-group col-xs-12 col-sm-6">
                     <textarea class="form-control" cols="20" id="Def6" name="Def6" rows="3">@entity.Def6</textarea>
                 </div>
+                <label class="control-label hide-xs col-xs-4 align-left">[nav:def6]	</label>
             </div>
             <div class="form-group col-xs-12 col-sm-12">
                 <label class="control-label col-xs-12 col-sm-2">创建者</label>

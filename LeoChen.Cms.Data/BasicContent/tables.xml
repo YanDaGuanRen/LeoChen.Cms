@@ -43,16 +43,15 @@
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
-        <Column Name="Title" DataType="String" Master="True" Length="100" Description="标题" />
-        <Column Name="Subtitle" DataType="String" Length="200" Description="副标题" />
-        <Column Name="Domain" DataType="String" Description="域名" />
-        <Column Name="Logo" DataType="String" Length="100" Description="logo" />
-        <Column Name="Keywords" DataType="String" Length="200" Description="关键词" />
-        <Column Name="Description" DataType="String" Length="500" Description="描述" />
-        <Column Name="Icp" DataType="String" Length="30" Description="备案信息" />
-        <Column Name="Theme" DataType="String" Length="30" Description="模板名" />
-        <Column Name="Statistical" DataType="String" Length="500" Description="统计代码" />
-        <Column Name="Copyright" DataType="String" Length="200" Description="版权" />
+        <Column Name="Title" DataType="String" Master="True" Length="100" Description="标题。{pboot:sitetitle}" />
+        <Column Name="Subtitle" DataType="String" Length="200" Description="副标题。{pboot:sitesubtitle}" />
+        <Column Name="Logo" DataType="String" Length="100" Description="logo。{pboot:sitelogo}" />
+        <Column Name="Keywords" DataType="String" Length="200" Description="关键词。{pboot:sitekeywords}" />
+        <Column Name="Description" DataType="String" Length="500" Description="描述。{pboot:sitedescription}" />
+        <Column Name="Icp" DataType="String" Length="30" Description="备案信息。{pboot:siteicp}" />
+        <Column Name="Theme" DataType="String" Length="30" Description="模板名。{pboot:sitetplpath} " />
+        <Column Name="Statistical" DataType="String" Length="500" Description="统计代码。{pboot:sitestatistical}" />
+        <Column Name="Copyright" DataType="String" Length="200" Description="版权。{pboot:sitecopyright}" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
         <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
@@ -69,18 +68,18 @@
       <Columns>
         <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="站点代码" />
-        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
-        <Column Name="Address" DataType="String" Length="200" Description="地址" />
-        <Column Name="Postcode" DataType="String" Length="6" Description="邮编" />
-        <Column Name="Contact" DataType="String" Length="30" Description="联系人" />
-        <Column Name="Mobile" DataType="String" Length="30" Description="手机号" />
-        <Column Name="Phone" DataType="String" Length="30" Description="电话" />
-        <Column Name="Fax" DataType="String" Length="30" Description="传真" />
-        <Column Name="Email" DataType="String" Description="邮箱" />
-        <Column Name="QQ" DataType="String" Length="30" Description="QQ号" />
-        <Column Name="Weixin" DataType="String" Length="30" Description="微信号" />
-        <Column Name="Blicense" DataType="String" Length="20" Description="营业执照" />
-        <Column Name="Other" DataType="String" Length="200" Description="其他" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称。{pboot:companyname}" />
+        <Column Name="Address" DataType="String" Length="200" Description="地址。{pboot:companyaddress}" />
+        <Column Name="Postcode" DataType="String" Length="6" Description="邮编。{pboot:companypostcode}" />
+        <Column Name="Contact" DataType="String" Length="30" Description="联系人。{pboot:companycontact}" />
+        <Column Name="Mobile" DataType="String" Length="30" Description="手机号。{pboot:companymobile}" />
+        <Column Name="Phone" DataType="String" Length="30" Description="电话。{pboot:companyphone}" />
+        <Column Name="Fax" DataType="String" Length="30" Description="传真。{pboot:companyfax}" />
+        <Column Name="Email" DataType="String" Description="邮箱。{pboot:companyemail}" />
+        <Column Name="QQ" DataType="String" Length="30" Description="QQ号。{pboot:companyqq}" />
+        <Column Name="Weixin" DataType="String" Length="30" Description="微信号。{pboot:companyweixin}" />
+        <Column Name="Blicense" DataType="String" Length="20" Description="营业执照。{pboot:companyblicense}" />
+        <Column Name="Other" DataType="String" Length="200" Description="其他。{pboot:companyother} " />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
         <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
@@ -90,33 +89,35 @@
       </Columns>
       <Indexes>
         <Index Columns="AreaID" Unique="True" />
+        <Index Columns="Name" Unique="True" />
       </Indexes>
     </Table>
     <Table Name="CmsContent_Sort" Description="内容分类表">
       <Columns>
-        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID" />
+        <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="主键ID。[nav:scode]" />
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
-        <Column Name="Pid" DataType="Int32" Description="父级代码" />
+        <Column Name="Pid" DataType="Int32" Description="父级代码。[nav:pcode]" />
         <Column Name="ModelID" DataType="Int32" Map="CmsModel@ID@Name" Description="模型代码" />
-        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称" />
-        <Column Name="Subname" DataType="String" Length="200" Description="副名称" />
-        <Column Name="ListTpl" DataType="String" Description="列表模板" />
-        <Column Name="ContentTpl" DataType="String" Description="内容模板" />
-        <Column Name="Enable" DataType="Boolean" Description="状态" />
-        <Column Name="Outlink" DataType="String" Length="100" Description="外部链接" />
-        <Column Name="Ico" DataType="String" Length="100" Description="图标" />
-        <Column Name="Pic" DataType="String" Length="100" Description="图片" />
-        <Column Name="Title" DataType="String" Length="100" Description="标题" />
-        <Column Name="Keywords" DataType="String" Length="200" Description="关键词" />
-        <Column Name="Description" DataType="String" Length="500" Description="描述" />
-        <Column Name="Filename" DataType="String" Length="30" Description="文件名" />
-        <Column Name="Sorting" DataType="Int32" Description="排序" />
-        <Column Name="Def1" DataType="String" Length="1000" Description="预留字段1" Category="扩展信息" />
-        <Column Name="Def2" DataType="String" Length="1000" Description="预留字段2" Category="扩展信息" />
-        <Column Name="Def3" DataType="String" Length="1000" Description="预留字段3" Category="扩展信息" />
-        <Column Name="Def4" DataType="String" Length="1000" Description="预留字段1" Category="扩展信息" />
-        <Column Name="Def5" DataType="String" Length="1000" Description="预留字段2" Category="扩展信息" />
-        <Column Name="Def6" DataType="String" Length="1000" Description="预留字段3" Category="扩展信息" />
+        <Column Name="Name" DataType="String" Master="True" Length="100" Description="名称。[nav:name]" />
+        <Column Name="Subname" DataType="String" Length="200" Description="副名称。[nav:subname]" />
+        <Column Name="UrlName" DataType="String" Length="200" Description="URL名称。[nav:link]" />
+        <Column Name="ListTpl" DataType="String" Description="列表模板。[nav:listtpl]" />
+        <Column Name="ContentTpl" DataType="String" Description="内容模板。[nav:contenttpl]" />
+        <Column Name="Enable" DataType="Boolean" Description="状态。" />
+        <Column Name="Outlink" DataType="String" Length="100" Description="外部链接。[nav:outlink]" />
+        <Column Name="Ico" DataType="String" Length="100" Description="图标。[nav:ico]" />
+        <Column Name="Pic" DataType="String" Length="100" Description="图片。[nav:pic]" />
+        <Column Name="Title" DataType="String" Length="100" Description="标题。[nav:title]" />
+        <Column Name="Keywords" DataType="String" Length="200" Description="关键词。[nav:keywords]" />
+        <Column Name="Description" DataType="String" Length="500" Description="描述。[nav:description]" />
+        <Column Name="Filename" DataType="String" Length="30" Description="文件名。[nav:filename]" />
+        <Column Name="Sorting" DataType="Int32" Description="排序。" />
+        <Column Name="Def1" DataType="String" Length="1000" Description="预留字段1。[nav:def1]" Category="扩展信息" />
+        <Column Name="Def2" DataType="String" Length="1000" Description="预留字段2。[nav:def2]" Category="扩展信息" />
+        <Column Name="Def3" DataType="String" Length="1000" Description="预留字段3。[nav:def3]" Category="扩展信息" />
+        <Column Name="Def4" DataType="String" Length="1000" Description="预留字段4。[nav:def4]" Category="扩展信息" />
+        <Column Name="Def5" DataType="String" Length="1000" Description="预留字段5。[nav:def5]" Category="扩展信息" />
+        <Column Name="Def6" DataType="String" Length="1000" Description="预留字段6。[nav:def6]" Category="扩展信息" />
         <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
         <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
         <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
@@ -125,13 +126,13 @@
         <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
       </Columns>
       <Indexes>
+        <Index Columns="AreaID,UrlName" Unique="True" />
+        <Index Columns="AreaID,Name" Unique="True" />
         <Index Columns="AreaID" />
         <Index Columns="PID" />
-        <Index Columns="AreaID,PID" />
         <Index Columns="ModelID" />
         <Index Columns="Enable" />
         <Index Columns="Sorting" />
-        <Index Columns="Name" Unique="True" />
       </Indexes>
     </Table>
   </Tables>

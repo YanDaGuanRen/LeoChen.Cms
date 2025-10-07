@@ -17,40 +17,40 @@ public partial interface ICmsCompany
     /// <summary>站点代码</summary>
     Int32 AreaID { get; set; }
 
-    /// <summary>名称</summary>
+    /// <summary>名称。{pboot:companyname}</summary>
     String Name { get; set; }
 
-    /// <summary>地址</summary>
+    /// <summary>地址。{pboot:companyaddress}</summary>
     String Address { get; set; }
 
-    /// <summary>邮编</summary>
+    /// <summary>邮编。{pboot:companypostcode}</summary>
     String Postcode { get; set; }
 
-    /// <summary>联系人</summary>
+    /// <summary>联系人。{pboot:companycontact}</summary>
     String Contact { get; set; }
 
-    /// <summary>手机号</summary>
+    /// <summary>手机号。{pboot:companymobile}</summary>
     String Mobile { get; set; }
 
-    /// <summary>电话</summary>
+    /// <summary>电话。{pboot:companyphone}</summary>
     String Phone { get; set; }
 
-    /// <summary>传真</summary>
+    /// <summary>传真。{pboot:companyfax}</summary>
     String Fax { get; set; }
 
-    /// <summary>邮箱</summary>
+    /// <summary>邮箱。{pboot:companyemail}</summary>
     String Email { get; set; }
 
-    /// <summary>QQ号</summary>
+    /// <summary>QQ号。{pboot:companyqq}</summary>
     String QQ { get; set; }
 
-    /// <summary>微信号</summary>
+    /// <summary>微信号。{pboot:companyweixin}</summary>
     String Weixin { get; set; }
 
-    /// <summary>营业执照</summary>
+    /// <summary>营业执照。{pboot:companyblicense}</summary>
     String Blicense { get; set; }
 
-    /// <summary>其他</summary>
+    /// <summary>其他。{pboot:companyother} </summary>
     String Other { get; set; }
 
     /// <summary>创建者</summary>

@@ -19,6 +19,7 @@ namespace LeoChen.Cms.Data;
 [DataObject]
 [Description("公司信息表")]
 [BindIndex("IU_CmsCompany_AreaID", true, "AreaID")]
+[BindIndex("IU_CmsCompany_Name", true, "Name")]
 [BindTable("CmsCompany", Description = "公司信息表", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsCompany : ICmsCompany, IEntity<ICmsCompany>
 {
@@ -40,99 +41,99 @@ public partial class CmsCompany : ICmsCompany, IEntity<ICmsCompany>
     public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private String _Name;
-    /// <summary>名称</summary>
+    /// <summary>名称。{pboot:companyname}</summary>
     [DisplayName("名称")]
-    [Description("名称")]
+    [Description("名称。{pboot:companyname}")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Name", "名称", "", Master = true)]
+    [BindColumn("Name", "名称。{pboot:companyname}", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
     private String _Address;
-    /// <summary>地址</summary>
+    /// <summary>地址。{pboot:companyaddress}</summary>
     [DisplayName("地址")]
-    [Description("地址")]
+    [Description("地址。{pboot:companyaddress}")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Address", "地址", "")]
+    [BindColumn("Address", "地址。{pboot:companyaddress}", "")]
     public String Address { get => _Address; set { if (OnPropertyChanging("Address", value)) { _Address = value; OnPropertyChanged("Address"); } } }
 
     private String _Postcode;
-    /// <summary>邮编</summary>
+    /// <summary>邮编。{pboot:companypostcode}</summary>
     [DisplayName("邮编")]
-    [Description("邮编")]
+    [Description("邮编。{pboot:companypostcode}")]
     [DataObjectField(false, false, true, 6)]
-    [BindColumn("Postcode", "邮编", "")]
+    [BindColumn("Postcode", "邮编。{pboot:companypostcode}", "")]
     public String Postcode { get => _Postcode; set { if (OnPropertyChanging("Postcode", value)) { _Postcode = value; OnPropertyChanged("Postcode"); } } }
 
     private String _Contact;
-    /// <summary>联系人</summary>
+    /// <summary>联系人。{pboot:companycontact}</summary>
     [DisplayName("联系人")]
-    [Description("联系人")]
+    [Description("联系人。{pboot:companycontact}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Contact", "联系人", "")]
+    [BindColumn("Contact", "联系人。{pboot:companycontact}", "")]
     public String Contact { get => _Contact; set { if (OnPropertyChanging("Contact", value)) { _Contact = value; OnPropertyChanged("Contact"); } } }
 
     private String _Mobile;
-    /// <summary>手机号</summary>
+    /// <summary>手机号。{pboot:companymobile}</summary>
     [DisplayName("手机号")]
-    [Description("手机号")]
+    [Description("手机号。{pboot:companymobile}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Mobile", "手机号", "")]
+    [BindColumn("Mobile", "手机号。{pboot:companymobile}", "")]
     public String Mobile { get => _Mobile; set { if (OnPropertyChanging("Mobile", value)) { _Mobile = value; OnPropertyChanged("Mobile"); } } }
 
     private String _Phone;
-    /// <summary>电话</summary>
+    /// <summary>电话。{pboot:companyphone}</summary>
     [DisplayName("电话")]
-    [Description("电话")]
+    [Description("电话。{pboot:companyphone}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Phone", "电话", "")]
+    [BindColumn("Phone", "电话。{pboot:companyphone}", "")]
     public String Phone { get => _Phone; set { if (OnPropertyChanging("Phone", value)) { _Phone = value; OnPropertyChanged("Phone"); } } }
 
     private String _Fax;
-    /// <summary>传真</summary>
+    /// <summary>传真。{pboot:companyfax}</summary>
     [DisplayName("传真")]
-    [Description("传真")]
+    [Description("传真。{pboot:companyfax}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Fax", "传真", "")]
+    [BindColumn("Fax", "传真。{pboot:companyfax}", "")]
     public String Fax { get => _Fax; set { if (OnPropertyChanging("Fax", value)) { _Fax = value; OnPropertyChanged("Fax"); } } }
 
     private String _Email;
-    /// <summary>邮箱</summary>
+    /// <summary>邮箱。{pboot:companyemail}</summary>
     [DisplayName("邮箱")]
-    [Description("邮箱")]
+    [Description("邮箱。{pboot:companyemail}")]
     [DataObjectField(false, false, true, 50)]
-    [BindColumn("Email", "邮箱", "")]
+    [BindColumn("Email", "邮箱。{pboot:companyemail}", "")]
     public String Email { get => _Email; set { if (OnPropertyChanging("Email", value)) { _Email = value; OnPropertyChanged("Email"); } } }
 
     private String _QQ;
-    /// <summary>QQ号</summary>
+    /// <summary>QQ号。{pboot:companyqq}</summary>
     [DisplayName("QQ号")]
-    [Description("QQ号")]
+    [Description("QQ号。{pboot:companyqq}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("QQ", "QQ号", "")]
+    [BindColumn("QQ", "QQ号。{pboot:companyqq}", "")]
     public String QQ { get => _QQ; set { if (OnPropertyChanging("QQ", value)) { _QQ = value; OnPropertyChanged("QQ"); } } }
 
     private String _Weixin;
-    /// <summary>微信号</summary>
+    /// <summary>微信号。{pboot:companyweixin}</summary>
     [DisplayName("微信号")]
-    [Description("微信号")]
+    [Description("微信号。{pboot:companyweixin}")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Weixin", "微信号", "")]
+    [BindColumn("Weixin", "微信号。{pboot:companyweixin}", "")]
     public String Weixin { get => _Weixin; set { if (OnPropertyChanging("Weixin", value)) { _Weixin = value; OnPropertyChanged("Weixin"); } } }
 
     private String _Blicense;
-    /// <summary>营业执照</summary>
+    /// <summary>营业执照。{pboot:companyblicense}</summary>
     [DisplayName("营业执照")]
-    [Description("营业执照")]
+    [Description("营业执照。{pboot:companyblicense}")]
     [DataObjectField(false, false, true, 20)]
-    [BindColumn("Blicense", "营业执照", "")]
+    [BindColumn("Blicense", "营业执照。{pboot:companyblicense}", "")]
     public String Blicense { get => _Blicense; set { if (OnPropertyChanging("Blicense", value)) { _Blicense = value; OnPropertyChanged("Blicense"); } } }
 
     private String _Other;
-    /// <summary>其他</summary>
+    /// <summary>其他。{pboot:companyother} </summary>
     [DisplayName("其他")]
-    [Description("其他")]
+    [Description("其他。{pboot:companyother} ")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Other", "其他", "")]
+    [BindColumn("Other", "其他。{pboot:companyother} ", "")]
     public String Other { get => _Other; set { if (OnPropertyChanging("Other", value)) { _Other = value; OnPropertyChanged("Other"); } } }
 
     private Int32 _CreateUserID;
@@ -318,6 +319,22 @@ public partial class CmsCompany : ICmsCompany, IEntity<ICmsCompany>
 
         return Find(_.AreaID == areaId);
     }
+
+    /// <summary>根据名称查找</summary>
+    /// <param name="name">名称</param>
+    /// <returns>实体对象</returns>
+    public static CmsCompany FindByName(String name)
+    {
+        if (name.IsNullOrEmpty()) return null;
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.Name.EqualIgnoreCase(name));
+
+        // 单对象缓存
+        return Meta.SingleCache.GetItemWithSlaveKey(name) as CmsCompany;
+
+        //return Find(_.Name == name);
+    }
     #endregion
 
     #region 高级查询
@@ -350,40 +367,40 @@ public partial class CmsCompany : ICmsCompany, IEntity<ICmsCompany>
         /// <summary>站点代码</summary>
         public static readonly Field AreaID = FindByName("AreaID");
 
-        /// <summary>名称</summary>
+        /// <summary>名称。{pboot:companyname}</summary>
         public static readonly Field Name = FindByName("Name");
 
-        /// <summary>地址</summary>
+        /// <summary>地址。{pboot:companyaddress}</summary>
         public static readonly Field Address = FindByName("Address");
 
-        /// <summary>邮编</summary>
+        /// <summary>邮编。{pboot:companypostcode}</summary>
         public static readonly Field Postcode = FindByName("Postcode");
 
-        /// <summary>联系人</summary>
+        /// <summary>联系人。{pboot:companycontact}</summary>
         public static readonly Field Contact = FindByName("Contact");
 
-        /// <summary>手机号</summary>
+        /// <summary>手机号。{pboot:companymobile}</summary>
         public static readonly Field Mobile = FindByName("Mobile");
 
-        /// <summary>电话</summary>
+        /// <summary>电话。{pboot:companyphone}</summary>
         public static readonly Field Phone = FindByName("Phone");
 
-        /// <summary>传真</summary>
+        /// <summary>传真。{pboot:companyfax}</summary>
         public static readonly Field Fax = FindByName("Fax");
 
-        /// <summary>邮箱</summary>
+        /// <summary>邮箱。{pboot:companyemail}</summary>
         public static readonly Field Email = FindByName("Email");
 
-        /// <summary>QQ号</summary>
+        /// <summary>QQ号。{pboot:companyqq}</summary>
         public static readonly Field QQ = FindByName("QQ");
 
-        /// <summary>微信号</summary>
+        /// <summary>微信号。{pboot:companyweixin}</summary>
         public static readonly Field Weixin = FindByName("Weixin");
 
-        /// <summary>营业执照</summary>
+        /// <summary>营业执照。{pboot:companyblicense}</summary>
         public static readonly Field Blicense = FindByName("Blicense");
 
-        /// <summary>其他</summary>
+        /// <summary>其他。{pboot:companyother} </summary>
         public static readonly Field Other = FindByName("Other");
 
         /// <summary>创建者</summary>
@@ -416,40 +433,40 @@ public partial class CmsCompany : ICmsCompany, IEntity<ICmsCompany>
         /// <summary>站点代码</summary>
         public const String AreaID = "AreaID";
 
-        /// <summary>名称</summary>
+        /// <summary>名称。{pboot:companyname}</summary>
         public const String Name = "Name";
 
-        /// <summary>地址</summary>
+        /// <summary>地址。{pboot:companyaddress}</summary>
         public const String Address = "Address";
 
-        /// <summary>邮编</summary>
+        /// <summary>邮编。{pboot:companypostcode}</summary>
         public const String Postcode = "Postcode";
 
-        /// <summary>联系人</summary>
+        /// <summary>联系人。{pboot:companycontact}</summary>
         public const String Contact = "Contact";
 
-        /// <summary>手机号</summary>
+        /// <summary>手机号。{pboot:companymobile}</summary>
         public const String Mobile = "Mobile";
 
-        /// <summary>电话</summary>
+        /// <summary>电话。{pboot:companyphone}</summary>
         public const String Phone = "Phone";
 
-        /// <summary>传真</summary>
+        /// <summary>传真。{pboot:companyfax}</summary>
         public const String Fax = "Fax";
 
-        /// <summary>邮箱</summary>
+        /// <summary>邮箱。{pboot:companyemail}</summary>
         public const String Email = "Email";
 
-        /// <summary>QQ号</summary>
+        /// <summary>QQ号。{pboot:companyqq}</summary>
         public const String QQ = "QQ";
 
-        /// <summary>微信号</summary>
+        /// <summary>微信号。{pboot:companyweixin}</summary>
         public const String Weixin = "Weixin";
 
-        /// <summary>营业执照</summary>
+        /// <summary>营业执照。{pboot:companyblicense}</summary>
         public const String Blicense = "Blicense";
 
-        /// <summary>其他</summary>
+        /// <summary>其他。{pboot:companyother} </summary>
         public const String Other = "Other";
 
         /// <summary>创建者</summary>

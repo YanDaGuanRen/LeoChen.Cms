@@ -47,7 +47,7 @@ else
 if (Environment.GetEnvironmentVariable("__ASPNETCORE_BROWSER_TOOLS") is null)
     app.UseResponseCompression();
 
-
+var abbbaa = CubeService.AreaNames;
 // 使用魔方
 app.UseCube(app.Environment);
 

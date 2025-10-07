@@ -20,9 +20,6 @@ public partial class CmsModelModel
     /// <summary>类型</summary>
     public LeoChen.Cms.Data.CmsModelType ModelType { get; set; }
 
-    /// <summary>Url</summary>
-    public String Url { get; set; }
-
     /// <summary>列表模板</summary>
     public String ListTpl { get; set; }
 
@@ -31,9 +28,6 @@ public partial class CmsModelModel
 
     /// <summary>状态</summary>
     public Boolean Enable { get; set; }
-
-    /// <summary>是否系统模型</summary>
-    public Boolean IsSystem { get; set; }
 
     /// <summary>创建者</summary>
     public Int32 CreateUserID { get; set; }
@@ -62,11 +56,9 @@ public partial class CmsModelModel
         ID = model.ID;
         Name = model.Name;
         ModelType = model.ModelType;
-        Url = model.Url;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
         Enable = model.Enable;
-        IsSystem = model.IsSystem;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;

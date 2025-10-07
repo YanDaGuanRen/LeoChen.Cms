@@ -54,6 +54,7 @@
         <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
       </Columns>
       <Indexes>
+        <Index Columns="Domain" Unique="True" />
         <Index Columns="TenantId,Name" Unique="True" />
         <Index Columns="Name" />
         <Index Columns="Enable" />

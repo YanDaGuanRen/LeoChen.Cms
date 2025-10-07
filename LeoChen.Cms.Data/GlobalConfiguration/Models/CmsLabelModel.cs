@@ -20,14 +20,14 @@ public partial class CmsLabelModel
     /// <summary>状态</summary>
     public Boolean Enable { get; set; }
 
-    /// <summary>标签类型,修改后先保存再编辑</summary>
+    /// <summary>标签类型。修改后先保存再编辑</summary>
     public LeoChen.Cms.Data.CmsItemType LabelType { get; set; }
 
     /// <summary>描述</summary>
     public String Description { get; set; }
 
     /// <summary>值</summary>
-    public String Value { get; set; }
+    public String LabelValue { get; set; }
 
     /// <summary>创建者</summary>
     public Int32 CreateUserID { get; set; }
@@ -58,7 +58,7 @@ public partial class CmsLabelModel
         Enable = model.Enable;
         LabelType = model.LabelType;
         Description = model.Description;
-        Value = model.Value;
+        LabelValue = model.LabelValue;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;

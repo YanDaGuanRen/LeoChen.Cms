@@ -43,12 +43,6 @@ public partial class CmsModelExtfield : Entity<CmsModelExtfield>
         // 实体缓存
         // var ec = Meta.Cache;
         // ec.Expire = 60;
-
-        // 单对象缓存
-        var sc = Meta.SingleCache;
-        // sc.Expire = 60;
-        sc.FindSlaveKeyMethod = k => Find(_.Name == k);
-        sc.GetSlaveKeyMethod = e => e.Name;
     }
 
     /// <summary>验证并修补数据，返回验证结果，或者通过抛出异常的方式提示验证失败。</summary>
@@ -77,7 +71,7 @@ public partial class CmsModelExtfield : Entity<CmsModelExtfield>
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(Name));
+        // CheckExist(method == DataMethod.Insert, nameof(ModelID), nameof(Name));
 
         return true;
     }
@@ -94,8 +88,10 @@ public partial class CmsModelExtfield : Entity<CmsModelExtfield>
     //    var entity = new CmsModelExtfield();
     //    entity.ModelID = 0;
     //    entity.Name = "abc";
+    //    entity.DisplayName = "abc";
     //    entity.FieldType = 0;
-    //    entity.Value = "abc";
+    //    entity.Enable = true;
+    //    entity.DefaultValue = "abc";
     //    entity.Description = "abc";
     //    entity.Sorting = 0;
     //    entity.Insert();

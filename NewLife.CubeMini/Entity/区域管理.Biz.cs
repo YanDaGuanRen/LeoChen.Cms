@@ -50,6 +50,9 @@ public partial class CmsArea : Entity<CmsArea>, ITenantSource
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        TenantId = TenantContext.CurrentId;
+        if (Name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Name), "名称不能为空");
+        if (Domain.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Domain), "域名不能为空");
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;
@@ -72,7 +75,8 @@ public partial class CmsArea : Entity<CmsArea>, ITenantSource
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        // CheckExist(method == DataMethod.Insert, nameof(TenantId), nameof(Name));
+        CheckExist(method == DataMethod.Insert, nameof(TenantId), nameof(Name));
+        CheckExist(method == DataMethod.Insert, nameof(Domain));
 
         return true;
     }
@@ -89,10 +93,9 @@ public partial class CmsArea : Entity<CmsArea>, ITenantSource
         var entity = new CmsArea();
         entity.TenantId = 0;
         entity.Name = "默认区域";
-        entity.Domain = "";
+        entity.Domain = "www.test.com";
         entity.Enable = true;
         entity.Insert();
-
         if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsArea[区域管理]数据！");
     }
 

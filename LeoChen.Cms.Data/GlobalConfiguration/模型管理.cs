@@ -48,14 +48,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
     [BindColumn("ModelType", "类型", "")]
     public LeoChen.Cms.Data.CmsModelType ModelType { get => _ModelType; set { if (OnPropertyChanging("ModelType", value)) { _ModelType = value; OnPropertyChanged("ModelType"); } } }
 
-    private String _Url;
-    /// <summary>Url</summary>
-    [DisplayName("Url")]
-    [Description("Url")]
-    [DataObjectField(false, false, true, 100)]
-    [BindColumn("Url", "Url", "")]
-    public String Url { get => _Url; set { if (OnPropertyChanging("Url", value)) { _Url = value; OnPropertyChanged("Url"); } } }
-
     private String _ListTpl;
     /// <summary>列表模板</summary>
     [DisplayName("列表模板")]
@@ -79,14 +71,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
     [DataObjectField(false, false, false, 0)]
     [BindColumn("Enable", "状态", "")]
     public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
-
-    private Boolean _IsSystem;
-    /// <summary>是否系统模型</summary>
-    [DisplayName("是否系统模型")]
-    [Description("是否系统模型")]
-    [DataObjectField(false, false, false, 0)]
-    [BindColumn("IsSystem", "是否系统模型", "")]
-    public Boolean IsSystem { get => _IsSystem; set { if (OnPropertyChanging("IsSystem", value)) { _IsSystem = value; OnPropertyChanged("IsSystem"); } } }
 
     private Int32 _CreateUserID;
     /// <summary>创建者</summary>
@@ -151,11 +135,9 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
         ID = model.ID;
         Name = model.Name;
         ModelType = model.ModelType;
-        Url = model.Url;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
         Enable = model.Enable;
-        IsSystem = model.IsSystem;
         CreateUserID = model.CreateUserID;
         CreateTime = model.CreateTime;
         CreateIP = model.CreateIP;
@@ -176,11 +158,9 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
             "ID" => _ID,
             "Name" => _Name,
             "ModelType" => _ModelType,
-            "Url" => _Url,
             "ListTpl" => _ListTpl,
             "ContentTpl" => _ContentTpl,
             "Enable" => _Enable,
-            "IsSystem" => _IsSystem,
             "CreateUserID" => _CreateUserID,
             "CreateTime" => _CreateTime,
             "CreateIP" => _CreateIP,
@@ -196,11 +176,9 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
                 case "ID": _ID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
                 case "ModelType": _ModelType = (LeoChen.Cms.Data.CmsModelType)value.ToInt(); break;
-                case "Url": _Url = Convert.ToString(value); break;
                 case "ListTpl": _ListTpl = Convert.ToString(value); break;
                 case "ContentTpl": _ContentTpl = Convert.ToString(value); break;
                 case "Enable": _Enable = value.ToBoolean(); break;
-                case "IsSystem": _IsSystem = value.ToBoolean(); break;
                 case "CreateUserID": _CreateUserID = value.ToInt(); break;
                 case "CreateTime": _CreateTime = value.ToDateTime(); break;
                 case "CreateIP": _CreateIP = Convert.ToString(value); break;
@@ -267,19 +245,17 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
     /// <summary>高级查询</summary>
     /// <param name="modelType">类型</param>
     /// <param name="enable">状态</param>
-    /// <param name="isSystem">是否系统模型</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsModel> Search(LeoChen.Cms.Data.CmsModelType modelType, Boolean? enable, Boolean? isSystem, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsModel> Search(LeoChen.Cms.Data.CmsModelType modelType, Boolean? enable, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (modelType >= 0) exp &= _.ModelType == modelType;
         if (enable != null) exp &= _.Enable == enable;
-        if (isSystem != null) exp &= _.IsSystem == isSystem;
         exp &= _.UpdateTime.Between(start, end);
         if (!key.IsNullOrEmpty()) exp &= SearchWhereByKeys(key);
 
@@ -300,9 +276,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
         /// <summary>类型</summary>
         public static readonly Field ModelType = FindByName("ModelType");
 
-        /// <summary>Url</summary>
-        public static readonly Field Url = FindByName("Url");
-
         /// <summary>列表模板</summary>
         public static readonly Field ListTpl = FindByName("ListTpl");
 
@@ -311,9 +284,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
 
         /// <summary>状态</summary>
         public static readonly Field Enable = FindByName("Enable");
-
-        /// <summary>是否系统模型</summary>
-        public static readonly Field IsSystem = FindByName("IsSystem");
 
         /// <summary>创建者</summary>
         public static readonly Field CreateUserID = FindByName("CreateUserID");
@@ -348,9 +318,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
         /// <summary>类型</summary>
         public const String ModelType = "ModelType";
 
-        /// <summary>Url</summary>
-        public const String Url = "Url";
-
         /// <summary>列表模板</summary>
         public const String ListTpl = "ListTpl";
 
@@ -359,9 +326,6 @@ public partial class CmsModel : ICmsModel, IEntity<ICmsModel>
 
         /// <summary>状态</summary>
         public const String Enable = "Enable";
-
-        /// <summary>是否系统模型</summary>
-        public const String IsSystem = "IsSystem";
 
         /// <summary>创建者</summary>
         public const String CreateUserID = "CreateUserID";

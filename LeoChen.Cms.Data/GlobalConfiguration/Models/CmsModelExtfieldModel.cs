@@ -26,8 +26,11 @@ public partial class CmsModelExtfieldModel
     /// <summary>类型</summary>
     public LeoChen.Cms.Data.CmsItemType FieldType { get; set; }
 
-    /// <summary>值</summary>
-    public String Value { get; set; }
+    /// <summary>状态</summary>
+    public Boolean Enable { get; set; }
+
+    /// <summary>默认值。只有在开关多选单选才有用</summary>
+    public String DefaultValue { get; set; }
 
     /// <summary>描述</summary>
     public String Description { get; set; }
@@ -64,7 +67,8 @@ public partial class CmsModelExtfieldModel
         Name = model.Name;
         DisplayName = model.DisplayName;
         FieldType = model.FieldType;
-        Value = model.Value;
+        Enable = model.Enable;
+        DefaultValue = model.DefaultValue;
         Description = model.Description;
         Sorting = model.Sorting;
         CreateUserID = model.CreateUserID;

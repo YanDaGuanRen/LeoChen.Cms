@@ -41,7 +41,7 @@ public class CmsLabelController : EntityController<CmsLabel>
             var aaa = Request.Form;
             var filteredDict = Request.Form.Where(kv => kv.Key.StartsWithIgnoreCase("CmsExp_"))
                 .ToDictionary(kv => kv.Key, kv => kv.Value.FirstOrDefault() );
-            entity.Value = JsonHelper.ToJson(filteredDict, false);
+            entity.LabelValue = JsonHelper.ToJson(filteredDict, false);
         }
         return entity.Update();
     }
@@ -58,15 +58,15 @@ public class CmsLabelController : EntityController<CmsLabel>
             _ => ListFields,
         };
         fields = fields.Clone();
-        fields.RemoveField(CmsLabel.__.Value);
+        fields.RemoveField(CmsLabel.__.LabelValue);
         // 表单嵌入配置字段
         if ((kind == ViewKinds.EditForm || kind == ViewKinds.Detail) && model is CmsLabel entity)
         {
             var melist = CmsModelExtfield.FindAllByModelID(1);
             IDictionary<string, object?> dic = new Dictionary<string, object?>();
-            if (!entity.Value.IsNullOrEmpty())
+            if (!entity.LabelValue.IsNullOrEmpty())
             {
-                dic = entity.Value.DecodeJson();
+                dic = entity.LabelValue.DecodeJson();
             }
             foreach (var cmsModelExtfield in melist)
             {

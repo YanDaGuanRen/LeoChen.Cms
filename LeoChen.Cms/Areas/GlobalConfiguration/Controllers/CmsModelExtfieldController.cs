@@ -56,10 +56,10 @@ public class CmsModelExtfieldController : EntityController<CmsModelExtfield>
     {
         var modelId = p["modelId"].ToInt(-1);
         var type = (LeoChen.Cms.Data.CmsItemType)p["type"].ToInt(-1);
-
+        var enable = p["Enable"]?.ToBoolean();
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 
-        return CmsModelExtfield.Search(modelId, type, start, end, p["Q"], p);
+        return CmsModelExtfield.Search(modelId, enable,type, start, end, p["Q"], p);
     }
 }

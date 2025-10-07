@@ -18,23 +18,23 @@ namespace LeoChen.Cms.Data;
 [Serializable]
 [DataObject]
 [Description("内容分类表")]
+[BindIndex("IU_CmsContent_Sort_AreaID_UrlName", true, "AreaID,UrlName")]
+[BindIndex("IU_CmsContent_Sort_AreaID_Name", true, "AreaID,Name")]
 [BindIndex("IX_CmsContent_Sort_AreaID", false, "AreaID")]
 [BindIndex("IX_CmsContent_Sort_PID", false, "PID")]
-[BindIndex("IX_CmsContent_Sort_AreaID_PID", false, "AreaID,PID")]
 [BindIndex("IX_CmsContent_Sort_ModelID", false, "ModelID")]
 [BindIndex("IX_CmsContent_Sort_Enable", false, "Enable")]
 [BindIndex("IX_CmsContent_Sort_Sorting", false, "Sorting")]
-[BindIndex("IU_CmsContent_Sort_Name", true, "Name")]
 [BindTable("CmsContent_Sort", Description = "内容分类表", ConnName = "Membership", DbType = DatabaseType.None)]
 public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sort>
 {
     #region 属性
     private Int32 _ID;
-    /// <summary>主键ID</summary>
+    /// <summary>主键ID。[nav:scode]</summary>
     [DisplayName("主键ID")]
-    [Description("主键ID")]
+    [Description("主键ID。[nav:scode]")]
     [DataObjectField(true, true, false, 0)]
-    [BindColumn("ID", "主键ID", "")]
+    [BindColumn("ID", "主键ID。[nav:scode]", "")]
     public Int32 ID { get => _ID; set { if (OnPropertyChanging("ID", value)) { _ID = value; OnPropertyChanged("ID"); } } }
 
     private Int32 _AreaID;
@@ -46,11 +46,11 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     public Int32 AreaID { get => _AreaID; set { if (OnPropertyChanging("AreaID", value)) { _AreaID = value; OnPropertyChanged("AreaID"); } } }
 
     private Int32 _Pid;
-    /// <summary>父级代码</summary>
+    /// <summary>父级代码。[nav:pcode]</summary>
     [DisplayName("父级代码")]
-    [Description("父级代码")]
+    [Description("父级代码。[nav:pcode]")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Pid", "父级代码", "")]
+    [BindColumn("Pid", "父级代码。[nav:pcode]", "")]
     public Int32 Pid { get => _Pid; set { if (OnPropertyChanging("Pid", value)) { _Pid = value; OnPropertyChanged("Pid"); } } }
 
     private Int32 _ModelID;
@@ -62,161 +62,169 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     public Int32 ModelID { get => _ModelID; set { if (OnPropertyChanging("ModelID", value)) { _ModelID = value; OnPropertyChanged("ModelID"); } } }
 
     private String _Name;
-    /// <summary>名称</summary>
+    /// <summary>名称。[nav:name]</summary>
     [DisplayName("名称")]
-    [Description("名称")]
+    [Description("名称。[nav:name]")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Name", "名称", "", Master = true)]
+    [BindColumn("Name", "名称。[nav:name]", "", Master = true)]
     public String Name { get => _Name; set { if (OnPropertyChanging("Name", value)) { _Name = value; OnPropertyChanged("Name"); } } }
 
     private String _Subname;
-    /// <summary>副名称</summary>
+    /// <summary>副名称。[nav:subname]</summary>
     [DisplayName("副名称")]
-    [Description("副名称")]
+    [Description("副名称。[nav:subname]")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Subname", "副名称", "")]
+    [BindColumn("Subname", "副名称。[nav:subname]", "")]
     public String Subname { get => _Subname; set { if (OnPropertyChanging("Subname", value)) { _Subname = value; OnPropertyChanged("Subname"); } } }
 
+    private String _UrlName;
+    /// <summary>URL名称。[nav:link]</summary>
+    [DisplayName("URL名称")]
+    [Description("URL名称。[nav:link]")]
+    [DataObjectField(false, false, true, 200)]
+    [BindColumn("UrlName", "URL名称。[nav:link]", "")]
+    public String UrlName { get => _UrlName; set { if (OnPropertyChanging("UrlName", value)) { _UrlName = value; OnPropertyChanged("UrlName"); } } }
+
     private String _ListTpl;
-    /// <summary>列表模板</summary>
+    /// <summary>列表模板。[nav:listtpl]</summary>
     [DisplayName("列表模板")]
-    [Description("列表模板")]
+    [Description("列表模板。[nav:listtpl]")]
     [DataObjectField(false, false, true, 50)]
-    [BindColumn("ListTpl", "列表模板", "")]
+    [BindColumn("ListTpl", "列表模板。[nav:listtpl]", "")]
     public String ListTpl { get => _ListTpl; set { if (OnPropertyChanging("ListTpl", value)) { _ListTpl = value; OnPropertyChanged("ListTpl"); } } }
 
     private String _ContentTpl;
-    /// <summary>内容模板</summary>
+    /// <summary>内容模板。[nav:contenttpl]</summary>
     [DisplayName("内容模板")]
-    [Description("内容模板")]
+    [Description("内容模板。[nav:contenttpl]")]
     [DataObjectField(false, false, true, 50)]
-    [BindColumn("ContentTpl", "内容模板", "")]
+    [BindColumn("ContentTpl", "内容模板。[nav:contenttpl]", "")]
     public String ContentTpl { get => _ContentTpl; set { if (OnPropertyChanging("ContentTpl", value)) { _ContentTpl = value; OnPropertyChanged("ContentTpl"); } } }
 
     private Boolean _Enable;
-    /// <summary>状态</summary>
+    /// <summary>状态。</summary>
     [DisplayName("状态")]
-    [Description("状态")]
+    [Description("状态。")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Enable", "状态", "")]
+    [BindColumn("Enable", "状态。", "")]
     public Boolean Enable { get => _Enable; set { if (OnPropertyChanging("Enable", value)) { _Enable = value; OnPropertyChanged("Enable"); } } }
 
     private String _Outlink;
-    /// <summary>外部链接</summary>
+    /// <summary>外部链接。[nav:outlink]</summary>
     [DisplayName("外部链接")]
-    [Description("外部链接")]
+    [Description("外部链接。[nav:outlink]")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Outlink", "外部链接", "")]
+    [BindColumn("Outlink", "外部链接。[nav:outlink]", "")]
     public String Outlink { get => _Outlink; set { if (OnPropertyChanging("Outlink", value)) { _Outlink = value; OnPropertyChanged("Outlink"); } } }
 
     private String _Ico;
-    /// <summary>图标</summary>
+    /// <summary>图标。[nav:ico]</summary>
     [DisplayName("图标")]
-    [Description("图标")]
+    [Description("图标。[nav:ico]")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Ico", "图标", "")]
+    [BindColumn("Ico", "图标。[nav:ico]", "")]
     public String Ico { get => _Ico; set { if (OnPropertyChanging("Ico", value)) { _Ico = value; OnPropertyChanged("Ico"); } } }
 
     private String _Pic;
-    /// <summary>图片</summary>
+    /// <summary>图片。[nav:pic]</summary>
     [DisplayName("图片")]
-    [Description("图片")]
+    [Description("图片。[nav:pic]")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Pic", "图片", "")]
+    [BindColumn("Pic", "图片。[nav:pic]", "")]
     public String Pic { get => _Pic; set { if (OnPropertyChanging("Pic", value)) { _Pic = value; OnPropertyChanged("Pic"); } } }
 
     private String _Title;
-    /// <summary>标题</summary>
+    /// <summary>标题。[nav:title]</summary>
     [DisplayName("标题")]
-    [Description("标题")]
+    [Description("标题。[nav:title]")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Title", "标题", "")]
+    [BindColumn("Title", "标题。[nav:title]", "")]
     public String Title { get => _Title; set { if (OnPropertyChanging("Title", value)) { _Title = value; OnPropertyChanged("Title"); } } }
 
     private String _Keywords;
-    /// <summary>关键词</summary>
+    /// <summary>关键词。[nav:keywords]</summary>
     [DisplayName("关键词")]
-    [Description("关键词")]
+    [Description("关键词。[nav:keywords]")]
     [DataObjectField(false, false, true, 200)]
-    [BindColumn("Keywords", "关键词", "")]
+    [BindColumn("Keywords", "关键词。[nav:keywords]", "")]
     public String Keywords { get => _Keywords; set { if (OnPropertyChanging("Keywords", value)) { _Keywords = value; OnPropertyChanged("Keywords"); } } }
 
     private String _Description;
-    /// <summary>描述</summary>
+    /// <summary>描述。[nav:description]</summary>
     [DisplayName("描述")]
-    [Description("描述")]
+    [Description("描述。[nav:description]")]
     [DataObjectField(false, false, true, 500)]
-    [BindColumn("Description", "描述", "")]
+    [BindColumn("Description", "描述。[nav:description]", "")]
     public String Description { get => _Description; set { if (OnPropertyChanging("Description", value)) { _Description = value; OnPropertyChanged("Description"); } } }
 
     private String _Filename;
-    /// <summary>文件名</summary>
+    /// <summary>文件名。[nav:filename]</summary>
     [DisplayName("文件名")]
-    [Description("文件名")]
+    [Description("文件名。[nav:filename]")]
     [DataObjectField(false, false, true, 30)]
-    [BindColumn("Filename", "文件名", "")]
+    [BindColumn("Filename", "文件名。[nav:filename]", "")]
     public String Filename { get => _Filename; set { if (OnPropertyChanging("Filename", value)) { _Filename = value; OnPropertyChanged("Filename"); } } }
 
     private Int32 _Sorting;
-    /// <summary>排序</summary>
+    /// <summary>排序。</summary>
     [DisplayName("排序")]
-    [Description("排序")]
+    [Description("排序。")]
     [DataObjectField(false, false, false, 0)]
-    [BindColumn("Sorting", "排序", "")]
+    [BindColumn("Sorting", "排序。", "")]
     public Int32 Sorting { get => _Sorting; set { if (OnPropertyChanging("Sorting", value)) { _Sorting = value; OnPropertyChanged("Sorting"); } } }
 
     private String _Def1;
-    /// <summary>预留字段1</summary>
+    /// <summary>预留字段1。[nav:def1]</summary>
     [Category("扩展信息")]
     [DisplayName("预留字段1")]
-    [Description("预留字段1")]
+    [Description("预留字段1。[nav:def1]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def1", "预留字段1", "")]
+    [BindColumn("Def1", "预留字段1。[nav:def1]", "")]
     public String Def1 { get => _Def1; set { if (OnPropertyChanging("Def1", value)) { _Def1 = value; OnPropertyChanged("Def1"); } } }
 
     private String _Def2;
-    /// <summary>预留字段2</summary>
+    /// <summary>预留字段2。[nav:def2]</summary>
     [Category("扩展信息")]
     [DisplayName("预留字段2")]
-    [Description("预留字段2")]
+    [Description("预留字段2。[nav:def2]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def2", "预留字段2", "")]
+    [BindColumn("Def2", "预留字段2。[nav:def2]", "")]
     public String Def2 { get => _Def2; set { if (OnPropertyChanging("Def2", value)) { _Def2 = value; OnPropertyChanged("Def2"); } } }
 
     private String _Def3;
-    /// <summary>预留字段3</summary>
+    /// <summary>预留字段3。[nav:def3]</summary>
     [Category("扩展信息")]
     [DisplayName("预留字段3")]
-    [Description("预留字段3")]
+    [Description("预留字段3。[nav:def3]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def3", "预留字段3", "")]
+    [BindColumn("Def3", "预留字段3。[nav:def3]", "")]
     public String Def3 { get => _Def3; set { if (OnPropertyChanging("Def3", value)) { _Def3 = value; OnPropertyChanged("Def3"); } } }
 
     private String _Def4;
-    /// <summary>预留字段1</summary>
+    /// <summary>预留字段4。[nav:def4]</summary>
     [Category("扩展信息")]
-    [DisplayName("预留字段1")]
-    [Description("预留字段1")]
+    [DisplayName("预留字段4")]
+    [Description("预留字段4。[nav:def4]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def4", "预留字段1", "")]
+    [BindColumn("Def4", "预留字段4。[nav:def4]", "")]
     public String Def4 { get => _Def4; set { if (OnPropertyChanging("Def4", value)) { _Def4 = value; OnPropertyChanged("Def4"); } } }
 
     private String _Def5;
-    /// <summary>预留字段2</summary>
+    /// <summary>预留字段5。[nav:def5]</summary>
     [Category("扩展信息")]
-    [DisplayName("预留字段2")]
-    [Description("预留字段2")]
+    [DisplayName("预留字段5")]
+    [Description("预留字段5。[nav:def5]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def5", "预留字段2", "")]
+    [BindColumn("Def5", "预留字段5。[nav:def5]", "")]
     public String Def5 { get => _Def5; set { if (OnPropertyChanging("Def5", value)) { _Def5 = value; OnPropertyChanged("Def5"); } } }
 
     private String _Def6;
-    /// <summary>预留字段3</summary>
+    /// <summary>预留字段6。[nav:def6]</summary>
     [Category("扩展信息")]
-    [DisplayName("预留字段3")]
-    [Description("预留字段3")]
+    [DisplayName("预留字段6")]
+    [Description("预留字段6。[nav:def6]")]
     [DataObjectField(false, false, true, 1000)]
-    [BindColumn("Def6", "预留字段3", "")]
+    [BindColumn("Def6", "预留字段6。[nav:def6]", "")]
     public String Def6 { get => _Def6; set { if (OnPropertyChanging("Def6", value)) { _Def6 = value; OnPropertyChanged("Def6"); } } }
 
     private Int32 _CreateUserID;
@@ -285,6 +293,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         ModelID = model.ModelID;
         Name = model.Name;
         Subname = model.Subname;
+        UrlName = model.UrlName;
         ListTpl = model.ListTpl;
         ContentTpl = model.ContentTpl;
         Enable = model.Enable;
@@ -325,6 +334,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
             "ModelID" => _ModelID,
             "Name" => _Name,
             "Subname" => _Subname,
+            "UrlName" => _UrlName,
             "ListTpl" => _ListTpl,
             "ContentTpl" => _ContentTpl,
             "Enable" => _Enable,
@@ -360,6 +370,7 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
                 case "ModelID": _ModelID = value.ToInt(); break;
                 case "Name": _Name = Convert.ToString(value); break;
                 case "Subname": _Subname = Convert.ToString(value); break;
+                case "UrlName": _UrlName = Convert.ToString(value); break;
                 case "ListTpl": _ListTpl = Convert.ToString(value); break;
                 case "ContentTpl": _ContentTpl = Convert.ToString(value); break;
                 case "Enable": _Enable = value.ToBoolean(); break;
@@ -425,6 +436,21 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         //return Find(_.ID == id);
     }
 
+    /// <summary>根据区域代码、URL名称查找</summary>
+    /// <param name="areaId">区域代码</param>
+    /// <param name="urlName">URL名称</param>
+    /// <returns>实体对象</returns>
+    public static CmsContent_Sort FindByAreaIDAndUrlName(Int32 areaId, String urlName)
+    {
+        if (areaId < 0) return null;
+        if (urlName.IsNullOrEmpty()) return null;
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.AreaID == areaId && e.UrlName.EqualIgnoreCase(urlName));
+
+        return Find(_.AreaID == areaId & _.UrlName == urlName);
+    }
+
     /// <summary>根据区域代码查找</summary>
     /// <param name="areaId">区域代码</param>
     /// <returns>实体列表</returns>
@@ -438,6 +464,21 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         return FindAll(_.AreaID == areaId);
     }
 
+    /// <summary>根据区域代码、名称查找</summary>
+    /// <param name="areaId">区域代码</param>
+    /// <param name="name">名称</param>
+    /// <returns>实体对象</returns>
+    public static CmsContent_Sort FindByAreaIDAndName(Int32 areaId, String name)
+    {
+        if (areaId < 0) return null;
+        if (name.IsNullOrEmpty()) return null;
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.AreaID == areaId && e.Name.EqualIgnoreCase(name));
+
+        return Find(_.AreaID == areaId & _.Name == name);
+    }
+
     /// <summary>根据父级代码查找</summary>
     /// <param name="pid">父级代码</param>
     /// <returns>实体列表</returns>
@@ -449,21 +490,6 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
         if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.Pid == pid);
 
         return FindAll(_.Pid == pid);
-    }
-
-    /// <summary>根据区域代码、父级代码查找</summary>
-    /// <param name="areaId">区域代码</param>
-    /// <param name="pid">父级代码</param>
-    /// <returns>实体列表</returns>
-    public static IList<CmsContent_Sort> FindAllByAreaIDAndPid(Int32 areaId, Int32 pid)
-    {
-        if (areaId < 0) return [];
-        if (pid < 0) return [];
-
-        // 实体缓存
-        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.AreaID == areaId && e.Pid == pid);
-
-        return FindAll(_.AreaID == areaId & _.Pid == pid);
     }
 
     /// <summary>根据模型代码查找</summary>
@@ -491,43 +517,29 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         return FindAll(_.Sorting == sorting);
     }
-
-    /// <summary>根据名称查找</summary>
-    /// <param name="name">名称</param>
-    /// <returns>实体对象</returns>
-    public static CmsContent_Sort FindByName(String name)
-    {
-        if (name.IsNullOrEmpty()) return null;
-
-        // 实体缓存
-        if (Meta.Session.Count < 1000) return Meta.Cache.Find(e => e.Name.EqualIgnoreCase(name));
-
-        // 单对象缓存
-        return Meta.SingleCache.GetItemWithSlaveKey(name) as CmsContent_Sort;
-
-        //return Find(_.Name == name);
-    }
     #endregion
 
     #region 高级查询
     /// <summary>高级查询</summary>
     /// <param name="areaId">区域代码</param>
-    /// <param name="pid">父级代码</param>
+    /// <param name="pid">父级代码。[nav:pcode]</param>
     /// <param name="modelId">模型代码</param>
-    /// <param name="enable">状态</param>
-    /// <param name="sorting">排序</param>
+    /// <param name="urlName">URL名称。[nav:link]</param>
+    /// <param name="enable">状态。</param>
+    /// <param name="sorting">排序。</param>
     /// <param name="start">更新时间开始</param>
     /// <param name="end">更新时间结束</param>
     /// <param name="key">关键字</param>
     /// <param name="page">分页参数信息。可携带统计和数据权限扩展查询等信息</param>
     /// <returns>实体列表</returns>
-    public static IList<CmsContent_Sort> Search(Int32 areaId, Int32 pid, Int32 modelId, Boolean? enable, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
+    public static IList<CmsContent_Sort> Search(Int32 areaId, Int32 pid, Int32 modelId, String urlName, Boolean? enable, Int32 sorting, DateTime start, DateTime end, String key, PageParameter page)
     {
         var exp = new WhereExpression();
 
         if (areaId >= 0) exp &= _.AreaID == areaId;
         if (pid >= 0) exp &= _.Pid == pid;
         if (modelId >= 0) exp &= _.ModelID == modelId;
+        if (!urlName.IsNullOrEmpty()) exp &= _.UrlName == urlName;
         if (enable != null) exp &= _.Enable == enable;
         if (sorting >= 0) exp &= _.Sorting == sorting;
         exp &= _.UpdateTime.Between(start, end);
@@ -541,73 +553,76 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     /// <summary>取得内容分类表字段信息的快捷方式</summary>
     public partial class _
     {
-        /// <summary>主键ID</summary>
+        /// <summary>主键ID。[nav:scode]</summary>
         public static readonly Field ID = FindByName("ID");
 
         /// <summary>区域代码</summary>
         public static readonly Field AreaID = FindByName("AreaID");
 
-        /// <summary>父级代码</summary>
+        /// <summary>父级代码。[nav:pcode]</summary>
         public static readonly Field Pid = FindByName("Pid");
 
         /// <summary>模型代码</summary>
         public static readonly Field ModelID = FindByName("ModelID");
 
-        /// <summary>名称</summary>
+        /// <summary>名称。[nav:name]</summary>
         public static readonly Field Name = FindByName("Name");
 
-        /// <summary>副名称</summary>
+        /// <summary>副名称。[nav:subname]</summary>
         public static readonly Field Subname = FindByName("Subname");
 
-        /// <summary>列表模板</summary>
+        /// <summary>URL名称。[nav:link]</summary>
+        public static readonly Field UrlName = FindByName("UrlName");
+
+        /// <summary>列表模板。[nav:listtpl]</summary>
         public static readonly Field ListTpl = FindByName("ListTpl");
 
-        /// <summary>内容模板</summary>
+        /// <summary>内容模板。[nav:contenttpl]</summary>
         public static readonly Field ContentTpl = FindByName("ContentTpl");
 
-        /// <summary>状态</summary>
+        /// <summary>状态。</summary>
         public static readonly Field Enable = FindByName("Enable");
 
-        /// <summary>外部链接</summary>
+        /// <summary>外部链接。[nav:outlink]</summary>
         public static readonly Field Outlink = FindByName("Outlink");
 
-        /// <summary>图标</summary>
+        /// <summary>图标。[nav:ico]</summary>
         public static readonly Field Ico = FindByName("Ico");
 
-        /// <summary>图片</summary>
+        /// <summary>图片。[nav:pic]</summary>
         public static readonly Field Pic = FindByName("Pic");
 
-        /// <summary>标题</summary>
+        /// <summary>标题。[nav:title]</summary>
         public static readonly Field Title = FindByName("Title");
 
-        /// <summary>关键词</summary>
+        /// <summary>关键词。[nav:keywords]</summary>
         public static readonly Field Keywords = FindByName("Keywords");
 
-        /// <summary>描述</summary>
+        /// <summary>描述。[nav:description]</summary>
         public static readonly Field Description = FindByName("Description");
 
-        /// <summary>文件名</summary>
+        /// <summary>文件名。[nav:filename]</summary>
         public static readonly Field Filename = FindByName("Filename");
 
-        /// <summary>排序</summary>
+        /// <summary>排序。</summary>
         public static readonly Field Sorting = FindByName("Sorting");
 
-        /// <summary>预留字段1</summary>
+        /// <summary>预留字段1。[nav:def1]</summary>
         public static readonly Field Def1 = FindByName("Def1");
 
-        /// <summary>预留字段2</summary>
+        /// <summary>预留字段2。[nav:def2]</summary>
         public static readonly Field Def2 = FindByName("Def2");
 
-        /// <summary>预留字段3</summary>
+        /// <summary>预留字段3。[nav:def3]</summary>
         public static readonly Field Def3 = FindByName("Def3");
 
-        /// <summary>预留字段1</summary>
+        /// <summary>预留字段4。[nav:def4]</summary>
         public static readonly Field Def4 = FindByName("Def4");
 
-        /// <summary>预留字段2</summary>
+        /// <summary>预留字段5。[nav:def5]</summary>
         public static readonly Field Def5 = FindByName("Def5");
 
-        /// <summary>预留字段3</summary>
+        /// <summary>预留字段6。[nav:def6]</summary>
         public static readonly Field Def6 = FindByName("Def6");
 
         /// <summary>创建者</summary>
@@ -634,73 +649,76 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
     /// <summary>取得内容分类表字段名称的快捷方式</summary>
     public partial class __
     {
-        /// <summary>主键ID</summary>
+        /// <summary>主键ID。[nav:scode]</summary>
         public const String ID = "ID";
 
         /// <summary>区域代码</summary>
         public const String AreaID = "AreaID";
 
-        /// <summary>父级代码</summary>
+        /// <summary>父级代码。[nav:pcode]</summary>
         public const String Pid = "Pid";
 
         /// <summary>模型代码</summary>
         public const String ModelID = "ModelID";
 
-        /// <summary>名称</summary>
+        /// <summary>名称。[nav:name]</summary>
         public const String Name = "Name";
 
-        /// <summary>副名称</summary>
+        /// <summary>副名称。[nav:subname]</summary>
         public const String Subname = "Subname";
 
-        /// <summary>列表模板</summary>
+        /// <summary>URL名称。[nav:link]</summary>
+        public const String UrlName = "UrlName";
+
+        /// <summary>列表模板。[nav:listtpl]</summary>
         public const String ListTpl = "ListTpl";
 
-        /// <summary>内容模板</summary>
+        /// <summary>内容模板。[nav:contenttpl]</summary>
         public const String ContentTpl = "ContentTpl";
 
-        /// <summary>状态</summary>
+        /// <summary>状态。</summary>
         public const String Enable = "Enable";
 
-        /// <summary>外部链接</summary>
+        /// <summary>外部链接。[nav:outlink]</summary>
         public const String Outlink = "Outlink";
 
-        /// <summary>图标</summary>
+        /// <summary>图标。[nav:ico]</summary>
         public const String Ico = "Ico";
 
-        /// <summary>图片</summary>
+        /// <summary>图片。[nav:pic]</summary>
         public const String Pic = "Pic";
 
-        /// <summary>标题</summary>
+        /// <summary>标题。[nav:title]</summary>
         public const String Title = "Title";
 
-        /// <summary>关键词</summary>
+        /// <summary>关键词。[nav:keywords]</summary>
         public const String Keywords = "Keywords";
 
-        /// <summary>描述</summary>
+        /// <summary>描述。[nav:description]</summary>
         public const String Description = "Description";
 
-        /// <summary>文件名</summary>
+        /// <summary>文件名。[nav:filename]</summary>
         public const String Filename = "Filename";
 
-        /// <summary>排序</summary>
+        /// <summary>排序。</summary>
         public const String Sorting = "Sorting";
 
-        /// <summary>预留字段1</summary>
+        /// <summary>预留字段1。[nav:def1]</summary>
         public const String Def1 = "Def1";
 
-        /// <summary>预留字段2</summary>
+        /// <summary>预留字段2。[nav:def2]</summary>
         public const String Def2 = "Def2";
 
-        /// <summary>预留字段3</summary>
+        /// <summary>预留字段3。[nav:def3]</summary>
         public const String Def3 = "Def3";
 
-        /// <summary>预留字段1</summary>
+        /// <summary>预留字段4。[nav:def4]</summary>
         public const String Def4 = "Def4";
 
-        /// <summary>预留字段2</summary>
+        /// <summary>预留字段5。[nav:def5]</summary>
         public const String Def5 = "Def5";
 
-        /// <summary>预留字段3</summary>
+        /// <summary>预留字段6。[nav:def6]</summary>
         public const String Def6 = "Def6";
 
         /// <summary>创建者</summary>

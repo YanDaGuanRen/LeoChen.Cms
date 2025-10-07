@@ -94,11 +94,9 @@ public partial class CmsModel : Entity<CmsModel>
     //    var entity = new CmsModel();
     //    entity.Name = "abc";
     //    entity.ModelType = 0;
-    //    entity.Url = "abc";
     //    entity.ListTpl = "abc";
     //    entity.ContentTpl = "abc";
     //    entity.Enable = true;
-    //    entity.IsSystem = true;
     //    entity.Insert();
 
     //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsModel[模型管理]数据！");
