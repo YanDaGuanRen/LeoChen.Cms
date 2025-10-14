@@ -34,6 +34,7 @@ public class ControllerBaseX : Controller
     public override void OnActionExecuting(Microsoft.AspNetCore.Mvc.Filters.ActionExecutingContext context)
     {
         UserHost = HttpContext.GetUserHost();
+        
         // 页面设置
         ViewBag.PageSetting = PageSetting;
 
