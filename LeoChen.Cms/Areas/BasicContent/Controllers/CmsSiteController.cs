@@ -9,6 +9,8 @@ using NewLife.Cube.ViewModels;
 using NewLife.Log;
 using NewLife.Web;
 using XCode.Membership;
+using LeoChen.Cms.TemplateEngine;
+using NewLife.Caching;
 using static LeoChen.Cms.Data.CmsSite;
 
 namespace LeoChen.Cms.Areas.BasicContent.Controllers;
@@ -18,10 +20,47 @@ namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 [BasicContentArea]
 public class CmsSiteController : EntityController<CmsSite>
 {
+    private readonly ICache _cache;
+
+
     static CmsSiteController()
     {
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+
+
+        {
+            var df = EditFormFields.GetField(__.Theme) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = e =>
+            {
+                var themeDic= new Dictionary<string,string>();
+                var dirs = "Template".GetFullPath().AsDirectory().GetDirectories();
+                foreach (var directoryInfo in dirs)
+                {
+                    themeDic[directoryInfo.Name] = directoryInfo.Name;
+                }
+                return themeDic;
+            };
+        }
+        
+        {
+            var df = AddFormFields.GetField(__.Theme) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = e =>
+            {
+                var themeDic= new Dictionary<string,string>();
+                var dirs = "Template".GetFullPath().AsDirectory().GetDirectories();
+                foreach (var directoryInfo in dirs)
+                {
+                    themeDic[directoryInfo.Name] = directoryInfo.Name;
+                }
+                return themeDic;
+            };
+        }
+
     }
+
+
 
     public override ActionResult Index(Pager p = null)
     {
@@ -30,7 +69,6 @@ public class CmsSiteController : EntityController<CmsSite>
         if (entity == null)
         {
             entity = new CmsSite();
-            entity.Title = "a";
             Valid(entity, DataObjectMethodType.Insert, false);
             var key = $"Cube_Add_LeoChen.Cms.Data.CmsSite";
             Session[key] = Request.Path.ToString();
@@ -67,5 +105,51 @@ public class CmsSiteController : EntityController<CmsSite>
         var end = p["dtEnd"].ToDateTime();
 
         return CmsSite.Search(areaId, start, end, p["Q"], p);
+    }
+    
+    public CmsSiteController(ICacheProvider cacheProvider)
+    {
+        _cache = cacheProvider.Cache;
+    }
+
+    protected override int OnInsert(CmsSite entity)
+    {
+        var o = base.OnInsert(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    protected override int OnDelete(CmsSite entity)
+    {       
+        var o = base.OnDelete(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+
+    }
+
+    public override ActionResult Delete(string id)
+    {
+        throw new InvalidOperationException("禁止删除");
+    }
+
+    protected override int OnUpdate(CmsSite entity)
+    {
+        var o = base.OnUpdate(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    private void SetCache(CmsSite entity)
+    {
+        _cache.Set(TemplateEngineCache.CacheSiteValue + entity.AreaID, entity, 0);
     }
 }

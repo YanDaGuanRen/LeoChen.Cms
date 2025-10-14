@@ -11,6 +11,7 @@
 
     var fs = ViewBag.Fields as FieldCollection;
     var dataField = fs.GetField(item.Name);
+    var addnull = dataField.AddNull;
     var dataSource = dataField?.DataSource;
     var itemModel = new ItemModel(item.Name, entity[item.Name], item.Type) { ItemType = item.ItemType, Length = item.Length };
 
@@ -59,14 +60,14 @@
             }
         }
 
-        if (ds is IDictionary<Int32, String> dic)
+        if (addnull && ds is IDictionary<Int32, String> dic)
         {
             if (!ds.Contains(-1))
             {
                 ds.Add(-1, "<无>");
             }
         }
-        else if (ds is IDictionary<String, String> dic2)
+        else if (addnull && ds is IDictionary<String, String> dic2)
         {
             if (!ds.Contains("-1"))
             {
@@ -94,7 +95,15 @@
     }
     else
     {
-        if (item.ItemType.EqualIgnoreCase("area4"))
+        if (item.ItemType.StartsWithIgnoreCase("formfile2"))
+        {
+            @await Html.PartialAsync("_Form_File2", Model)
+        }
+        else if (item.ItemType.StartsWithIgnoreCase("formimage2"))
+        {
+            @await Html.PartialAsync("_Form_Image2", Model)
+        }
+        else if (item.ItemType.EqualIgnoreCase("area4"))
         {
             @await Html.PartialAsync("_Area4", Model)
         }

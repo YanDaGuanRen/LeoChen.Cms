@@ -10,11 +10,11 @@ using NewLife.Web;
 using XCode.Membership;
 using static LeoChen.Cms.Data.CmsFormField;
 
-namespace LeoChen.Cms.Areas.ExpandContent.Controllers;
+namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>自定义表单字段</summary>
-[Menu(20, false, Icon = "fa-table")]
-[ExpandContentArea]
+[Menu(-1, false, Icon = "fa-table")]
+[GlobalConfigurationArea]
 public class CmsFormFieldController : EntityController<CmsFormField>
 {
     static CmsFormFieldController()

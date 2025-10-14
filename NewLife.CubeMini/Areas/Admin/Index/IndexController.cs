@@ -79,6 +79,7 @@ public class IndexController : ControllerBaseX
         var uAgent = Request.Headers["User-Agent"] + "";
         var isMobile = uAgent.Contains("Android") || uAgent.Contains("iPhone") || uAgent.Contains("iPad");
 
+        return View("CubeIndex");
         return isMobile ? View("MCubeIndex") : View("CubeIndex");
     }
 

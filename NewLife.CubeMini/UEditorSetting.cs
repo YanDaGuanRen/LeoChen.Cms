@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel;
+using NewLife.Cube.Configuration;
 using NewLife.Configuration;
 
 namespace NewLife.Cube
@@ -9,6 +10,8 @@ namespace NewLife.Cube
     [Config("UEditor")]
     public class UEditorSetting : Config<UEditorSetting>
     {
+        static UEditorSetting()   => Provider = new CmsDBConfigProvider() { Category = "UEditor" };
+
         #region 上传图片配置项
 
         /// <summary>上传大小限制，单位B</summary>

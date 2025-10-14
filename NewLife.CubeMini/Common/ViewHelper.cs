@@ -980,9 +980,10 @@ public static class ViewHelper
     /// <summary>是否附件列</summary>
     /// <param name="name">列名</param>
     /// <returns></returns>
-    public static Boolean IsAttachment(this String name)=> name.EqualIgnoreCase("file", "image") ||
-                                                           name.StartsWithIgnoreCase("file-", "image-")||
-                                                           name.StartsWithIgnoreCase("cmsext_file", "cmsext_image");
+    public static Boolean IsAttachment(this String name) => name.EqualIgnoreCase("file", "image") ||
+                                                            name.StartsWithIgnoreCase("file-", "image-")||
+                                                            name.EqualIgnoreCase("formimage2") ||
+                                                            name.EqualIgnoreCase("formfile2");
 
 
     /// <summary>格式化数据用于显示</summary>

@@ -450,6 +450,21 @@ public partial class CmsContent_Sort : ICmsContent_Sort, IEntity<ICmsContent_Sor
 
         return Find(_.AreaID == areaId & _.UrlName == urlName);
     }
+    
+    /// <summary>根据区域代码、URL名称查找</summary>
+    /// <param name="areaId">区域代码</param>
+    /// <param name="pid">Pid</param>
+    /// <returns>实体对象</returns>
+    public static IList<CmsContent_Sort> FindByAreaIDAndPID(Int32 areaId, Int32 pid)
+    {
+        if (areaId < 0) return null;
+        if (pid < 0) return null;
+
+        // 实体缓存
+        if (Meta.Session.Count < 1000) return Meta.Cache.FindAll(e => e.AreaID == areaId && e.Pid==pid);
+
+        return FindAll(_.AreaID == areaId & _.Pid == pid);
+    }
 
     /// <summary>根据区域代码查找</summary>
     /// <param name="areaId">区域代码</param>

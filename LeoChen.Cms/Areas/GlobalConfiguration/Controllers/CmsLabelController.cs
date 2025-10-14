@@ -16,7 +16,7 @@ using static LeoChen.Cms.Data.CmsLabel;
 namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>定制标签</summary>
-[Menu(30, true, Icon = "fa-table")]
+[Menu(40, true, Icon = "fa-table")]
 [GlobalConfigurationArea]
 public class CmsLabelController : EntityController<CmsLabel>
 {

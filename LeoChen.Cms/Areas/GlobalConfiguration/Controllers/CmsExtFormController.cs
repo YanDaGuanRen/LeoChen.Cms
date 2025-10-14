@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Reflection.Metadata.Ecma335;
+using LeoChen.Cms.Areas.GlobalConfiguration;
 using Microsoft.AspNetCore.Mvc;
 using LeoChen.Cms.Data;
 using Leochen.Cms.Results;
@@ -16,11 +17,11 @@ using NewLife.Web;
 using XCode.Membership;
 using static LeoChen.Cms.Data.CmsExtForm;
 
-namespace LeoChen.Cms.Areas.ExpandContent.Controllers;
+namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>自定义表单数据</summary>
-[Menu(10, false, Icon = "fa-table")]
-[ExpandContentArea]
+[Menu(-2, false, Icon = "fa-table")]
+[GlobalConfigurationArea]
 public class CmsExtFormController : EntityController<CmsExtForm>
 {
     static CmsExtFormController()
@@ -139,6 +140,7 @@ public class CmsExtFormController : EntityController<CmsExtForm>
             ListFields.RecoveryList();
             var formid = p[__.FormID].ToInt(-1);
             var melist = CmsFormField.FindAllByFormID(formid);
+            
             foreach (var cff in melist)
             {
                 var df = ListFields.AddListField(cff.Name, null, "");

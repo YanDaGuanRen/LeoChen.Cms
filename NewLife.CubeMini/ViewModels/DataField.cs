@@ -105,6 +105,9 @@ public class DataField
     /// <summary>LOV 配置代码</summary>
     public String LovCode { get; set; }
 
+    /// <summary>下拉菜单添加无选择</summary>
+    public Boolean AddNull { get; set; } = true;
+
     /// <summary>映射提供者</summary>
     [XmlIgnore, IgnoreDataMember, JsonIgnore]
     public MapProvider MapProvider { get; set; }
@@ -261,11 +264,12 @@ public class DataField
 
     /// <summary>是否富文本字段</summary>
     /// <returns></returns>
-    public virtual Boolean IsUeText() => Type == typeof(String) && (Length >= 50 && Name.EqualIgnoreCase("Value"));
+    public virtual Boolean IsUeText() => Type == typeof(String) && ItemType == "UeText";
 
     /// <summary>是否附件列</summary>
     /// <returns></returns>
-    public Boolean IsAttachment() =>  ItemType.IsAttachment();
+    public Boolean IsAttachment() => ItemType.IsAttachment();
+                                      
 
     /// <summary>格式化数据用于显示</summary>
     /// <param name="value"></param>

@@ -12,7 +12,7 @@ using static LeoChen.Cms.Data.CmsModel;
 namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>模型管理表</summary>
-[Menu(20, true, Icon = "fa-table")]
+[Menu(30, true, Icon = "fa-table")]
 [GlobalConfigurationArea]
 public class CmsModelController : EntityController<CmsModel>
 {
@@ -56,7 +56,7 @@ public class CmsModelController : EntityController<CmsModel>
     {
         var modelType = (LeoChen.Cms.Data.CmsModelType)p["modelType"].ToInt(-1);
         var status = p["status"]?.ToBoolean();
-        var enable = p["Enable"]?.ToBoolean();
+        var enable = p["enable"]?.ToBoolean();
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 

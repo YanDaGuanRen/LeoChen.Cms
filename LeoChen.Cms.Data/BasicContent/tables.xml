@@ -45,7 +45,7 @@
         <Column Name="AreaID" DataType="Int32" Map="CmsArea@ID@Name" Description="区域代码" />
         <Column Name="Title" DataType="String" Master="True" Length="100" Description="标题。{pboot:sitetitle}" />
         <Column Name="Subtitle" DataType="String" Length="200" Description="副标题。{pboot:sitesubtitle}" />
-        <Column Name="Logo" DataType="String" Length="100" Description="logo。{pboot:sitelogo}" />
+        <Column Name="Logo" DataType="String" Length="100" ItemType="FormImage2" Description="logo。{pboot:sitelogo}" />
         <Column Name="Keywords" DataType="String" Length="200" Description="关键词。{pboot:sitekeywords}" />
         <Column Name="Description" DataType="String" Length="500" Description="描述。{pboot:sitedescription}" />
         <Column Name="Icp" DataType="String" Length="30" Description="备案信息。{pboot:siteicp}" />

@@ -104,6 +104,12 @@ public class UserController : EntityController<User, UserModel>
             // 使用area4组件
             ff.ItemType = "area4";
         }
+        {
+            var ff = EditFormFields.GetField(__.Avatar) as FormField;
+            //ff.ItemView = "_Area3";
+            // 使用area4组件
+            ff.ItemType = "formimage2";
+        }
     }
 
     class MyAvatar : ILinkExtend
@@ -111,7 +117,7 @@ public class UserController : EntityController<User, UserModel>
         public String Resolve(DataField field, IModel data)
         {
             var user = data as User;
-            return $"<a href=\"/Admin/User/Edit?id={user.ID}\" target=\"_blank\"><img src=\"{user.GetAvatarUrl()}\" style=\"width:32px;height:32px;\" /></a>";
+            return $"<a href=\"/Admin/User/Edit?id={user.ID}\"><img src=\"{user.GetAvatarUrl()}\" style=\"width:32px;height:32px;\" /></a>";
         }
     }
 

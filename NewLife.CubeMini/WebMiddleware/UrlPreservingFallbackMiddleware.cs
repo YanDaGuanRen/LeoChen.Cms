@@ -14,9 +14,9 @@ public class UrlPreservingFallbackMiddleware
 
     public async Task InvokeAsync(Microsoft.AspNetCore.Http.HttpContext context)
     {
-        var path = context.Request.Path.Value?.EnsureStart("/");
         context.Response.StatusCode = 200;
-        context.Items["Path"] = path;
+        context.Items["Path"] = context.Request.Path.Value??"";
+        context.Items["Host"] = context.Request.Host;
         // 重写请求路径
         context.Request.RouteValues["controller"] = "Home";
         context.Request.RouteValues["action"] = "Index";

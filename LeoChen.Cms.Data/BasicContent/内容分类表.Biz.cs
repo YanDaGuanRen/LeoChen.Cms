@@ -62,12 +62,17 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
+        if(method == DataMethod.Delete) return false;
+        
         AreaID = CmsAreaContext.CurrentId;
         if (ModelID <= 0) throw new ArgumentNullException(nameof(ModelID), "不能为空");
         if (Name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Name), "不能为空");
-        if(UrlName.IsNullOrEmpty()) UrlName =PinYin.Get(Name); 
+        if (UrlName.IsNullOrEmpty()) UrlName = PinYin.Get(Name);
+        UrlName = UrlName.Replace("/", "");
+        if(!Filename.IsNullOrEmpty()) Filename =Filename.EnsureEnd(".html");
+        if(Model.ModelType == CmsModelType.列表 && !ListTpl.EndsWithIgnoreCase(".html")) throw new ArgumentNullException(nameof(ListTpl), "列表模板配置不正确");
+        if(!ContentTpl.EndsWithIgnoreCase(".html")) throw new ArgumentNullException(nameof(ContentTpl), "内容模板配置不正确");
 
-        //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;
 
@@ -89,9 +94,9 @@ public partial class CmsContent_Sort : Entity<CmsContent_Sort>
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        CheckExist(method == DataMethod.Insert, nameof(Name),nameof(AreaID));
-        CheckExist(method == DataMethod.Insert, nameof(UrlName),nameof(AreaID));
-
+        
+        if (IsDirty(Name)) CheckExist(method == DataMethod.Insert, nameof(Name),nameof(AreaID));
+        if (IsDirty(UrlName))  CheckExist(method == DataMethod.Insert, nameof(UrlName),nameof(AreaID));
         return true;
     }
 

@@ -1,5 +1,7 @@
 ﻿using LenChen.Cms;
 using LenChen.Cms.Services;
+using LeoChen.Cms;
+using LeoChen.Cms.TemplateEngine;
 using NewLife;
 using NewLife.Log;
 using XCode;
@@ -20,8 +22,8 @@ var star = services.AddStardust(null);
 services.AddRedis();
 
 // 注入应用配置
-var set = WebSetting.Current;
-services.AddSingleton(set);
+var cmsset = CmsSetting.Current;
+services.AddSingleton(cmsset);
 
 // 启用接口响应压缩
 services.AddResponseCompression();
@@ -35,6 +37,9 @@ services.AddCube();
 services.AddHostedService<MyHostedService>();
 // 先预热数据，再启动Web服务，避免网络连接冲击
 services.AddHostedService<PreheatHostedService>();
+
+services.AddSingleton<ITemplateEngine, PbootTemplateEngine>();
+services.AddSingleton<TemplateEngineCache>();
 
 var app = builder.Build();
 
@@ -50,6 +55,8 @@ if (Environment.GetEnvironmentVariable("__ASPNETCORE_BROWSER_TOOLS") is null)
 var abbbaa = CubeService.AreaNames;
 // 使用魔方
 app.UseCube(app.Environment);
+
+
 
 app.UseAuthorization();
 
@@ -99,4 +106,8 @@ static void InitConfig()
         set3.SingleCacheExpire = 60;
         set3.Save();
     }
+
+    "RunTime".EnsureDirectory(false);
+    "RunTime/Template".EnsureDirectory(false);
+    "Template".EnsureDirectory(false);
 }

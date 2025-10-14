@@ -103,5 +103,59 @@
         <Index Columns="Enable" />
       </Indexes>
     </Table>
+      <Table Name="CmsForm" Description="自定义表单">
+          <Columns>
+              <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+              <Column Name="Name" DataType="String" Master="True" Description="表单名称" />
+              <Column Name="FormDescription" DataType="String" Description="描述" />
+              <Column Name="Enable" DataType="Boolean" Description="状态" />
+              <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+              <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+              <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+              <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+              <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+              <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+          </Columns>
+          <Indexes>
+              <Index Columns="Name" Unique="True" />
+              <Index Columns="Enable" />
+          </Indexes>
+      </Table>
+      <Table Name="CmsFormField" Description="自定义表单字段">
+          <Columns>
+              <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+              <Column Name="FormID" DataType="Int32" Map="CmsForm@ID@Name" Description="表单名" />
+              <Column Name="Name" DataType="String" Master="True" Description="字段名" />
+              <Column Name="DisplayName" DataType="String" Description="显示名" />
+              <Column Name="FieldType" DataType="Int32" Description="字段类型" Type="LeoChen.Cms.Data.CmsItemType" />
+              <Column Name="Length" DataType="Int32" Description="长度" />
+              <Column Name="DefaultValue" DataType="String" Description="默认值" />
+              <Column Name="FieldDescription" DataType="String" Description="描述" />
+              <Column Name="Sorting" DataType="Int32" Description="排序" />
+              <Column Name="Enable" DataType="Boolean" Description="状态" />
+              <Column Name="CreateUserID" DataType="Int32" Description="创建者" Category="扩展信息" />
+              <Column Name="CreateTime" DataType="DateTime" Description="创建时间" Category="扩展信息" />
+              <Column Name="CreateIP" DataType="String" Description="创建地址" Category="扩展信息" />
+              <Column Name="UpdateUserID" DataType="Int32" Description="更新者" Category="扩展信息" />
+              <Column Name="UpdateTime" DataType="DateTime" Description="更新时间" Category="扩展信息" />
+              <Column Name="UpdateIP" DataType="String" Description="更新地址" Category="扩展信息" />
+          </Columns>
+          <Indexes>
+              <Index Columns="Name" Unique="True" />
+              <Index Columns="FormID" />
+              <Index Columns="Enable" />
+              <Index Columns="Sorting" />
+          </Indexes>
+      </Table>
+      <Table Name="CmsExtForm" Description="自定义表单数据">
+          <Columns>
+              <Column Name="ID" DataType="Int32" Identity="True" PrimaryKey="True" Description="编号" />
+              <Column Name="FormID" DataType="Int32" Map="CmsForm@ID@Name" Description="表单名" />
+              <Column Name="FormValue" DataType="String" Length="2000" Description="表单内容" />
+          </Columns>
+          <Indexes>
+              <Index Columns="FormID" />
+          </Indexes>
+      </Table>
   </Tables>
 </EntityModel>

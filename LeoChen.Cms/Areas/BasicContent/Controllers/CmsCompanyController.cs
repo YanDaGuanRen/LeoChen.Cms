@@ -1,7 +1,9 @@
 ﻿using System.ComponentModel;
 using LeoChen.Cms.Data;
+using LeoChen.Cms.TemplateEngine;
 using Microsoft.AspNetCore.Mvc;
 using NewLife;
+using NewLife.Caching;
 using NewLife.Cube;
 using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
@@ -18,6 +20,8 @@ namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 [BasicContentArea]
 public class CmsCompanyController : EntityController<CmsCompany>
 {
+    private readonly ICache _cache;
+
     static CmsCompanyController()
     {
         //LogOnChange = true;
@@ -25,6 +29,8 @@ public class CmsCompanyController : EntityController<CmsCompany>
         //ListFields.RemoveField("Id", "Creator");
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
 
+
+        
         //{
         //    var df = ListFields.GetField("Code") as ListField;
         //    df.Url = "?code={Code}";
@@ -90,4 +96,42 @@ public class CmsCompanyController : EntityController<CmsCompany>
 
         return CmsCompany.Search(areaId, start, end, p["Q"], p);
     }
+    
+    
+    
+    public CmsCompanyController(ICacheProvider cacheProvider)
+    {
+        _cache = cacheProvider.Cache;
+    }
+
+    protected override int OnInsert(CmsCompany entity)
+    {
+        var o = base.OnInsert(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    protected override int OnDelete(CmsCompany entity)
+    {       
+        throw new InvalidOperationException("禁止删除");
+    }
+
+    protected override int OnUpdate(CmsCompany entity)
+    {
+        var o = base.OnUpdate(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    private void SetCache(CmsCompany entity)
+    {
+        _cache.Set(TemplateEngineCache.CacheCompanyValue + entity.AreaID, entity, 0);
+    }
+
 }

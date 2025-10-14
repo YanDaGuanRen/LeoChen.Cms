@@ -29,38 +29,17 @@
         <PackageReference Include="NewLife.Stardust.Extensions" Version="3.4.2025.1001" />
     </ItemGroup>
 
-
+    <ItemGroup>
+        <EmbeddedResource Include="wwwroot\**\*" />
+    </ItemGroup>
+    
     <ItemGroup>
         <ProjectReference Include="..\LeoChen.Cms.Data\LeoChen.Cms.Data.csproj"/>
         <ProjectReference Include="..\NewLife.CubeMini\NewLife.CubeMini.csproj"/>
     </ItemGroup>
 
 
-    <ItemGroup>
-        <Folder Include="Areas\"/>
-    </ItemGroup>
 
-
-    <ItemGroup>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_Form_Body.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Data.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Search.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsSite\_List_Toolbar_Batch.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\CmsCompany\_Form_Action.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\ListTree.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_Form_Body.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_ListTree_Data2.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Search.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Batch.cshtml"/>
-        <_ContentIncludedByDefault Remove="Areas\BasicContent\Views\新建文件夹\_List_Toolbar_Search.cshtml"/>
-    </ItemGroup>
-
-
-    <ItemGroup>
-      <AdditionalFiles Include="Areas\GlobalConfiguration\Views\File\Index.cshtml" />
-    </ItemGroup>
 
 
 </Project>

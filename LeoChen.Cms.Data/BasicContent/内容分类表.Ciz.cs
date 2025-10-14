@@ -30,20 +30,13 @@ namespace LeoChen.Cms.Data;
 
 public partial class CmsContent_Sort
 {
-    // [XmlIgnore, IgnoreDataMember, ScriptIgnore]
-    // public IList<CmsContent_Sort> Children => Extends.Get(nameof(Children), e => FindChilds())!;
-    // protected IList<CmsContent_Sort> FindChilds() => FindAllByAreaIDAndPid(CmsAreaContext.CurrentId,ID)!;
-    //
-    //
-    //
-    // [XmlIgnore, IgnoreDataMember, ScriptIgnore]
-    // public CmsContent_Sort Parent => Extends.Get(nameof(Parent), e => FindParent())!;
-    // protected CmsContent_Sort FindParent() => FindByID(ID)!;
-    
-    
     [XmlIgnore, IgnoreDataMember, ScriptIgnore]
     public IList<CmsContent_Sort> Children { get; set; }
     
+    [XmlIgnore, IgnoreDataMember, ScriptIgnore]
+    public IList<CmsContent_Sort> MyChildren => Extends.Get(nameof(Children), e => FindChilds())!;
+    protected IList<CmsContent_Sort> FindChilds() => FindByAreaIDAndPID(CmsAreaContext.CurrentId,ID)!;
+
     [XmlIgnore, IgnoreDataMember, ScriptIgnore]
     public String TreeNodeText { get; set; }
     public static IList<CmsContent_Sort> GetTree()
@@ -77,7 +70,7 @@ public partial class CmsContent_Sort
         return GetTreeList1(list,id);
     }
 
-        public static IList<CmsContent_Sort> GetTreeList1(IList<CmsContent_Sort> flatList, int id,int parentId = 0, int depth = 1,HashSet<int> visitedIds = null)
+    public static IList<CmsContent_Sort> GetTreeList1(IList<CmsContent_Sort> flatList, int id,int parentId = 0, int depth = 1,HashSet<int> visitedIds = null)
         {
             var result = new List<CmsContent_Sort>();
             if (parentId == 0)

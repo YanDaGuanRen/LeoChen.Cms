@@ -24,7 +24,7 @@ public static class FileUploadHelper
         {
             return await SaveFile(file,category,"","",savefileName);
         }
-        return await SaveFile(file,category,cubeset.PathFormat,cubeset.SaveFileFormat,savefileName);
+        return await SaveFile(file,category,cubeset.PathFormat,cubeset.SaveFileFormat.ToLower(),savefileName);
     }
     
 

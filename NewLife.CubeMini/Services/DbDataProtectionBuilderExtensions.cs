@@ -7,6 +7,7 @@ namespace NewLife.Cube.Services;
 public static class DbDataProtectionBuilderExtensions
 {
     private const String DataProtectionKeysName = "DataProtection-Keys";
+    private const String CmsDataProtectionKeysName = "CmsDataProtection-Keys";
 
     /// <summary>存储数据保护Key到Redis，自动识别已注入到容器的FullRedis或Redis单例</summary>
     /// <param name="builder"></param>

@@ -1,0 +1,83 @@
+﻿@model EntityField
+@using NewLife;
+@using NewLife.Cube
+@using XCode;
+@using XCode.Configuration;
+@{
+    var entity = Model.Entity;
+    var field = Model.Field;
+    var value = entity[field.Name] as String;
+}
+
+<div class="input-group">
+    <input class="form-control" id="@field.Name" name="@field.Name" type="text" value="@value">
+    @if (!value.IsNullOrEmpty())
+    {
+        <div class="input-group-btn">
+            <a href="@value" class="btn btn-primary btn-sm" download>
+                下载
+            </a>
+        </div>
+    }
+    <span class="input-group-btn">
+        <button type="button" class="btn btn-success btn-sm" id="@(field.Name + "_triggerBtn")">
+            <span class="ace-icon fa fa-upload icon-on-right bigger-110"></span>
+            上传
+        </button>
+    </span>
+</div>
+<input type="file" id="@(field.Name + "_attachment")" name="@(field.Name + "_attachment")" accept="image/*"
+       style="display: none;">
+<div class="selected-file-display" style="margin-top: 8px; display: none;">
+    <div class="input-group">
+        <input type="text" class="form-control" readonly id="@(field.Name + "_fileName")"
+               name="@(field.Name + "_fileName")">
+        <span class="input-group-btn">
+            <button type="button" class="btn btn-danger btn-sm" id="@(field.Name + "_clearBtn")"
+                    name="@(field.Name + "_clearBtn")">
+                <span class="ace-icon fa fa-times icon-on-right bigger-110"></span>
+                清除
+            </button>
+        </span>
+    </div>
+</div>
+@if (!value.IsNullOrEmpty())
+{
+    <div class="input-group">
+        <img src="@value" style="max-width: 100%;height: auto; object-fit: contain;" alt=""/>
+    </div>
+}
+
+<script>
+    // 初始化单个上传组件
+    function initFileUpload(fieldName) {
+        const triggerBtn = document.getElementById(fieldName + "_triggerBtn");
+        const fileInput = document.getElementById(fieldName + "_attachment");
+        const fileName = document.getElementById(fieldName + "_fileName");
+        const clearBtn = document.getElementById(fieldName + "_clearBtn");
+        const displayArea = fileName.closest('.selected-file-display');
+
+        // 绑定事件
+        triggerBtn.addEventListener('click', function () {
+            fileInput.click();
+        });
+
+        fileInput.addEventListener('change', function () {
+            if (this.files && this.files.length > 0) {
+                fileName.value = this.files[0].name;
+                displayArea.style.display = 'block';
+            }
+        });
+
+        clearBtn.addEventListener('click', function () {
+            fileInput.value = '';
+            fileName.value = '';
+            displayArea.style.display = 'none';
+        });
+    }
+
+    // 页面加载时初始化
+    document.addEventListener('DOMContentLoaded', function () {
+        initFileUpload('@field.Name');
+    });
+</script>

@@ -61,7 +61,7 @@ public partial class CmsSite : ICmsSite, IEntity<ICmsSite>
     [DisplayName("logo")]
     [Description("logo。{pboot:sitelogo}")]
     [DataObjectField(false, false, true, 100)]
-    [BindColumn("Logo", "logo。{pboot:sitelogo}", "")]
+    [BindColumn("Logo", "logo。{pboot:sitelogo}", "",ItemType ="FormImage2")]
     public String Logo { get => _Logo; set { if (OnPropertyChanging("Logo", value)) { _Logo = value; OnPropertyChanged("Logo"); } } }
 
     private String _Keywords;

@@ -12,7 +12,7 @@ using static LeoChen.Cms.Data.CmsModelExtfield;
 namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 
 /// <summary>扩展字段表</summary>
-[Menu(10, true, Icon = "fa-table")]
+[Menu(20, true, Icon = "fa-table")]
 [GlobalConfigurationArea]
 public class CmsModelExtfieldController : EntityController<CmsModelExtfield>
 {
@@ -56,7 +56,7 @@ public class CmsModelExtfieldController : EntityController<CmsModelExtfield>
     {
         var modelId = p["modelId"].ToInt(-1);
         var type = (LeoChen.Cms.Data.CmsItemType)p["type"].ToInt(-1);
-        var enable = p["Enable"]?.ToBoolean();
+        var enable = p["enable"]?.ToBoolean();
         var start = p["dtStart"].ToDateTime();
         var end = p["dtEnd"].ToDateTime();
 

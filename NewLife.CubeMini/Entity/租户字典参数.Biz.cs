@@ -11,8 +11,6 @@ using System.Web;
 using System.Web.Script.Serialization;
 using System.Xml.Serialization;
 using NewLife;
-using NewLife.Cube;
-using NewLife.Cube.Common;
 using NewLife.Data;
 using NewLife.Log;
 using NewLife.Model;
@@ -26,41 +24,46 @@ using XCode.DataAccessLayer;
 using XCode.Membership;
 using XCode.Shards;
 
-namespace LeoChen.Cms.Data;
+namespace NewLife.Cube.Entity;
 
-public partial class CmsSite : Entity<CmsSite>
+public partial class CmsParameter : Entity<CmsParameter>
 {
     #region 对象操作
-    static CmsSite()
+    static CmsParameter()
     {
         // 累加字段，生成 Update xx Set Count=Count+1234 Where xxx
         //var df = Meta.Factory.AdditionalFields;
-        //df.Add(nameof(AreaID));
+        //df.Add(nameof(TenantId));
 
         // 过滤器 UserModule、TimeModule、IPModule
         Meta.Modules.Add(new UserModule { AllowEmpty = false });
         Meta.Modules.Add<TimeModule>();
         Meta.Modules.Add(new IPModule { AllowEmpty = false });
+        Meta.Modules.Add<TenantModule>();
 
         // 实体缓存
-        var ec = Meta.Cache;
-        ec.Expire = 60;
+        // var ec = Meta.Cache;
+        // ec.Expire = 60;
     }
 
     /// <summary>验证并修补数据，返回验证结果，或者通过抛出异常的方式提示验证失败。</summary>
     /// <param name="method">添删改方法</param>
     public override Boolean Valid(DataMethod method)
     {
-        if (Title.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Title),nameof(Title)+ "不能为空");
-        AreaID = CmsAreaContext.CurrentId;
         //if (method == DataMethod.Delete) return true;
         // 如果没有脏数据，则不需要进行任何处理
         if (!HasDirty) return true;
+
+        // 这里验证参数范围，建议抛出参数异常，指定参数名，前端用户界面可以捕获参数异常并聚焦到对应的参数输入框
+        if (Name.IsNullOrEmpty()) throw new ArgumentNullException(nameof(Name), "名称不能为空！");
 
         // 建议先调用基类方法，基类方法会做一些统一处理
         if (!base.Valid(method)) return false;
 
         // 在新插入数据或者修改了指定字段时进行修正
+
+        // 保留2位小数
+        //Ex3 = Math.Round(Ex3, 2);
 
         // 处理当前已登录用户信息，可以由UserModule过滤器代劳
         /*var user = ManageProvider.User;
@@ -75,7 +78,7 @@ public partial class CmsSite : Entity<CmsSite>
         //if (!Dirtys[nameof(UpdateIP)]) UpdateIP = ManageProvider.UserHost;
 
         // 检查唯一索引
-        CheckExist(method == DataMethod.Insert, nameof(AreaID));
+        // CheckExist(method == DataMethod.Insert, nameof(TenantId), nameof(Category), nameof(Name));
 
         return true;
     }
@@ -87,23 +90,25 @@ public partial class CmsSite : Entity<CmsSite>
     //    // InitData一般用于当数据表没有数据时添加一些默认数据，该实体类的任何第一次数据库操作都会触发该方法，默认异步调用
     //    if (Meta.Session.Count > 0) return;
 
-    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsSite[站点管理表]数据……");
+    //    if (XTrace.Debug) XTrace.WriteLine("开始初始化CmsParameter[租户字典参数]数据……");
 
-    //    var entity = new CmsSite();
-    //    entity.AreaID = 0;
-    //    entity.Title = "abc";
-    //    entity.Subtitle = "abc";
-    //    entity.Domain = "abc";
-    //    entity.Logo = "abc";
-    //    entity.Keywords = "abc";
-    //    entity.Description = "abc";
-    //    entity.Icp = "abc";
-    //    entity.Theme = "abc";
-    //    entity.Statistical = "abc";
-    //    entity.Copyright = "abc";
+    //    var entity = new CmsParameter();
+    //    entity.TenantId = 0;
+    //    entity.Category = "abc";
+    //    entity.Name = "abc";
+    //    entity.Value = "abc";
+    //    entity.LongValue = "abc";
+    //    entity.Kind = 0;
+    //    entity.Enable = true;
+    //    entity.Ex1 = 0;
+    //    entity.Ex2 = 0.0;
+    //    entity.Ex3 = 0.0;
+    //    entity.Ex4 = "abc";
+    //    entity.Ex5 = "abc";
+    //    entity.Ex6 = "abc";
     //    entity.Insert();
 
-    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsSite[站点管理表]数据！");
+    //    if (XTrace.Debug) XTrace.WriteLine("完成初始化CmsParameter[租户字典参数]数据！");
     //}
 
     ///// <summary>已重载。基类先调用Valid(true)验证数据，然后在事务保护内调用OnInsert</summary>
@@ -126,21 +131,21 @@ public partial class CmsSite : Entity<CmsSite>
 
     #region 高级查询
 
-    // Select Count(ID) as ID,Category From CmsSite Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
-    //static readonly FieldCache<CmsSite> _CategoryCache = new(nameof(Category))
-    //{
-    //Where = _.CreateTime > DateTime.Today.AddDays(-30) & Expression.Empty
-    //};
+    // Select Count(ID) as ID,Category From CmsParameter Where CreateTime>'2020-01-24 00:00:00' Group By Category Order By ID Desc limit 20
+    static readonly FieldCache<CmsParameter> _CategoryCache = new(nameof(Category))
+    {
+        //Where = _.CreateTime > DateTime.Today.AddDays(-30) & Expression.Empty
+    };
 
-    ///// <summary>获取类别列表，字段缓存10分钟，分组统计数据最多的前20种，用于魔方前台下拉选择</summary>
-    ///// <returns></returns>
-    //public static IDictionary<String, String> GetCategoryList() => _CategoryCache.FindAllName();
+    /// <summary>获取类别列表，字段缓存10分钟，分组统计数据最多的前20种，用于魔方前台下拉选择</summary>
+    /// <returns></returns>
+    public static IDictionary<String, String> GetCategoryList() => _CategoryCache.FindAllName();
     #endregion
 
     #region 业务操作
-    public ICmsSite ToModel()
+    public CmsParameterModel ToModel()
     {
-        var model = new CmsSite();
+        var model = new CmsParameterModel();
         model.Copy(this);
 
         return model;

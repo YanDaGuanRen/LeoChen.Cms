@@ -1,7 +1,10 @@
 ﻿using LeoChen.Cms.Data;
+using LeoChen.Cms.TemplateEngine;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using NewLife;
 using NewLife;
+using NewLife.Caching;
 using NewLife.Cube;
 using NewLife.Cube.Common;
 using NewLife.Cube.Extensions;
@@ -19,11 +22,88 @@ namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 [BasicContentArea]
 public class CmsContent_SortController : EntityController<CmsContent_Sort>
 {
+    private readonly ICacheProvider _cacheProvider;
+    private readonly TemplateEngineCache _templateEngineCache;
+
     static CmsContent_SortController()
     {
         ListFields.RemoveCreateField().RemoveRemarkField().RemoveUpdateField();
+
+        {
+            var df = AddFormFields.GetField(__.ListTpl) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var dic = new Dictionary<Int32, String>();
+                var site = CmsSite.FindByAreaID(CmsAreaContext.CurrentId);
+                if (site == null) return dic;
+                return GetTpl(site.Theme);
+            };
+        }
+        {
+            var df = EditFormFields.GetField(__.ListTpl) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var dic = new Dictionary<Int32, String>();
+                var site = CmsSite.FindByAreaID(CmsAreaContext.CurrentId);
+                if (site == null) return dic;
+                return GetTpl(site.Theme);
+            };
+        }
+        {
+            var df = AddFormFields.GetField(__.ContentTpl) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var dic = new Dictionary<Int32, String>();
+                var site = CmsSite.FindByAreaID(CmsAreaContext.CurrentId);
+                if (site == null) return dic;
+                return GetTpl(site.Theme);
+            };
+        }
+        {
+            var df = EditFormFields.GetField(__.ContentTpl) as FormField;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var dic = new Dictionary<Int32, String>();
+                var site = CmsSite.FindByAreaID(CmsAreaContext.CurrentId);
+                if (site == null) return dic;
+                return GetTpl(site.Theme);
+            };
+        }
+        {
+            var df = AddFormFields.GetField(__.Pid) as FormField;
+            df.AddNull = false;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var data = CmsContent_Sort.GetTreeList(CmsAreaContext.CurrentId)
+                    .ToDictionary(k=>k.ID,v=>v.TreeNodeText);
+                return data;
+            };
+        }
+        
+        {
+            var df = EditFormFields.GetField(__.Pid) as FormField;
+            df.AddNull = false;
+            df.ItemType = "singleSelect";
+            df.DataSource = o =>
+            {
+                var data = CmsContent_Sort.GetTreeList(CmsAreaContext.CurrentId)
+                    .ToDictionary(k=>k.ID,v=>v.TreeNodeText);
+                return data;
+            };
+        }
     }
     
+    protected static Dictionary<String, String> GetTpl(string theme)
+    {
+        var dic = new Dictionary<String, String>(StringComparer.OrdinalIgnoreCase);
+        var tpldir = $"Template/{theme}".GetFullPath().EnsureDirectory(false);
+        return tpldir.AsDirectory().GetAllFiles("*.html",false).ToDictionary(k => k.Name, v => v.Name, StringComparer.OrdinalIgnoreCase);
+    }
     protected override WhereBuilder CreateWhere()
     {
         HttpContext.Items["AreaID"] = CmsAreaContext.CurrentId;
@@ -76,6 +156,7 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
 
 
 
+
     protected override FieldCollection OnGetFields(ViewKinds kind, Object model)
     {
         var rs = base.OnGetFields(kind, model);
@@ -85,21 +166,15 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
             {
                 "ID",          // ID
                 "Name",        // 名称
+                "UrlName",     // Url名称
                 "ListTpl",     // 列表模板
                 "ContentTpl",  // 内容模板
                 "Enable",      // 状态
                 "Sorting"      // 排序
             };
-
-            // 3. 计算需要删除的字段名（所有不在keep列表中的字段）
-            var removeFieldNames = rs.Select(f => f.Name)
-                .Where(name => !keepFieldNames.Contains(name))
-                .ToArray(); // 转换为数组，方便传递给RemoveField
-
-            if (removeFieldNames.Length > 0)
-            {
-                rs.RemoveField(removeFieldNames); 
-            }
+            
+            var removeFieldNames = rs.Select(f => f.Name).Where(name => !keepFieldNames.Contains(name)).ToArray(); 
+            if (removeFieldNames.Length > 0) rs.RemoveField(removeFieldNames); 
         }
 
         rs.RemoveField("AreaID","AreaName");
@@ -124,5 +199,51 @@ public class CmsContent_SortController : EntityController<CmsContent_Sort>
         var end = p["dtEnd"].ToDateTime();
 
         return CmsContent_Sort.Search(areaId, pid, modelId, urlname,enable,sorting, start, end, p["Q"], p);
+    }
+    
+    
+    public CmsContent_SortController(ICacheProvider cacheProvider,TemplateEngineCache templateEngineCache)
+    {
+        _cacheProvider = cacheProvider;
+        _templateEngineCache = templateEngineCache;
+    }
+
+    protected override int OnInsert(CmsContent_Sort entity)
+    {
+        var o = base.OnInsert(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    protected override int OnDelete(CmsContent_Sort entity)
+    {       
+        var o = base.OnDelete(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+
+    }
+
+    protected override int OnUpdate(CmsContent_Sort entity)
+    {
+        var o = base.OnUpdate(entity);
+        if (o > 0)
+        {
+            SetCache(entity);
+        }
+        return o;
+    }
+
+    private void SetCache(CmsContent_Sort entity)
+    {
+        var dic = FindAllByAreaID(entity.AreaID)
+            .Where(contentSort => !string.IsNullOrEmpty(contentSort.UrlName))
+            .ToDictionary(contentSort => contentSort.ID, contentSort => contentSort);
+        _cacheProvider.Cache.Set(TemplateEngineCache.CacheContentSortDic + entity.AreaID, dic, 0);
     }
 }

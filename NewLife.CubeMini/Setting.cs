@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using NewLife.Configuration;
+using NewLife.Cube.Configuration;
 using NewLife.Security;
 using XCode.Configuration;
 
@@ -19,7 +20,7 @@ public class CubeSetting : Config<CubeSetting>
 {
     #region 静态
     /// <summary>指向数据库参数字典表</summary>
-    static CubeSetting() => Provider = new DbConfigProvider { UserId = 0, Category = "Cube" };
+    static CubeSetting() => Provider = new DbConfigProvider() {UserId = 0, Category = "Cube" };
     #endregion
 
     #region 通用
@@ -41,7 +42,7 @@ public class CubeSetting : Config<CubeSetting>
     /// <summary>上传文件名称格式。默认是按天yyyyMMdd</summary>
     [Description("上传文件名称格式。,支持{yyyy}{yy}{mm}{dd}{hh}{ii}{ss}{time}{filename}{rand:随机数}")]
     [Category("通用")]
-    public String SaveFileFormat { get; set; } = "{yyyy}{MM}{dd}";
+    public String SaveFileFormat { get; set; } = "{time}{rand:6}";
     /// <summary>上传目录。默认Uploads 它只能在wwwroot目录下面,因为租户问题所以不需要添加wwwroot系统会自动添加,</summary>
     [Description("上传目录。默认Uploads")]
     [Category("通用")]

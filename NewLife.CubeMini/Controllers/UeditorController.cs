@@ -137,8 +137,6 @@ public class UeditorController(TokenService tokenService, IEnumerable<EndpointDa
         var tenant = (cubeset.EnableTenant && TenantContext.CurrentId != 0) ? "/" + TenantContext.CurrentId : "";
         ;
         var urlPrefix = $"{tenant}/{cubeset.UploadPath.EnsureEnd("/")}";
-        // var tpath = $"{CubeSetting.Current.WebRootPath}{tenant}/{cubeset.UploadPath}".GetFullPath();
-        // tpath = tpath.Replace("\\", Path.DirectorySeparatorChar + "").Replace("/", Path.DirectorySeparatorChar + "");
         // 构建UEditor需要的配置对象
         var config = new Dictionary<string, object>
         {

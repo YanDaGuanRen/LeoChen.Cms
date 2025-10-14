@@ -150,7 +150,7 @@ public partial class CmsContent : ICmsContent, IEntity<ICmsContent>
     [DisplayName("内容")]
     [Description("内容")]
     [DataObjectField(false, false, true, 60000)]
-    [BindColumn("Content", "内容", "")]
+    [BindColumn("Content", "内容", "",ItemType = "UeText")]
     public String Content { get => _Content; set { if (OnPropertyChanging("Content", value)) { _Content = value; OnPropertyChanged("Content"); } } }
 
     private String _Tags;

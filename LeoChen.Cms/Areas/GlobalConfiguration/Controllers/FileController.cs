@@ -10,7 +10,7 @@ namespace LeoChen.Cms.Areas.GlobalConfiguration.Controllers;
 [DisplayName("文件")]
 [EntityAuthorize(PermissionFlags.Detail)]
 [GlobalConfigurationArea]
-[Menu(28, true, Icon = "fa-file")]
+[Menu(50, true, Icon = "fa-file")]
 public class FileController : ControllerBaseX
 {
     #region 基础
