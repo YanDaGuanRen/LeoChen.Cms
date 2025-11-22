@@ -15,7 +15,6 @@ using NewLife.Caching;
 using NewLife.Common;
 using NewLife.Configuration;
 using NewLife.Cube.Extensions;
-using NewLife.Cube.Middleware;
 using NewLife.Cube.Modules;
 using NewLife.Cube.Services;
 using NewLife.Cube.WebMiddleware;
@@ -378,75 +377,7 @@ public static class CubeService
         app.UseMiddleware<RunTimeMiddleware>();
         app.UseMiddleware<TenantMiddleware>();
         app.UseMiddleware<CmsAreaMiddleware>();
-        var webroot = set.WebRootPath.GetFullPath();
-        var provider2 = new FileExtensionContentTypeProvider();
-        provider2.Mappings.Remove(".html");
-        provider2.Mappings.Remove(".htm");
-        //前端路由
-        app.UseWhen(
-            context =>
-            {
-                var path = context.Request.Path.Value?.ToLower();
-                return !IsAdminPath(path) && !IsCubePath(path);
-            },
-            appBuilder =>
-            {
-                // 先处理静态文件
-                appBuilder.UseStaticFiles(
-                    new StaticFileOptions
-                    {
-                        FileProvider = new PhysicalFileProvider(webroot),
-                        RequestPath = "",
-                        ContentTypeProvider = provider2,
-                        OnPrepareResponse = ctx =>
-                        {
-                            // 标记文件是否存在
-                            if (!File.Exists(ctx.File.PhysicalPath))
-                            {
-                                ctx.Context.Items["FileNotFound"] = true;
-                                XTrace.WriteLine("[StaticFiles] 文件未找到: {0}", ctx.File.PhysicalPath);
-                            }
-                            else
-                            {
-                                XTrace.WriteLine("[StaticFiles] 文件找到: {0}", ctx.File.PhysicalPath);
-                            }
-                        }
-                    });
-                appBuilder.Use(async (context, next) =>
-                {
-                    XTrace.WriteLine("[CustomMiddleware] 请求路径: {0}", context.Request.Path);
-
-                    // 检查是否有文件未找到的标记
-                    if (context.Items.ContainsKey("FileNotFound") && (bool)context.Items["FileNotFound"])
-                    {
-                        XTrace.WriteLine("[CustomMiddleware] 检测到文件未找到标记，返回404");
-                        context.Response.StatusCode = 404;
-                        return; // 直接返回，不调用next()
-                    }
-
-                    // 检查是否是静态资源请求但文件已被静态文件中间件处理
-                    var path = context.Request.Path.Value;
-                    if (!string.IsNullOrEmpty(path))
-                    {
-                        var extension = Path.GetExtension(path)?.ToLowerInvariant();
-                        if (!string.IsNullOrEmpty(extension) && provider2.Mappings.ContainsKey(extension))
-                        {
-                            // 这是一个静态资源请求
-                            XTrace.WriteLine("[CustomMiddleware] 静态资源请求: {0}", path);
-                            // 如果走到这里说明文件不存在（因为如果存在会被StaticFiles处理）
-                            context.Response.StatusCode = 404;
-                            XTrace.WriteLine("[CustomMiddleware] 静态资源不存在，返回404");
-                            return;
-                        }
-                    }
-
-                    XTrace.WriteLine("[CustomMiddleware] 非静态资源请求，继续处理");
-                    // 非静态资源请求，继续处理
-                    await next();
-                });
-                XTrace.WriteLine("[Program] 注册UrlPreservingFallbackMiddleware");
-                appBuilder.UseMiddleware<UrlPreservingFallbackMiddleware>();
-            });
+        
         //静态文件
         if (env != null) app.UseCubeDefaultUI(env);
 

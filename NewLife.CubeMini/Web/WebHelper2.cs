@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Primitives;
 using NewLife.Collections;
 using NewLife.Cube.Extensions;
+using NewLife.Cube.Web;
 using NewLife.Serialization;
 using XCode;
 using XCode.Membership;
@@ -10,6 +11,15 @@ namespace NewLife.Cube;
 /// <summary>Web助手</summary>
 public static class WebHelper2
 {
+    public static UserAgentParser GetUserAgent(this IHeaderDictionary headerDictionary)
+    {
+        
+        var ua = new UserAgentParser();
+        ua.Parse(headerDictionary.UserAgent.ToString());
+        return ua; 
+    }
+    
+    
     #region 兼容处理
     /// <summary>获取请求值</summary>
     /// <param name="request"></param>

@@ -14,9 +14,9 @@ namespace Leochen.Cms.Controllers;
 
 /// <summary>主页面</summary>
 //[AllowAnonymous]
-public class HomeController : HomeBaseController
+public class IndexController : HomeBaseController
 {
-    public HomeController(TemplateEngineCache templateEngineCache, ITemplateEngine iTemplateEngine) : base(templateEngineCache, iTemplateEngine)
+    public IndexController(TemplateEngineCache templateEngineCache, ITemplateEngine iTemplateEngine) : base(templateEngineCache, iTemplateEngine)
     {
     }
 
@@ -44,21 +44,7 @@ public class HomeController : HomeBaseController
         {
             return Error(cmsArea.ID, $"未正确区域{cmsArea.Name}中的站点信息");
         }
-        
-        var cmsp = CmsSetting.Provider as CmsDBConfigProvider;
-        cmsp.SetValueForTenant("CloseSite","True",0);
-        // var cccc = cmsp.GetValueForTenant("closesite", 0);
-        // var dddd = cmsp.GetValueForTenant("closesite", 1);
-        // dddd = cmsp.GetValueForTenant("LoginNum", 1);
-        // cmsp.SetValueForTenant("LoginNum","3",0);
-        // dddd = cmsp.GetValueForTenant("LoginNum", 1);
-        // cmsp.SetValueForTenant("CloseSite","False",0);
-        // dddd = cmsp.GetValueForTenant("closesite", 1);
-        //
-        // cmsp.SetValueForTenant("CloseSite","True",0);
-        // dddd = cmsp.GetValueForTenant("closesite", 1);
-        // cmsp.SetValueForTenant("CloseSite","False",0);
-        // dddd = cmsp.GetValueForTenant("closesite", 0);
+
         if (cmsSet.CloseSite)
         {
             ViewBag.Message = cmsSet.CloseSiteNote;
@@ -132,5 +118,30 @@ public class HomeController : HomeBaseController
         cmsContent = CmsContent.FindByID(0);
         return ParseTemplate(cmsContentSort.ContentTpl,homeAction);
 
+    }
+
+    public ActionResult ParseTemplate(string tplfile,string url)
+    {
+        return Content(
+            _iTemplateEngine.ParseTemplate(tplfile, url, cmsArea,cmsSite, cmsCompany, cmsContent),
+            "text/html;charset=utf-8");
+    }
+
+    public ActionResult Error(int areaid = 0, string? message = "未知错误")
+    {
+
+        if (areaid < 1)
+        {
+            ViewBag.Message = message;
+            return View("_Error");
+        }
+
+        if (!_templateEngineCache.GetCaCheTemplatePath(areaid, out var path) || !System.IO.File.Exists(path + "404.html"))
+        {
+            ViewBag.Message = message;
+            return View("_Error");
+        }
+
+        return ParseTemplate("404.html","404.html");
     }
 }

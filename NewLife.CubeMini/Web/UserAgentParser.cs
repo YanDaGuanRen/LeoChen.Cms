@@ -8,6 +8,7 @@ namespace NewLife.Cube.Web;
 public class UserAgentParser
 {
     #region 属性
+    
     /// <summary>原始字符串</summary>
     public String UserAgent { get; set; }
 

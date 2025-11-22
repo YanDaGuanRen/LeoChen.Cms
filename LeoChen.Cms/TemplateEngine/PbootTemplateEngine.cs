@@ -24,21 +24,26 @@ public class PbootTemplateEngine : ITemplateEngine
         _templateEngineCache = templateEngineCache;
         _httpContextAccessor = httpContextAccessor;
     }
-    
+
     // HTTP上下文访问器（用于请求信息）
     private readonly TemplateEngineCache _templateEngineCache;
     private readonly IHttpContextAccessor _httpContextAccessor;
 
     // 匹配包含标签 {include file="header.html"}{include file='header.html'}{include file=header.html}
     // 捕获组：1-文件名 2-参数
-    private readonly Regex RegexInclude = new("""\{include\s+file\s*=\s*["']?([^"'\s}]*)["']?\s*\}""", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+    private readonly Regex RegexInclude = new("""\{include\s+file\s*=\s*["']?([^"'\s}]*)["']?\s*\}""",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
     // 匹配输出地址标签 {url.xxx}
     // 捕获组：1-地址
-    private readonly Regex RegexOutputUrl = new("""/\{url\.([^\}]+)\}/""", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+    private readonly Regex RegexOutputUrl =
+        new("""/\{url\.([^\}]+)\}/""", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     // 匹配输出地址标签 {homeurl.xxx}
     // 捕获组：1-地址
-    private readonly Regex RegexOutputHomeUrl = new("""/\{homeurl\.([^\}]+)\}/""", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-    
+    private readonly Regex RegexOutputHomeUrl =
+        new("""/\{homeurl\.([^\}]+)\}/""", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
     // 捕获组：1-列表变量名 2-项变量名 3-起始索引 4-显示数量 5-循环内部内容
     private readonly Regex RegexLoop = new(@"\{loop\s+(\$\w+)\s+(\$\w+)\s*(\d*)\s*(\d*)\}(.*?)\{/loop\}",
         RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
@@ -77,36 +82,28 @@ public class PbootTemplateEngine : ITemplateEngine
     private readonly Regex RegexPageNav = new(@"\{pagenav(.*?)\}", RegexOptions.Compiled | RegexOptions.IgnoreCase);
 
     #endregion
-  
+
 
     #region 核心解析入口
 
     /// <summary>
     /// 解析模板文件（主入口）
     /// </summary>
-    public string ParseTemplate(string templatePath,string url, CmsArea cmsArea, CmsSite cmsSite, CmsCompany cmsCompany, CmsContent cmsContent = null)
+    public string ParseTemplate(string templatePath, string url, CmsArea cmsArea, CmsSite cmsSite,
+        CmsCompany cmsCompany, CmsContent cmsContent = null)
     {
         if (string.IsNullOrEmpty(templatePath)) return "<!-- 模板路径不能为空 -->";
 
         try
         {
-            var templateContent = LoadTemplateFile(cmsArea,templatePath);
+            var templateContent = LoadTemplateFile(cmsArea, templatePath);
             var contentSb = new StringBuilder(templateContent);
-            
+
             ParseparOutputUrl(contentSb);
             ParseparOutputHomeUrl(contentSb);
             ParseOutputDefine(contentSb);
-            ParseIncludeTag(cmsArea,contentSb); // 包含标签（优先解析，避免嵌套问题）
-            PraseOutputVar(contentSb); // 输出变量
-            PraseOutputObjVal(contentSb); // 输出对象
-            PraseOutputConfig(contentSb); // 输出配置参数
-            PraseOutputSession(contentSb); // 输出会话Session
-            PraseOutputCookie(contentSb); // 输出会话Cookie
-            PraseOutputServer(contentSb); // 输出环境变量
-            PraseOutputPost(contentSb); // 输出POST请求值
-            PraseOutputGet(contentSb); // 输出GET请求值
-            PraseOutputArrVal(contentSb); // 输出数组
-            PraseOutputFun(contentSb); // 使用函数
+            ParseIncludeTag(cmsArea, contentSb); // 包含标签（优先解析，避免嵌套问题）
+
             // ParsePageNavTag(contentSb); // 分页标签
             // ParseLoopTag(contentSb); // 循环标签
             // ParseIfElseTag(contentSb); // 条件标签（if/elseif/else）
@@ -115,20 +112,21 @@ public class PbootTemplateEngine : ITemplateEngine
             // ParseFunctionTag(contentSb); // 函数标签（{:func()}）
             // ParseSpecialTag(contentSb); // 特殊标签（{:sitename}）
             // CleanEmptyTags(contentSb);
-            return contentSb.ToString();;
+            return contentSb.ToString();
+            ;
         }
         catch (Exception ex)
         {
             return $"<!-- 模板解析错误：{ex.Message} -->";
         }
     }
-    
-    
-    
-    
+
+
     // 输出常量标签
     // 捕获组：1-常量名称
-    private readonly Regex RegexOutputDefine = new("""/\{([A-Z_]+)\}/""", RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+    private readonly Regex RegexOutputDefine = new("""/\{([A-Z_]+)\}/""",
+        RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
     /// <summary>
     /// 解析输出常量 如：{DB_HOST}
     /// </summary>
@@ -136,7 +134,7 @@ public class PbootTemplateEngine : ITemplateEngine
     private void ParseOutputDefine(StringBuilder contentSb)
     {
         //todo
-        
+
         // string content = contentSb.ToString();
         // var matches = RegexOutputDefine.Matches(content);
         // for (int i = matches.Count - 1; i >= 0; i--)
@@ -163,9 +161,8 @@ public class PbootTemplateEngine : ITemplateEngine
         //     string url = match.Groups[1].Value.Trim();
         //     contentSb.Replace(match.Value, url, match.Index, match.Length);
         // }
-        
     }
-    
+
     /// <summary>
     /// 输出地址 {homeurl./home/index/index}
     /// </summary>
@@ -186,11 +183,14 @@ public class PbootTemplateEngine : ITemplateEngine
     /// <summary>
     /// 加载模板文件内容
     /// </summary>
-    private string LoadTemplateFile(CmsArea cmsArea,string templatePath)
+    private string LoadTemplateFile(CmsArea cmsArea, string templatePath)
     {
-        _templateEngineCache.GetTemplatePath(cmsArea.ID, out var path);
-        var fullPath =path.CombinePath(templatePath).GetFullPath();
-        return File.Exists(fullPath) ? System.IO.File.ReadAllText(fullPath) :  $"<!--在目录:{path}下,模板文件不存在：{templatePath}-->";;
+        _templateEngineCache.GetCaCheTemplatePath(cmsArea.ID, out var path);
+        var fullPath = path.CombinePath(templatePath).GetFullPath();
+        return File.Exists(fullPath)
+            ? System.IO.File.ReadAllText(fullPath)
+            : $"<!--在目录:{path}下,模板文件不存在：{templatePath}-->";
+        ;
     }
 
 
@@ -234,6 +234,7 @@ public class PbootTemplateEngine : ITemplateEngine
     #endregion
 
     #region 标签解析实现
+
     /// <summary>
     /// 解析包含标签 {include file="header.html"}
     /// </summary>
@@ -247,7 +248,7 @@ public class PbootTemplateEngine : ITemplateEngine
         {
             includedFiles = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         }
-    
+
         string content = contentSb.ToString();
         var matches = RegexInclude.Matches(content);
         for (int i = matches.Count - 1; i >= 0; i--)
@@ -255,20 +256,20 @@ public class PbootTemplateEngine : ITemplateEngine
             Match match = matches[i];
             // 组2是文件路径
             string includePath = match.Groups[1].Value.Trim();
-        
+
             // 检查是否循环嵌套
             if (includedFiles.Contains(includePath))
             {
                 contentSb.Replace(match.Value, $"<!-- 循环嵌套警告：文件 {includePath} 已被包含 -->", match.Index, match.Length);
                 continue;
             }
-        
+
             // 将当前文件添加到已包含集合
             var newIncludedFiles = new HashSet<string>(includedFiles, StringComparer.OrdinalIgnoreCase)
             {
                 includePath
             };
-        
+
             // 加载并解析包含的模板
             string includeContent = LoadTemplateFile(cmsArea, includePath);
             var includeSb = new StringBuilder(includeContent);
@@ -376,7 +377,8 @@ public class PbootTemplateEngine : ITemplateEngine
     /// </summary>
     private static class LoopItemStorage
     {
-        private static readonly ThreadLocal<Dictionary<string, object>> _threadItems = new ThreadLocal<Dictionary<string, object>>(() => new Dictionary<string, object>());
+        private static readonly ThreadLocal<Dictionary<string, object>> _threadItems =
+            new ThreadLocal<Dictionary<string, object>>(() => new Dictionary<string, object>());
 
         public static void SetItem(string key, object value)
         {
@@ -516,7 +518,7 @@ public class PbootTemplateEngine : ITemplateEngine
 
             // 获取变量值
             // object varValue = GetData(varKey);
-             object varValue = null;
+            object varValue = null;
             if (varValue == null)
             {
                 // 检查是否是循环项变量（如item.title）
@@ -580,7 +582,7 @@ public class PbootTemplateEngine : ITemplateEngine
                     // result = $"{GetData("site.url")}{parsedParam}";
                     // todo
                     result = """$\\\"{GetData(\\\"site.url\\\")}{parsedParam}\\\""";
-                    
+
                     break;
                 case "thumb":
                     // result = $"{GetData("site.url")}upload/thumb/{parsedParam}";
@@ -635,7 +637,7 @@ public class PbootTemplateEngine : ITemplateEngine
             // 从缓存获取分页信息
             // PageInfo pageInfo = GetData("pageinfo") as PageInfo;
             // todo
-            PageInfo pageInfo = null;   
+            PageInfo pageInfo = null;
             if (pageInfo == null)
             {
                 contentSb.Replace(match.Value, "<!-- 未设置分页信息（需从缓存提供pageinfo数据） -->", match.Index, match.Length);

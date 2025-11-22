@@ -50,80 +50,120 @@ public class TemplateEngineCache
     #region 数据管理
 
     /// <summary>
-    /// 获取区域列表
+    /// 获取缓存区域列表
     /// </summary>
     /// <param name="arealist">区域列表</param>
     /// <returns></returns>
-    public Boolean GetAreaList(out Dictionary<String, CmsArea> arealist)
+    public Boolean GetCacheAreaList(out Dictionary<String, CmsArea> arealist)
     {
-        return GetCacheData(CacheAreaList, d =>
-        {
-            var cmsAreas = new Dictionary<String, CmsArea>(StringComparer.OrdinalIgnoreCase);
-            var list = CmsArea.FindAll();
-            foreach (var cmsArea in list)
-            {
-                if (cmsArea.Domain.IsNullOrEmpty()) continue;
-                string host;
-                try
-                {
-                    var uri = new Uri(cmsArea.Domain);
-                    host = uri.Host;
-                }
-                catch (UriFormatException)
-                {
-                    host = cmsArea.Domain;
-                }
-
-                cmsAreas.Add(host, cmsArea);
-            }
-
-            return cmsAreas;
-        }, out arealist);
+        return GetCacheData(CacheAreaList, d =>GetAreaList(), out arealist);
     }
 
     /// <summary>
-    /// 获取站点信息
+    /// 获取数据库区域列表
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<String, CmsArea> GetAreaList()
+    {
+        var cmsAreas = new Dictionary<String, CmsArea>(StringComparer.OrdinalIgnoreCase);
+        var list = CmsArea.FindAll();
+        foreach (var cmsArea in list)
+        {
+            if (cmsArea.Domain.IsNullOrEmpty()) continue;
+            string host;
+            try
+            {
+                var uri = new Uri(cmsArea.Domain);
+                host = uri.Host;
+            }
+            catch (UriFormatException)
+            {
+                host = cmsArea.Domain;
+            }
+
+            cmsAreas.Add(host, cmsArea);
+        }
+
+        return cmsAreas;
+    }
+    
+    /// <summary>
+    /// 设置缓存区域列表
+    /// </summary>
+    /// <param name="arealist"></param>
+    /// <returns></returns>
+    public Boolean SetAreaList(Dictionary<String, CmsArea> arealist)
+    {
+        return SetCacheData(CacheAreaList, arealist);
+    }
+    
+    /// <summary>
+    /// 获取缓存站点信息
     /// </summary>
     /// <param name="areaid">区域ID</param>
     /// <param name="cmsSite">站点信息</param>
     /// <returns></returns>
-    public Boolean GetSite(int areaid, out CmsSite cmsSite)
+    public Boolean GetCacheSite(int areaid, out CmsSite cmsSite)
     {
-        return GetCacheData(
-            CacheSiteValue + areaid,
-            d => CmsSite.FindByAreaID(areaid),
-            out cmsSite);
+        return GetCacheData(CacheSiteValue + areaid, d => GetSite(areaid), out cmsSite);
+    }
+    
+    /// <summary>
+    /// 获取缓存站点信息
+    /// </summary>
+    /// <param name="areaid">区域ID</param>
+    /// <returns></returns>
+    public CmsSite GetSite(int areaid)
+    {
+        return CmsSite.FindByAreaID(areaid);
     }
 
+    /// <summary>
+    /// 设置缓存站点信息
+    /// </summary>
+    /// <param name="areaid">区域ID</param>
+    /// <param name="cmsSite">站点信息</param>
+    /// <returns></returns>
     public Boolean SetSite(int areaid, CmsSite cmsSite)
     {
-        return GetCacheData(
-            CacheSiteValue + areaid,
-            d => CmsSite.FindByAreaID(areaid),
-            out cmsSite);
+        return SetCacheData(CacheSiteValue + areaid, cmsSite);
     }
 
 
     /// <summary>
-    /// 获取模板路径
+    /// 获取缓存模板路径
     /// </summary>
     /// <param name="areaid">区域ID</param>
     /// <param name="templatePath">模板路径</param>
     /// <returns></returns>
-    public Boolean GetTemplatePath(int areaid, out String templatePath)
+    public Boolean GetCaCheTemplatePath(int areaid, out String templatePath)
     {
-        return GetCacheData(
-            CacheTemplatePathValue + areaid,
-            d =>
-            {
-                string path;
-                if (!GetSite(areaid, out var cmsSite)) return null;
-                if (cmsSite.Theme.IsNullOrEmpty()) path = "Template/Default/";
-                else path = $"Template{cmsSite.Theme.EnsureStart("/").EnsureEnd("/")}";
-                path.GetFullPath().EnsureDirectory(false);
-                return path;
-            },
-            out templatePath);
+        return GetCacheData(CacheTemplatePathValue + areaid, d =>GetTemplatePath(areaid), out templatePath);
+    }
+    
+    /// <summary>
+    /// 获取模板路径
+    /// </summary>
+    /// <param name="areaid">区域ID</param>
+    /// <returns></returns>
+    public String GetTemplatePath(int areaid)
+    {
+        var path = "Template/Default/";
+        if (!GetCacheSite(areaid, out var cmsSite)) return path;
+        if (cmsSite.Theme.IsNullOrEmpty()) return path; 
+        else path = $"Template{cmsSite.Theme.EnsureStart("/").EnsureEnd("/")}";
+        path.GetFullPath().EnsureDirectory(false);
+        return path;
+    }
+    /// <summary>
+    /// 设置模板路径
+    /// </summary>
+    /// <param name="areaid">区域ID</param>
+    /// <param name="templatePath">模板路径</param>
+    /// <returns></returns>
+    public Boolean SetTemplatePath(int areaid, String templatePath)
+    {
+        return SetCacheData(CacheTemplatePathValue + areaid,templatePath);
     }
 
     /// <summary>
@@ -179,17 +219,17 @@ public class TemplateEngineCache
     public Boolean GetCacheData<T>(String key, Func<string, T> dataProvider, [MaybeNullWhen(false)] out T value)
     {
         if (_cache.TryGetValue<T>(key, out value)) return true;
-
         if (dataProvider == null) return false;
-
         value = dataProvider(key);
         if (value == null) return false;
         if (value is string str && str.IsNullOrEmpty()) return false;
         if (value is IEnumerable enumerable && !enumerable.Cast<object>().Any()) return false;
-        _cache.Set(key, value, 0);
-        return true;
+        return _cache.Set(key, value, 0);
     }
-
+    public Boolean SetCacheData<T>(String key,T data,Int32 expire=0)
+    {
+        return  _cache.Set<T>(key, data, expire);
+    }
     public Boolean GetCacheData<T>(String key, [MaybeNullWhen(false)] out T value)
     {
         if (_cache.TryGetValue<T>(key, out value)) return true;

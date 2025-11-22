@@ -20,7 +20,7 @@ namespace LeoChen.Cms.Areas.BasicContent.Controllers;
 [BasicContentArea]
 public class CmsSiteController : EntityController<CmsSite>
 {
-    private readonly ICache _cache;
+    private readonly TemplateEngineCache _templateEngineCache;
 
 
     static CmsSiteController()
@@ -107,9 +107,9 @@ public class CmsSiteController : EntityController<CmsSite>
         return CmsSite.Search(areaId, start, end, p["Q"], p);
     }
     
-    public CmsSiteController(ICacheProvider cacheProvider)
+    public CmsSiteController(TemplateEngineCache templateEngineCache)
     {
-        _cache = cacheProvider.Cache;
+        _templateEngineCache = templateEngineCache;
     }
 
     protected override int OnInsert(CmsSite entity)
@@ -150,6 +150,7 @@ public class CmsSiteController : EntityController<CmsSite>
 
     private void SetCache(CmsSite entity)
     {
-        _cache.Set(TemplateEngineCache.CacheSiteValue + entity.AreaID, entity, 0);
+        _templateEngineCache.SetSite(entity.AreaID, entity);
+
     }
 }
