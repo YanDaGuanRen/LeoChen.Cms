@@ -241,10 +241,14 @@ public static class CubeService
     {
         using var span = DefaultTracer.Instance?.NewSpan(nameof(AddCustomApplicationParts));
 
-        var manager =
-            services.LastOrDefault(e => e.ServiceType == typeof(ApplicationPartManager))?.ImplementationInstance as
-                ApplicationPartManager;
-        manager ??= new ApplicationPartManager();
+        // 取已存在的 ApplicationPartManager；若不存在则创建并注册，避免丢失默认 MVC 配置
+        var manager = services.LastOrDefault(e => e.ServiceType == typeof(ApplicationPartManager))?.ImplementationInstance as ApplicationPartManager;
+        if (manager == null)
+        {
+            manager = new ApplicationPartManager();
+            // 注册到容器中，确保 MVC 能获取到我们追加的 Parts
+            services.AddSingleton(manager);
+        }
 
         var list = FindAllArea();
         span?.AppendTag(null, list.Count);
@@ -256,6 +260,8 @@ public static class CubeService
             var factory = ApplicationPartFactory.GetApplicationPartFactory(asm);
             foreach (var part in factory.GetApplicationParts(asm))
             {
+                //if (!manager.ApplicationParts.Any(p => p.Name == part.Name)) manager.ApplicationParts.Add(part);
+                // 程序集 NewLife.Cube.dll 中有两个part，一个程序集自身，一个Razor预编译项，二者的Name相同，但两个都要添加
                 if (!manager.ApplicationParts.Contains(part)) manager.ApplicationParts.Add(part);
             }
         }
@@ -412,15 +418,17 @@ public static class CubeService
 
         XTrace.WriteLine("{0} End   初始化魔方 {0}", new String('=', 32));
 
-        Task.Run(() => ResolveStarWeb(provider));
+        Task.Factory.StartNew(() => ResolveStarWeb(provider), TaskCreationOptions.LongRunning);
 
         // 注册退出事件
         if (app is IHost web)
+        {
             NewLife.Model.Host.RegisterExit(() =>
             {
                 XTrace.WriteLine("魔方优雅退出！");
-                web.StopAsync().Wait();
+                web.StopAsync().Wait(5_000);
             });
+        }
 
         return app;
     }

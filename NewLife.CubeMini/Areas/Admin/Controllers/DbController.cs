@@ -45,14 +45,14 @@ public class DbController : ControllerBaseX
                 di.DriverVersion = ax.FileVersion;
             }
 
-            var t = Task.Run(() =>
+            var t = Task.Factory.StartNew(() =>
             {
                 try
                 {
                     return dal.Db.ServerVersion;
                 }
                 catch { return null; }
-            });
+            },TaskCreationOptions.LongRunning);
             if (t.Wait(300)) di.Version = t.Result;
 
             di.Tables = dal.Tables.Count;

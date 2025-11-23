@@ -363,7 +363,7 @@ public class SsoProvider
             {
                 // 如果Avatar还是保存远程头像地址，下载远程头像到本地
                 if (user2.Avatar.StartsWithIgnoreCase("http://", "https://"))
-                    Task.Run(() => FetchAvatar(user, av));
+                    Task.Factory.StartNew(() => FetchAvatar(user, av), TaskCreationOptions.LongRunning);
             }
         }
     }
